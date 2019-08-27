@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Cp;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Modules\CpUserModule;
-use \Exception,\Session,\YC_Util;
-use App\Modules\CpAccess;
-use App\Modules\UserModule;
+use App\Modules\Admin\Access\CpUserModule;
+use \Exception;
+use \Session;
+use \YC_Util;
+use App\Modules\Admin\Access\CpAccess;
+use App\Modules\User\UserBase\UserModule;
 
 /**
  * @desc 系统首页
@@ -19,17 +21,16 @@ class HomeController extends Controller
      */
     public function welcome()
     {
-        // throw new Exception('sentry test 1123123', 123123);
-        if(CpAccess::checkUserInDepartByMark(CpAccess::theUid(), CpAccess::$saleMark)) {
-            // $assign = [
-            //     'start' => date('Y-m-d'),
-            //     'end' => date('Y-m-d'),
-            //     'seller_id' => CpAccess::theUid(),
-            // ];
-            // return view('cp.sellerProcess.sellerPanels', $assign);
-            header('location:/sellerProcess/sellerPanels');
-            exit();
-        }
+        // if(CpAccess::checkUserInDepartByMark(CpAccess::theUid(), CpAccess::$saleMark)) {
+        //     // $assign = [
+        //     //     'start' => date('Y-m-d'),
+        //     //     'end' => date('Y-m-d'),
+        //     //     'seller_id' => CpAccess::theUid(),
+        //     // ];
+        //     // return view('cp.sellerProcess.sellerPanels', $assign);
+        //     header('location:/sellerProcess/sellerPanels');
+        //     exit();
+        // }
 
         return view('cp.home.welcome');
     }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Cp;
 
-use App\Modules\SalesModule;
+// use App\Modules\SalesModule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Modules\CpAccess;
-use App\Modules\CpUserModule;
+use App\Modules\Admin\Access\CpAccess;
+use App\Modules\Admin\Access\CpUserModule;
 use App\Modules\Admin\Access\Models\CpDepartment;
 use App\Modules\Admin\Access\Models\CpDepartmentUser;
 use App\Modules\Admin\Access\Models\CpDepartmentAction;
@@ -22,7 +22,7 @@ class AccessController extends Controller
     public function getAllDepart() {
         $objDepart = new CpDepartment();
         $pInfo = $objDepart->getAllDepart();
-        return $this->returnAjax(0,'suc', $pInfo);
+        return $this->json(0,'suc', $pInfo);
     }
 
     /**
@@ -32,7 +32,7 @@ class AccessController extends Controller
         $id = $request->input('id');
         $objDepart = new CpDepartment();
         $pInfo = $objDepart->getParentDepart($id);      
-        return $this->returnAjax(0, 'suc', $pInfo);     
+        return $this->json(0, 'suc', $pInfo);     
     }
 
     /**
@@ -41,7 +41,7 @@ class AccessController extends Controller
     public function getDepartUser(Request $request) {
         $id = $request->input('did');
         if (empty($id)) {
-            return $this->returnAjax(1, '部门ID为空');
+            return $this->json(1, '部门ID为空');
         }
         $userList = CpDepartmentUser::where('department_id', $id)->where('is_deleted',CpDepartmentUser::NOT_DELETED)->get()->toArray();
         // $this->renderUserTable($userList);
@@ -249,9 +249,9 @@ class AccessController extends Controller
             }
         }
         if ($ret) {
-            return $this->returnAjax(0,'保存成功');
+            return $this->json(0,'保存成功');
         } else {
-            return $this->returnAjax(1,'保存失败，请重试');
+            return $this->json(1,'保存失败，请重试');
         }
     }
 
@@ -286,9 +286,9 @@ class AccessController extends Controller
             }
         }
         if ($ret) {
-            return $this->returnAjax(0,'保存成功');
+            return $this->json(0,'保存成功');
         } else {
-            return $this->returnAjax(1,'保存失败，请重试');
+            return $this->json(1,'保存失败，请重试');
         }
     }
 
@@ -333,9 +333,9 @@ class AccessController extends Controller
             }
         }
         if ($ret) {
-            return $this->returnAjax(0,'保存成功');
+            return $this->json(0,'保存成功');
         } else {
-            return $this->returnAjax(1,'保存失败，请重试');
+            return $this->json(1,'保存失败，请重试');
         }
     }
 
@@ -349,7 +349,7 @@ class AccessController extends Controller
         $mark  = $request->input('mark');
         $email = $request->input('email');
         $ret   = CpAccess::addDepartment($name, $mark, $code, $pid, $email);
-        return $this->returnAjax($ret['code'],$ret['msg'],$ret['data']);
+        return $this->json($ret['code'],$ret['msg'],$ret['data']);
     }
 
     /**
@@ -359,7 +359,7 @@ class AccessController extends Controller
     {
         $did = $request->input('did');
         $ret = CpAccess::getDepartInfo($did);
-        return $this->returnAjax($ret['code'], $ret['msg'], $ret['data']);
+        return $this->json($ret['code'], $ret['msg'], $ret['data']);
     }
     /**
      * @desc 添加部门用户
@@ -369,12 +369,12 @@ class AccessController extends Controller
         $did = $request->input('did');
         $accout = $request->input('cp_account');
         if (empty($did) || empty($accout)) {
-            return $this->returnAjax(1, '信息有误');
+            return $this->json(1, '信息有误');
         }
         $ret = CpAccess::addDepartUser($did, $accout);
         //增加销售信息
-        SalesModule::addSellerInfo();
-        return $this->returnAjax($ret['code'], $ret['msg'], $ret['data']);
+        // SalesModule::addSellerInfo();
+        return $this->json($ret['code'], $ret['msg'], $ret['data']);
     }
 
     /**
@@ -399,7 +399,7 @@ class AccessController extends Controller
         } else {
             $ret  = CpAccess::updateActionGroup($id, $name, $desc);
         }
-        return $this->returnAjax($ret['code'], $ret['msg'], $ret['data']);      
+        return $this->json($ret['code'], $ret['msg'], $ret['data']);      
     }
 
     /**
@@ -421,20 +421,20 @@ class AccessController extends Controller
                 'email'     => empty($email) ? '' : $email,
             );
         $ret  = CpAccess::updateDepartment($id, $data);
-        return $this->returnAjax($ret['code'],$ret['msg'],$ret['data']);        
+        return $this->json($ret['code'],$ret['msg'],$ret['data']);        
     }
 
     public function delActionGroup(Request $request) {
         $id = intval($request->input('id'));
         $ret  = CpAccess::delActionGroup($id);
-        return $this->returnAjax($ret['code'], $ret['msg'], $ret['data']);    
+        return $this->json($ret['code'], $ret['msg'], $ret['data']);    
     }
 
     public function delDepartUser(Request $request) {
         $did = $request->input('did');
         $uid = $request->input("uid");
         $ret = CpAccess::delDepartUser($uid, $did);
-        return $this->returnAjax($ret['code'], $ret['msg'], $ret['data']);        
+        return $this->json($ret['code'], $ret['msg'], $ret['data']);        
     }
 
     /**
@@ -459,7 +459,7 @@ class AccessController extends Controller
             $ret  = CpAccess::addResourceGroup($name, $desc);
         else
             $ret  = CpAccess::updateResourceGroup($id, $name, $desc);
-        return $this->returnAjax($ret['code'], $ret['msg'], $ret['data']);        
+        return $this->json($ret['code'], $ret['msg'], $ret['data']);        
     }
 
     /**
@@ -469,7 +469,7 @@ class AccessController extends Controller
     {
         $id = trim($request->input('id'));
         $ret  = CpAccess::delResourceGroup($id);
-        return $this->returnAjax($ret['code'], $ret['msg'], $ret['data']);
+        return $this->json($ret['code'], $ret['msg'], $ret['data']);
     }
 
     /**
@@ -530,9 +530,9 @@ class AccessController extends Controller
             }
         }
         if ($ret) {
-            return $this->returnAjax(0,'保存成功');
+            return $this->json(0,'保存成功');
         } else {
-            return $this->returnAjax(1,'保存失败，请重试');
+            return $this->json(1,'保存失败，请重试');
         }
 
     }
@@ -568,9 +568,9 @@ class AccessController extends Controller
             }
         }
         if ($ret) {
-            return $this->returnAjax(0,'保存成功');
+            return $this->json(0,'保存成功');
         } else {
-            return $this->returnAjax(1,'保存失败，请重试');
+            return $this->json(1,'保存失败，请重试');
         }
     }
 
@@ -615,9 +615,9 @@ class AccessController extends Controller
             }
         }
         if ($ret) {
-            return $this->returnAjax(0,'保存成功');
+            return $this->json(0,'保存成功');
         } else {
-            return $this->returnAjax(1,'保存失败，请重试');
+            return $this->json(1,'保存失败，请重试');
         }
     }
 
@@ -651,7 +651,7 @@ class AccessController extends Controller
         $accessKey = trim($request->input('access_key'));
         $accessVal = trim($request->input('access_val'));
         $ret = CpAccess::selectAccess($accessKey, $accessVal); 
-        return $this->returnAjax($ret['code'], $ret['msg']);
+        return $this->json($ret['code'], $ret['msg']);
     }
 
     public function fromEctCheck(Request $request)
@@ -719,10 +719,10 @@ class AccessController extends Controller
     public function decodeMaskMobile($id)
     {
         if (empty($id) || is_int($id)) {
-            return $this->returnAjax(800035, '参数错误');
+            return $this->json(800035, '参数错误');
         }
         $mobile = CpAccess::decodeMaskMobile($id);
-        return $this->returnAjax(0, 'ok', $mobile);
+        return $this->json(0, 'ok', $mobile);
     }
 
     /**
@@ -733,23 +733,14 @@ class AccessController extends Controller
     {
         $id = intval($request->input('id'));
         if (empty($id)) {
-            return $this->returnAjax(800035, '参数错误');
+            return $this->json(800035, '参数错误');
         }
         $ret = CpAccess::delDepart($id);        
         if ($ret) {
-            return $this->returnAjax(0,'删除成功');
+            return $this->json(0,'删除成功');
         } else {
-            return $this->returnAjax(1,'删除失败，请重试');
+            return $this->json(1,'删除失败，请重试');
         }
     }
-   
-    protected function returnAjax($code, $msg = '', $data = null)
-    {
-        $data = array(
-            'code' => $code,
-            'msg'  => $msg,
-            'data' => $data,
-        );
-        return $data;
-    }
+
 }

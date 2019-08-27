@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules;
+namespace App\Modules\User\UserBase;
 
-use App\Modules\Admin\Access\Models\User\EcsUser;
+use App\Modules\User\UserBase\Models\EcsUser;
 
 class UserModule
 {
@@ -28,13 +28,15 @@ class UserModule
         self::USER_RANK_PREPAID => '无优惠客户',
     );
 
-    public static function getUserById($uid){
+    public static function getUserById($uid)
+    {
         $objUser = new EcsUser();
         $ret = $objUser->getById($uid);
         return self::modelReturn(0, 'suc', $ret);
     }
 
-    public static function getUserRank($uid){
+    public static function getUserRank($uid)
+    {
         return EcsUser::where('user_id', $uid)->value('user_rank');
     }
 

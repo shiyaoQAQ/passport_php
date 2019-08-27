@@ -1,11 +1,9 @@
 <?php
 
-namespace App\Modules\Admin\Access\Models\User;
+namespace App\Modules\User\UserBase\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use App\Modules\Admin\Access\Models\LaravelSmsTmp;
-use App\Modules\CpAccess;
 
 class EcsUser extends Model
 {
@@ -15,24 +13,6 @@ class EcsUser extends Model
     protected $table = 'ecs_users';
     protected $primaryKey = 'user_id';
     public $timestamps = false;
-
-    /**
-     * 电销系统用户关系
-     */
-    public function salesCustomer()
-    {
-        return $this->hasMany('App\Modules\Admin\Access\Models\Sales\SalesCustomer', 'uid', 'user_id');
-    }
-
-    public function order()
-    {
-        return $this->hasMany('App\Modules\Admin\Access\Models\Order\OrderInfo', 'user_id', 'user_id');
-    }
-
-    public function address()
-    {
-        return $this->hasMany('App\Modules\Admin\Access\Models\User\EcsUserAddress', 'user_id', 'user_id');
-    }
 
     public function cpUser()
     {
@@ -91,29 +71,6 @@ class EcsUser extends Model
         $list = self::whereIn('user_id', $uids)->get()->keyBy('user_id');
         return empty($list) ? array() : $list->toArray();
     }
-        
-    // //扣除返现
-    // public function reduceUserSurplus($userId, $reduceSurplus)
-    // {
-    //     //给我发一条短信
-    //     // $smsObj = new LaravelSmsTmp;
-    //     // $smsObj->add('13655491631', "{$userId}扣除了{$reduceSurplus}元", 0);
-    //     $user = self::findOrFail($userId);
-    //     $user->user_money -= $reduceSurplus;
-    //     $user->save();
-    // }
-
-    // //增加返现
-    // public function increaseUserSurplus($userId, $reduceSurplus)
-    // {
-    //     //给我发一条短信
-    //     // $smsObj = new LaravelSmsTmp;
-    //     // $smsObj->add('13655491631', "{$userId}增加了{$reduceSurplus}元", 0);
-        
-    //     $user = self::findOrFail($userId);
-    //     $user->user_money += $reduceSurplus;
-    //     $user->save();
-    // }
 
     public function getUsersByKeyword($keyword)
     {
@@ -160,7 +117,7 @@ class EcsUser extends Model
     public function createSimpleUser($mobile, $data = [])
     {
         $user = new self;
-        $user->user_name = isset($data['user_name']) ? $data['user_name'] : $mobile_phone;
+        $user->user_name = isset($data['user_name']) ? $data['user_name'] : $mobile;
         $user->reg_time = time();
         $user->mobile_phone = $mobile;
         $user->is_validated = 0;
