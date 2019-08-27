@@ -2,24 +2,24 @@
 
 namespace App\Modules;
 
-use App\Models\CpDepartment;
-use App\Models\CpDepartmentUser;
-use App\Models\CpDepartmentAction;
-use App\Models\CpActionGroup;
-use App\Models\CpActionGroupAccess;
-use App\Models\CpResourceGroup;
-use App\Models\CpResourceGroupAccess;
-use App\Models\CpDepartmentResource;
-use App\Models\User\EcsUser;
-use App\Models\CpUser;
-use App\Models\Access\MobileMaskLog;
+use App\Modules\Admin\Access\Models\CpDepartment;
+use App\Modules\Admin\Access\Models\CpDepartmentUser;
+use App\Modules\Admin\Access\Models\CpDepartmentAction;
+use App\Modules\Admin\Access\Models\CpActionGroup;
+use App\Modules\Admin\Access\Models\CpActionGroupAccess;
+use App\Modules\Admin\Access\Models\CpResourceGroup;
+use App\Modules\Admin\Access\Models\CpResourceGroupAccess;
+use App\Modules\Admin\Access\Models\CpDepartmentResource;
+use App\Modules\Admin\Access\Models\User\EcsUser;
+use App\Modules\Admin\Access\Models\CpUser;
+use App\Modules\Admin\Access\Models\Access\MobileMaskLog;
 use \Session,\YC_Util;
 use \Exception;
 use App\Modules\Ka\KaModule;
 use App\Exceptions\WorkException;
 use App\Modules\Store\StoreModule;
 use App\Modules\Base\CityModule;
-use App\Models\Sales\DmSellerOriginationChart;
+use App\Modules\Admin\Access\Models\Sales\DmSellerOriginationChart;
 class CpAccess {
     const MARK_SALELEADER = 'salesleader';
     const MARK_SALE        = 'seller';

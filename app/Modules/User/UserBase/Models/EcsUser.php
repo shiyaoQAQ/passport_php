@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models\User;
+namespace App\Modules\Admin\Access\Models\User;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use App\Models\LaravelSmsTmp;
+use App\Modules\Admin\Access\Models\LaravelSmsTmp;
 use App\Modules\CpAccess;
 
 class EcsUser extends Model
@@ -21,22 +21,22 @@ class EcsUser extends Model
      */
     public function salesCustomer()
     {
-        return $this->hasMany('App\Models\Sales\SalesCustomer', 'uid', 'user_id');
+        return $this->hasMany('App\Modules\Admin\Access\Models\Sales\SalesCustomer', 'uid', 'user_id');
     }
 
     public function order()
     {
-        return $this->hasMany('App\Models\Order\OrderInfo', 'user_id', 'user_id');
+        return $this->hasMany('App\Modules\Admin\Access\Models\Order\OrderInfo', 'user_id', 'user_id');
     }
 
     public function address()
     {
-        return $this->hasMany('App\Models\User\EcsUserAddress', 'user_id', 'user_id');
+        return $this->hasMany('App\Modules\Admin\Access\Models\User\EcsUserAddress', 'user_id', 'user_id');
     }
 
     public function cpUser()
     {
-        return $this->hasOne('App\Models\CpUser', 'uid', 'user_id');
+        return $this->hasOne('App\Modules\Admin\Access\Models\CpUser', 'uid', 'user_id');
     }
 
     public function add($data)

@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\CpAccess;
 use App\Modules\CpUserModule;
-use App\Models\CpDepartment;
-use App\Models\CpDepartmentUser;
-use App\Models\CpDepartmentAction;
+use App\Modules\Admin\Access\Models\CpDepartment;
+use App\Modules\Admin\Access\Models\CpDepartmentUser;
+use App\Modules\Admin\Access\Models\CpDepartmentAction;
 
 /**
  * @desc 访问控制

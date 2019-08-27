@@ -2,7 +2,7 @@
 
 namespace App\Modules;
 
-use App\Models\User\EcsUser;
+use App\Modules\Admin\Access\Models\User\EcsUser;
 
 class UserModule
 {
