@@ -8,12 +8,12 @@ return [
         '权限' => [
             'logo' => 'locked',
             'menu_list' => [
-                $passportUrl . '/user/add'                        => '新增\关闭账户',
+                $passportUrl . '/cp/user/add'                        => '新增\关闭账户',
                 $passportUrl . '/cp/department'                      => '组织架构',
                 $passportUrl . '/cp/department/actiongrouplist'   => '权限组管理',
                 $passportUrl . '/cp/department/resourcegrouplist' => '资源组管理',
-                $passportUrl . '/user/addDepartmentUser'          => '新增管理员',
-                $passportUrl . '/log/index'                       => '操作日志',
+                $passportUrl . '/cp/user/addDepartmentUser'          => '新增管理员',
+                $zsfucaiCpUrl . '/log/index'                       => '操作日志',
             ],
         ],
         '电销' => [

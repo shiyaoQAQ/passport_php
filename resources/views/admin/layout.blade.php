@@ -508,7 +508,7 @@
                 </Dropdown>
             </dropdown-menu>
         </Dropdown>
-        <Dropdown v-if="!menuFold">
+        <!-- <Dropdown v-if="!menuFold">
             <a class="DropdownTitle" href="javascript:void(0)">
                 <Icon type="ios-redo"></Icon>
                 回ECT
@@ -519,7 +519,7 @@
                     <a target="_blank" href="http://{{config('app.url')}}/admin">EcTouch</a>
                 </dropdown-item>
             </dropdown-menu>
-        </Dropdown>
+        </Dropdown> -->
 
         <Submenu
             v-for="(access, accessKey) in showAccessList"

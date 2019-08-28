@@ -231,7 +231,7 @@
                          
                            
                             $.ajax({
-                                url  : '/user/addDepartmentUser',
+                                url  : '/cp/user/addDepartmentUser',
                                 data : modalData,
                                 type : 'POST',
                                 headers: {

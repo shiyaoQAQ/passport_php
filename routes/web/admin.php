@@ -12,6 +12,7 @@
 */
 
 Route::group(['middleware' => ['cpauth']], function () {
+    // 组织架构
     Route::get('/department', 'AccessController@department');
     Route::get('/longrentdepartment/ajaxdeparttree', 'AccessController@getDepartTree');
     Route::get('/longrentdepartment/ajaxrenderdeparttree', 'AccessController@getTree');
@@ -44,11 +45,20 @@ Route::group(['middleware' => ['cpauth']], function () {
     Route::get('/longrentdepartment/depart_resource_detail', 'AccessController@departResourceDetail');
     Route::post('/access/selectAccess', 'AccessController@selectAccess');
     Route::post('/longrentdepartment/ajaxdeletedepart', 'AccessController@delDepart');
-
+    // 首页和登录
     Route::get('/', 'HomeController@welcome');
     Route::get('/home/login', 'HomeController@login');
     Route::post('/home/login', 'HomeController@storeLogin');
     Route::get('/home/wxcode', 'HomeController@wxCode');
     Route::get('/home/welcome', 'HomeController@welcome');
     Route::get('/home/logout', 'HomeController@logout');
+    // CP用户
+    Route::get('/user/add', 'UserController@addUser');
+    Route::post('/user/add', 'UserController@doAddUser');
+    Route::get('/user/search', 'UserController@search');
+    Route::get('/user/password', 'UserController@password');
+    Route::post('/user/password', 'UserController@doPassword');
+    Route::get('/user/addDepartmentUser', 'UserController@addDepartmentUser');
+    Route::post('/user/addDepartmentUser', 'UserController@addDepartmentUserJson');
+    Route::delete('/user/dimission', 'UserController@dimission');
 });

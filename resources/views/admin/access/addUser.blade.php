@@ -1,6 +1,8 @@
-@extends('cp.newlayout')
+@extends('admin.layout')
 @section('title', '新增\关闭账户')
-@section('head')
+
+@section('content')
+    
     <style>
         .ivu-modal-body td {
         }
@@ -18,9 +20,6 @@
             min-height: 450px;;
         }
     </style>
-@endsection
-@section('content')
-    @verbatim
         <div id="editUser" v-cloak>
             <Card>
                 <Tabs>
@@ -46,14 +45,14 @@
                             <form-item label="用户角色" prop="role">
                                 <i-select placeholder="请选择用户角色" v-model="formData.role" filterable>
                                     <i-option v-for="(value, key) in roleList" :value="key"
-                                              :key="key">{{ value }}</i-option>
+                                              :key="key">@{{ value }}</i-option>
                                 </i-select>
                             </form-item>
                             <form-item label="当前状态">
                                 <Tag v-if="!formData.leave">在职</Tag>
                                 <Tag color="error" v-if="formData.leave && formData.uid">离职</Tag>
                             </form-item>
-                            <form-item label="所在组织" v-if="formData.dpList.length !=0 ">
+                            <form-item label="所在组织" v-if="formData.dpList.length !=0">
                                 <Tag type="dot" v-for="value in formData.dpList" :key="value">{{value}}</Tag>
                             </form-item>
                             <form-item style="margin-top:50px">
@@ -65,10 +64,7 @@
                 </Tabs>
             </Card>
         </div>
-    @endverbatim
-@endsection
 
-@section('endbody')
 <script>
    var vm = new Vue({
             el: '#editUser',
@@ -106,8 +102,8 @@
             methods: {
                 seach(){
                     _this = this;
-                    ajax({
-                        url:'/user/search',
+                    $.ajax({
+                        url:'/cp/user/search',
                         type:'GET',
                         dataType:'JSON',
                         data:{mobile:_this.formData.mobile},
@@ -125,8 +121,8 @@
                 dimission(){
                     _this = this ;
                     if (confirm('确认将该用户离职吗？')) {
-                        ajax({
-                                url:'/user/dimission',
+                        $.ajax({
+                                url:'/cp/user/dimission',
                                 type:'delete',
                                 dataType:'JSON',
                                 data:_this.formData,
@@ -141,8 +137,8 @@
                     _this = this;
                     _this.$refs['formData'].validate((valid) => {
                         if (valid) {
-                            ajax({
-                                url:'/user/add',
+                            $.ajax({
+                                url:'/cp/user/add',
                                 type:'POST',
                                 dataType:'JSON',
                                 data:_this.formData,
@@ -162,4 +158,6 @@
             }
    });
 </script>
+
+    
 @endsection

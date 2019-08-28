@@ -120,7 +120,6 @@ class AccessController extends Controller
             return $this->json(1, '部门ID为空');
         }
         $userList = CpDepartmentUser::where('department_id', $id)->where('is_deleted',CpDepartmentUser::NOT_DELETED)->get()->toArray();
-        // $this->renderUserTable($userList);
         if(!empty($userList)) {
             foreach ($userList as &$user) {
                 $user['userName']  = CpUserModule::getName($user['uid']);
@@ -749,64 +748,6 @@ class AccessController extends Controller
         $accessVal = trim($request->input('access_val'));
         $ret = CpAccess::selectAccess($accessKey, $accessVal); 
         return $this->json($ret['code'], $ret['msg']);
-    }
-
-    public function fromEctCheck(Request $request)
-    {
-        $token = $request->input('token');
-        $to    = $request->input('to');
-        $time  = $request->input('num');
-        $subdata  = $request->input('subdata');
-        $ret = CpAccess::fromEctCheck($token, $time);
-        if ($ret['code'] == 0) {
-            if (!empty($to)) {
-                $toUrl = base64_decode($to);
-                if (!empty($subdata)) {
-                    // 拆subdata
-                    $subdata = json_decode(base64_decode($subdata), true);
-                    $queryArray = [];
-                    foreach ($subdata as $key => $value) {
-                        $queryArray[] = $key . '=' . $value;
-                    }
-                    $toUrl .= "?" . implode('&', $queryArray);
-                }
-                return redirect($toUrl);
-            }
-            return redirect('/home/welcome');
-        } else {
-            die();
-        }
-    }
-
-    private function renderUserTable($userList)
-    {
-        echo "<tr class='active'>
-                <th>ID</th>
-                <td>CP账户</td>
-                <td>姓名</td>
-                <td>添加时间</td>
-                <td>添加人</td>
-                <td>操作</td>
-                </tr>";
-        if (empty($userList)) {
-            return;
-        }
-        foreach ($userList as $user) {
-            $encodeUid = $user['uid'];
-            $userName  = CpUserModule::getName($user['uid']);
-            $adminName = CpUserModule::getName($user['admin_uid']);
-            $cp = CpUserModule::getUserInfo($user['uid'], 'mobile_phone');
-            echo "<tr>
-                <td><a href='/cp/user/{$encodeUid}/detail'>{$encodeUid}</a></td>
-                <td>{$cp}</td>
-                <td>{$userName}</td>
-                <td>{$user['ctime']}</td>
-                <td>{$adminName}</td>
-                <td>
-                    <input type='button' class='btn btn-danger btn-xs'  userid='{$encodeUid}' value='删除' id='user-del'> 
-                </td>
-                </tr>";
-        }
     }
 
     /**
