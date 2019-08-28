@@ -31,20 +31,14 @@ class CpActionGroup extends Model
 		return empty($ret) ? array() : $ret->toArray();
 	}    
 
-	public function updateGroup($id, $name, $desc){
-		$data = array(
-				'name' => $name,
-				'desc' => $desc,
-			);
+	public function updateGroup($id, $data)
+	{
 		$ret = DB::table($this->table)->where(array('id'=>$id))->update($data);
 		return $ret ? true : false;
 	}
 
-	public function add($name, $desc){
-		$data = array(
-				'name' => $name,
-				'desc' => $desc,
-			);
+	public function add($data)
+	{
 		$id = DB::table($this->table)->insert($data);
 		return true;
 	}	

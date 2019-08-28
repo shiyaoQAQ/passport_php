@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 // use App\Modules\SalesModule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Modules\Admin\Access\Constants\AccessConst;
 use App\Modules\Admin\Access\CpAccess;
 use App\Modules\Admin\Access\CpUserModule;
 use App\Modules\Admin\Access\Models\CpDepartment;
@@ -24,7 +25,9 @@ class AccessController extends Controller
     public function department(Request $request){
         
         $objCpAcc = new CpAccess();
-        $data = [];
+        $data = [
+            'accessProjectList' => AccessConst::$accessProjectList,
+        ];
     	return view('admin.access.department', $data); ;
     }
     
@@ -135,7 +138,11 @@ class AccessController extends Controller
     public function getActionGroup(Request $request) {
         $did = $request->input('did');
         //所有权限节点
-        $allAction = CpAccess::getActionList();
+        $allProjectAction = CpAccess::getActionList();
+        $allAction = [];
+        foreach ($allProjectAction as $projectAction) {
+            $allAction = array_merge($projectAction ?: [], $allAction);
+        }
         //权限组，部门配置
         $departGroup = CpAccess::getActionGroupByDid($did);
         if ($departGroup['code'] == 0 && !empty($departGroup['data'])) {
@@ -255,16 +262,20 @@ class AccessController extends Controller
      */
     public function actionAccessDetail(Request $request) {
         $did = $request->input('id');
+        $project = $request->input('project');
         $depart = CpAccess::getDepartInfo($did);
         if ($depart['code'] != 0 || empty($depart['data'])) {
             die('请重试');
         }
         $depart = $depart['data'];
-        $actionList = CpAccess::getDeaprtActionList($did);
-        $ret = CpAccess::getActionList();
-        dd($ret);
-        return view('admin.access.departmentActionAccess')->with('action_list', $ret)->with('action_info_json', json_encode($actionList['data']))
-                                       ->with('depart_info', $depart)->with('id', $did);
+        $actionList = array_get(CpAccess::getDeaprtActionList($did), 'data');
+        $ret = CpAccess::getActionList($project);
+        return view('admin.access.departmentActionAccess')
+            ->with('action_list', $ret)
+            ->with('action_info', $actionList)
+            ->with('depart_info', $depart)
+            ->with('project', $project)
+            ->with('id', $did);
     }
 
     /**
@@ -276,11 +287,11 @@ class AccessController extends Controller
         if ($groupInfo['code'] != 0 || empty($groupInfo['data'])) {
             die('请重试');
         }
+        $groupInfo = $groupInfo['data'];
         $actionList = CpAccess::getActionByGroupId($gid);
         $departList = CpAccess::getDepartByGroupId($gid);
-        $ret = CpAccess::getActionList();
-        // dd($ret);
-        return view('admin.access.departmentActionGroupAccess')->with('action_list', $ret)->with('group_info', $groupInfo['data'])        
+        $ret = CpAccess::getActionList($groupInfo['project']);
+        return view('admin.access.departmentActionGroupAccess')->with('action_list', $ret)->with('group_info', $groupInfo)        
                                                      ->with('action_info_json', json_encode($actionList['data']))
                                                      ->with('deaprt_info_json', json_encode($departList['data']))
                                                      ->with('gid', $gid);
@@ -295,6 +306,10 @@ class AccessController extends Controller
         $choose     = $request->input('choose');
         // $limit      = $request->input('limit');
         $did        = $request->input('did');
+        $project = $request->input('project');
+        if (empty ($project)) {
+            return $this->json(1,'保存失败，场景错误');
+        }
         $data = array();
         foreach ($controller as $key => $name) {
             $tmp = array(
@@ -312,13 +327,13 @@ class AccessController extends Controller
         }
         $ret = true;
         if (!empty($data['choose'])) {
-            $addRet = CpAccess::addDepartAction($data['choose'], $did);
+            $addRet = CpAccess::addDepartAction($data['choose'], $did, $project);
             if ($addRet['code'] != 0) {
                 $ret = false;
             }
         }
         if (!empty($data['remove'])) {
-            $reRet  = CpAccess::removeDepartAction($data['remove'], $did);
+            $reRet  = CpAccess::removeDepartAction($data['remove'], $did, $project);
             if ($reRet['code'] != 0) {
                 $ret = false;
             }
@@ -458,7 +473,11 @@ class AccessController extends Controller
     public function actionGroupList()
     {
         $list = CpAccess::getActionGroupList();
-        return view('admin.access.actionGroupList')->with('action_group_list', $list['data']);
+        $assign = [
+            'accessProjectList' => AccessConst::$accessProjectList,
+            'action_group_list' => $list['data'],
+        ];
+        return view('admin.access.actionGroupList', $assign);
     }
 
     /**
@@ -467,12 +486,15 @@ class AccessController extends Controller
     public function addActionGroup(Request $request)
     {
         $id   = trim($request->input('id'));
-        $name = trim($request->input('name'));
-        $desc = trim($request->input('desc'));
+        $data = [
+            'name' => trim($request->input('name')),
+            'desc' => trim($request->input('desc')),
+            'project' => trim($request->input('project')),
+        ];
         if (empty($id)) {
-            $ret  = CpAccess::addActionGroup($name, $desc);
+            $ret  = CpAccess::addActionGroup($data);
         } else {
-            $ret  = CpAccess::updateActionGroup($id, $name, $desc);
+            $ret  = CpAccess::updateActionGroup($id, $data);
         }
         return $this->json($ret['code'], $ret['msg'], $ret['data']);      
     }

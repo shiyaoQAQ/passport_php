@@ -16,6 +16,7 @@ use \Session;
 use \YC_Util;
 // use App\Modules\Ka\KaModule;
 use App\Exceptions\WorkException;
+use App\Modules\Admin\Access\Constants\AccessConst;
 use App\Modules\Base\Store\StoreModule;
 use App\Modules\Base\City\CityModule;
 use App\Modules\Admin\Access\Models\Sales\DmSellerOriginationChart;
@@ -84,14 +85,23 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         return $list;
     }
 
-    public static function getActionList()
+    public static function getActionList($project = null)
     {
-        // 分模块返回
-        return [
-            'zsfucai' => \YC_Util::chipGet('zsfucai_access_list'),
-            'shanhujia' => \YC_Util::chipGet('shanhujia_access_list'),
+        $zsfucai = app('redis')->get(AccessConst::REDIS_ZSFUCAI_ACCESS_LIST);
+        $zsfucai = json_decode($zsfucai, true);
+        $shanhujia = app('redis')->get(AccessConst::REDIS_SHANHUJIA_ACCESS_LIST);
+        $shanhujia = json_decode($shanhujia, true);
+        $result = [
+            'zsfucai' => $zsfucai,
+            'shanhujia' => $shanhujia,
             'passport' => self::getOwnAction(),
         ];
+        if (is_null($project)) {
+            // 分模块返回
+            return $result;
+        } else {
+            return array_get($result, $project ?: 0) ?: [];
+        }
     }
 
     private static function _getDescByDocComment($obj)
@@ -162,23 +172,23 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         return self::modelReturn(0, '', $ret);
     }
 
-    public static function addDepartAction($datas, $did)
+    public static function addDepartAction($datas, $did, $project)
     {
         if (empty($datas)) {
             return self::modelReturn(800030, 'action列表为空');
         }
         $dDG = new CpDepartmentAction();
-        $ret = $dDG->addActions($datas, $did);
+        $ret = $dDG->addActions($datas, $did, $project);
         return $ret ? self::modelReturn(0, '移除成功') : self::modelReturn(800031,'移除失败');
     }
 
-    public static function removeDepartAction($datas, $did)
+    public static function removeDepartAction($datas, $did, $project)
     {
         if (empty($datas)) {
             return self::modelReturn(800030, 'action列表为空');
         }
         $dDG = new CpDepartmentAction();
-        $ret = $dDG->removeActions($datas, $did);
+        $ret = $dDG->removeActions($datas, $did, $project);
         return $ret ? self::modelReturn(0, '添加成功') : self::modelReturn(800032,'添加失败');
     }
 
@@ -237,7 +247,8 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
             returnself::modelReturn(800030, 'action列表为空');
         }
         $dDG = new CpDepartmentAction();
-        $ret = $dDG->addGroups($dids, $gid);
+        $groupInfo = array_get(CpAccess::getActionGroupInfo($gid), 'data');
+        $ret = $dDG->addGroups($dids, $gid, $groupInfo['project']);
         return $ret ? self::modelReturn(0, '添加成功') : self::modelReturn(800032, '添加失败');
     }
 
@@ -335,29 +346,35 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
     /**
      * 添加权限组
      */
-    public static function addActionGroup($name, $desc)
+    public static function addActionGroup($data)
     {
-        if (empty($name)) {
+        if (empty($data['name'])) {
             return self::modelReturn(800028,'名称不能为空');
         }
+        if (empty($data['project'])) {
+            return self::modelReturn(800028,'请选择所属项目');
+        }
         $dAG = new CpActionGroup();
-        $ret = $dAG->add($name, $desc);
+        $ret = $dAG->add($data);
         return $ret ? self::modelReturn(0, '添加成功') : self::modelReturn(800029,'添加失败');
     }
 
     /**
      * 更新权限组
      */
-    public static function updateActionGroup($id, $name, $desc)
+    public static function updateActionGroup($id, $data)
     {
         if (empty($id)) {
             return self::modelReturn(800029,'ID不能为空');
         }
-        if (empty($name)) {
+        if (empty($data['name'])) {
             return self::modelReturn(800028,'名称不能为空');
         }
+        if (empty($data['project'])) {
+            return self::modelReturn(800028,'请选择所属项目');
+        }
         $dAG = new CpActionGroup();
-        $ret = $dAG->updateGroup($id, $name, $desc);
+        $ret = $dAG->updateGroup($id, $data);
         return $ret ? self::modelReturn(0, '更新成功') : self::modelReturn(800029,'更新失败');
     }
 

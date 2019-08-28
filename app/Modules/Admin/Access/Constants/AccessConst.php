@@ -434,5 +434,14 @@ class AccessConst
         4 => 10013
     );
 
-    
+    // 权限可编辑列表
+    public static $accessProjectList = [
+        'zsfucai' => '掌上辅材',
+        'passport' => 'passport',
+        'shanhujia' => '珊瑚家',
+    ];
+
+    // zsfucai shanhujia权限组的redis key
+    const REDIS_ZSFUCAI_ACCESS_LIST = 'zf:st:zsfucai_access_list';
+    const REDIS_SHANHUJIA_ACCESS_LIST = 'zf:st:shanhujia_access_list';
 }

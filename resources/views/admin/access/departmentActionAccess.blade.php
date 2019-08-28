@@ -167,7 +167,9 @@ function escapeJquery(srcString) {
 }
 //页面初始化显示
 function renderChooseAction(){
-    var list = {!!$action_info_json!!};
+    var list = {!! json_encode($action_info) !!};
+    console.log(list);
+    
     if(list != null){
         $.each(list,function(i,action){
             var node = $(".action-node[controller="+escapeJquery(action.controller)+"][title="+action.action+"]");
@@ -314,7 +316,14 @@ function saveAction(){
         url:'/cp/longrentdepartment/setdepartaction',
         type:'POST',
         dataType:'JSON',
-        data:{did:did,controller:contro_arr,action:action_arr,choose:choose_arr,_token:$('input[name=_token]').val()},
+        data:{
+            did:did,
+            controller:contro_arr,
+            action:action_arr,
+            choose:choose_arr,
+            project: '{{ $project }}',
+            _token:$('input[name=_token]').val()
+        },
         success:function(data){
             alert(data.msg);
         },

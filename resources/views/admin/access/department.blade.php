@@ -178,7 +178,8 @@
                                         <tr>
                                             <td>
                                                 <p>@{{groupItem.name}}（@{{index}}）</p>
-                                                <i-button type="success" size="small" v-for="groupResource,groupResourceIdx in groupItem.actions" :key="groupResourceIdx" v-if="groupResource.desc">@{{groupResource.desc}}</i-button>
+                                                <i-button type="success" size="small" v-for="groupResource,groupResourceIdx in groupItem.actions" 
+                                                :key="groupResourceIdx" v-if="groupResource.desc">@{{groupResource.desc}}</i-button>
                                             </td>
                                         </tr>
                                     </table>
@@ -186,10 +187,18 @@
                             </td>
                         </tr>
                     </template>
-                    <tr>
+                    <tr >
                         <th class="table_tr_title">独立权限</th>
                         <th @click.self="nodeData.isActionTmpShow = nodeData.isActionTmpShow ? false : true">单个权限详情
-                            <i-button type="primary" size="small" @click="pageJump('actionTmp')">编辑权限</i-button>
+                            <i-button 
+                                v-for="(projectDesc, project) in accessProjectList" 
+                                style="margin-right:10px;" 
+                                type="primary" 
+                                size="small" 
+                                @click="pageJump('actionTmp', project)"
+                            >
+                                @{{ projectDesc }}权限
+                            </i-button>
                         </th>
                     </tr>
                     <tr v-show="nodeData.isActionTmpShow">
@@ -327,6 +336,7 @@
                     name: null,
                 },
                 cp_account: null,
+                accessProjectList : {!! json_encode($accessProjectList) !!},
             }
         },
         methods: {
@@ -619,7 +629,8 @@
                 }else if (type == 'actionGroup') {
                     window.open('/cp/longrentdepartment/actiongroupaccessdetail?id=' + data);
                 }else if (type == 'actionTmp') {
-                    window.open('/cp/longrentdepartment/actionaccessdetail?id=' + this.nodeData.id)
+                    // 这里的data指的是project
+                    window.open('/cp/longrentdepartment/actionaccessdetail?id=' + this.nodeData.id + '&project=' + data)
                 }
             },
             // 删除用户

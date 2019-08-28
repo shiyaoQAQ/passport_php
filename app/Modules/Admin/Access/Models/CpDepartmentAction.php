@@ -33,7 +33,8 @@ class CpDepartmentAction extends Model
 		return empty($ret) ? array() : $ret;
     }
 
-	public function addActions($datas, $did){
+	public function addActions($datas, $did, $project)
+	{
 		if(empty($datas)){
 			return false;
 		}
@@ -45,6 +46,7 @@ class CpDepartmentAction extends Model
 					'action'        => $one['action'],
 					'data_limit'    => $one['limit'],
 					'action_type'   => self::TYPE_ACTION,
+					'project'   => $project,
 				);	
 			$one = self::where(array('con_action'=>$action['con_action'], 'department_id'=> $action['department_id']))->first();
 			if(empty($one)){
@@ -54,7 +56,8 @@ class CpDepartmentAction extends Model
 		return true;
 	}
 
-	public function removeActions($datas, $did){
+	public function removeActions($datas, $did, $project)
+	{
 		if(empty($datas)){
 			return false;
 		}
@@ -64,12 +67,15 @@ class CpDepartmentAction extends Model
 		}	
 		$keyArr = array_chunk($keyArr, 100);
 		foreach ($keyArr as $chunkKey) {
-			DB::table($this->table)->where(array('department_id'=>$did))->whereIn('con_action', $chunkKey)->delete();
+			DB::table($this->table)->where(array('department_id'=>$did))
+			->whereIn('con_action', $chunkKey)
+			->where('project', $project)
+			->delete();
 		}
 		return true;
 	}  
 
-	public function addGroups($dids, $gid){
+	public function addGroups($dids, $gid, $project){
 		if(empty($dids)){
 			return false;
 		}
@@ -77,9 +83,13 @@ class CpDepartmentAction extends Model
 			$action = array(
 					'group_id'      => $gid,
 					'department_id' => $one,
+					'project'       => $project,
 					'action_type'   => self::TYPE_GROUP,
 				);	
-			$one = self::where(array('group_id'=>$action['group_id'], 'department_id'=> $action['department_id']))->first();
+			$one = self::where([
+				'group_id'=>$action['group_id'],
+				'department_id'=> $action['department_id']
+			])->first();
 			if(empty($one)){
 				DB::table($this->table)->insert($action);
 			}
