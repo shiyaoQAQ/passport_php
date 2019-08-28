@@ -1,0 +1,6 @@
+.impowerBox .title {display: none;}
+.impowerBox .qrcode {width: 200px;}
+.impowerBox .status.status_browser {color: #fff}
+.impowerBox .status_succ, .impowerBox .status_fail {
+    color: #fff;
+}

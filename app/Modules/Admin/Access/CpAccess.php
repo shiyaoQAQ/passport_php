@@ -37,19 +37,10 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         return 'xsxd';
     }
 
-
-    public static function getControllerList()
-    {
-        $CpFile  = self::travleDir('Http/Controllers/Cp/');
-        $ApiFile = self::travleDir('Http/Controllers/CpApi/');
-        $PdaFile = self::travleDir('Http/Controllers/Pda/');
-        $file = array_merge($CpFile, $ApiFile, $PdaFile);
-        return $file;
-    }
-
     private static function travleDir($path)
     {
         $dir = app_path($path);
+        // dd($dir);
         $list = array();
         if (!$dh = opendir($dir)) {
             return $list;
@@ -69,16 +60,16 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         return $list;
     }
 
-    public static function getActionList()
+    public static function getOwnAction()
     {
-        $ctl = self::getControllerList();
+        $ctl = self::travleDir('Http/Controllers/Admin/');
         $breakAction = array('__construct', 'middleware', 'getMiddleware', 'callAction', '__call', 'authorize', 'authorizeForUser', 'authorizeResource', 
-                             'dispatchNow', 'validateWith', 'validate', 'validateWithBag', 'login', 'returnAjax', 'json', 'returnMsg');
-        $ret = array();
+            'dispatchNow', 'validateWith', 'validate', 'validateWithBag', 'login', 'returnAjax', 'json', 'returnMsg');
+        $list = array();
         foreach ($ctl as $k => $v) {
             $reflection = new \ReflectionClass($k);
             $cDesc = self::_getDescByDocComment($reflection);
-            $ret[$k]['desc'] = $cDesc;
+            $list[$k]['desc'] = $cDesc;
             $methods = $reflection->getMethods(\ReflectionMethod::IS_PUBLIC);
             foreach ($methods as $method) {
                 $mName = $method->name;
@@ -87,10 +78,20 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                 if (empty($mDesc)) {
                     $mDesc = $mName;
                 }
-                $ret[$k]['action'][$mName] = array('action'=>$mName,'desc'=>$mDesc,'controller'=>$k);
+                $list[$k]['action'][$mName] = array('action'=>$mName,'desc'=>$mDesc,'controller'=>$k);
             }
         }
-        return $ret;
+        return $list;
+    }
+
+    public static function getActionList()
+    {
+        // 分模块返回
+        return [
+            'zsfucai' => \YC_Util::chipGet('zsfucai_access_list'),
+            'shanhujia' => \YC_Util::chipGet('shanhujia_access_list'),
+            'passport' => self::getOwnAction(),
+        ];
     }
 
     private static function _getDescByDocComment($obj)
@@ -642,7 +643,8 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         }
         return $userId;
     }
-   public static function theName()
+
+    public static function theName()
     {
         $userId = \Session::get('user_name') ?? 0;
         return $userId;
@@ -719,7 +721,6 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
             return self::modelReturn(2, '没有权限');
         }
         $actionList = $actionList['data'];
-        // dd($actionList);
         if(!isset($actionList['all']['all']) && !isset($actionList[$class][$action])){
             return self::modelReturn(3, '没有权限');
         }
@@ -735,7 +736,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
     public static function initMenu($actionList)
     {
 
-        $allMenuList = config('app.cp_menu'); 
+        $allMenuList = config('menu.cp_menu'); 
         $actionMd5 = md5(json_encode($actionList) . json_encode($allMenuList));
         $actionMd5Key  = "action_list_md5_key";
         $actionMenuKey = 'action_list_menu_key';
@@ -797,7 +798,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
             Session::put($actionMd5Key, $actionMd5); 
             Session::put($actionMenuKey, json_encode($actionMenu));
         }
-        \View::share('show_access_menu_list', $actionMenu); 
+        \View::share('show_access_menu_list', $actionMenu);
     }
 
     //初始化全局控制权限相关(目前仓库使用)
@@ -822,7 +823,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                     $showAccessList[$accessKey]['options'][$rKey] = $rDesc;
                 }
             }
-            //如果都为空，给全部权限
+            //如果都为空，没有权限
             if(empty($showAccessList[$accessKey]['options'])){
                 return self::modelReturn(4, '没有权限'); 
             }

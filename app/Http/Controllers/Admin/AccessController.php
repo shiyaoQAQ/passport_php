@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Cp;
+namespace App\Http\Controllers\Admin;
 
 // use App\Modules\SalesModule;
 use Illuminate\Http\Request;
@@ -16,6 +16,79 @@ use App\Modules\Admin\Access\Models\CpDepartmentAction;
  */
 class AccessController extends Controller
 {
+    /**
+     * @desc 组织架构主页
+     * @param  Request $request [description]
+     * @return [type]           [description]
+     */
+    public function department(Request $request){
+        
+        $objCpAcc = new CpAccess();
+        $data = [];
+    	return view('admin.access.department', $data); ;
+    }
+    
+    /**
+     * @desc 获取组织构架树
+     */
+    public function getTree(){
+        $objDepart = new CpDepartment();
+        $treeInfo  = $objDepart->getDepartmentTree($did=0);
+        // return $this->renderTree($treeInfo);
+        return $this->json(0, 'ok', $treeInfo);
+    }
+
+    /**
+     * @desc 获取组织构架树（权限、资源）
+     */
+    public function getDepartTree(){
+        $objDepart = new CpDepartment();
+        $treeInfo  = $objDepart->getDepartmentTree($did=0);
+        return $this->renderTree($treeInfo);
+    }
+
+    /**
+     * @desc 渲染组织架构树
+     */
+    public function renderTree($list, $isFirst = true){
+        $num = sizeof($list);
+        foreach ($list as $key => $node) {
+            echo "<div class='strt-block'>
+                  <div class='strt-part'>";
+            if(!$isFirst){
+                if($num == 1){
+                }elseif($num == 2){
+                    echo $key == 1 ? "<span class='line-h line-h-l'></span>" : "<span class='line-h line-h-r'></span>"; 
+                    echo "<div class='line-v'><span></span></div>";
+                }else{
+                    if($key == 0){
+                        echo "<span class='line-h line-h-r'></span>";
+                    }elseif(($key+1) == $num ){
+                        echo "<span class='line-h line-h-l'></span>";
+                    }else{
+                        echo "<span class='line-h line-h-c'></span>";
+                    }
+                    echo "<div class='line-v'><span></span></div>";
+                }
+            }
+            //统计每个节点下的人数
+            $ret = array('data'=>1,'code'=>0);
+            $node['city_name'] = '北京';
+            if($ret['code'] == 0 && !empty($ret['data'])){
+                $node['count'] = count($ret['data']);
+            }else{
+                $node['count'] = 0;
+            }
+            echo "<div class='strt-name' choose='0' departname='{$node['name']}' departid='{$node['id']}' citycode='{$node['city_id']}' mark='{$node['mark']}' email='{$node['email']}'><table class='table table-bordered'><tr><td colspan='2'>{$node['name']}</td></tr><tr><td>{$node['city_name']}</td><td class='user_count'>{$node['count']}</td></tr></table></div>";
+            if(isset($node['child']) && !empty($node['child'])){
+                echo "<div class='line-v'><span></span></div>";
+                self::renderTree($node['child'], false);
+            }
+            echo "</div>
+                </div>"; 
+        }
+    }
+
     /**
      * @desc 获取所有的部门信息
      */
@@ -112,7 +185,7 @@ class AccessController extends Controller
         $data['tmp'] = $tmp;
         $data['depart'] = $depart;
         $data['groups'] = $groups;
-        // return view('cp/departmentActionList')->with('controller_list',$tmp)
+        // return view('admin.access.departmentActionList')->with('controller_list',$tmp)
         //                                       ->with('depart_info', $depart)
         //                                       ->with('group_info', isset($groups) ? $groups : array());
         return $this->json(0, 'ok', $data);
@@ -168,7 +241,7 @@ class AccessController extends Controller
         }
         // F3::set('resource_list', $tmp);
         // echo Template::serve('cp/longrent_department/department_render_resource.html');      
-        // return view('cp/departmentResourceRender')->with('resource_list',$tmp)
+        // return view('admin.access.departmentResourceRender')->with('resource_list',$tmp)
         //                                       ->with('depart_info', $depart)
         //                                       ->with('group_info', isset($groups) ? $groups : array());   
         $data['depart'] = $depart;
@@ -189,7 +262,8 @@ class AccessController extends Controller
         $depart = $depart['data'];
         $actionList = CpAccess::getDeaprtActionList($did);
         $ret = CpAccess::getActionList();
-        return view('cp/departmentActionAccess')->with('action_list', $ret)->with('action_info_json', json_encode($actionList['data']))
+        dd($ret);
+        return view('admin.access.departmentActionAccess')->with('action_list', $ret)->with('action_info_json', json_encode($actionList['data']))
                                        ->with('depart_info', $depart)->with('id', $did);
     }
 
@@ -205,7 +279,8 @@ class AccessController extends Controller
         $actionList = CpAccess::getActionByGroupId($gid);
         $departList = CpAccess::getDepartByGroupId($gid);
         $ret = CpAccess::getActionList();
-        return view('cp/departmentActionGroupAccess')->with('action_list', $ret)->with('group_info', $groupInfo['data'])        
+        // dd($ret);
+        return view('admin.access.departmentActionGroupAccess')->with('action_list', $ret)->with('group_info', $groupInfo['data'])        
                                                      ->with('action_info_json', json_encode($actionList['data']))
                                                      ->with('deaprt_info_json', json_encode($departList['data']))
                                                      ->with('gid', $gid);
@@ -383,7 +458,7 @@ class AccessController extends Controller
     public function actionGroupList()
     {
         $list = CpAccess::getActionGroupList();
-        return view('cp/actionGroupList')->with('action_group_list', $list['data']);
+        return view('admin.access.actionGroupList')->with('action_group_list', $list['data']);
     }
 
     /**
@@ -444,7 +519,7 @@ class AccessController extends Controller
         $list = CpAccess::getResourceGroupList();
         // F3::set('list', $list['data']);
         // echo Template::serve('cp/longrent_department/resource_group_list.html');
-        return view('cp/resourceGroupList')->with('action_group_list', $list['data']);
+        return view('admin.access.resourceGroupList')->with('action_group_list', $list['data']);
     } 
 
     /**
@@ -488,7 +563,7 @@ class AccessController extends Controller
         $departList = CpAccess::getDepartByResourceGroupId($gid);
         // F3::set('deaprt_info_json', json_encode($departList['data']));
         $resourceList = CpAccess::$resourceList;
-        return view('cp/departmentResourceGroupAccess')->with('resource_list', $resourceList)->with('group_info', $groupInfo['data'])        
+        return view('admin.access.departmentResourceGroupAccess')->with('resource_list', $resourceList)->with('group_info', $groupInfo['data'])        
                                                      ->with('action_info_json', json_encode($actionList['data']))
                                                      ->with('deaprt_info_json', json_encode($departList['data']))
                                                      ->with('gid', $gid);
@@ -637,7 +712,7 @@ class AccessController extends Controller
         // F3::set('choose_resource', json_encode($departResour['data']));
         $resourceList = CpAccess::$resourceList;
         // F3::set('resource_list', $resourceList);
-        return view('cp/departmentResourceAccessDetail')->with('resource_list', $resourceList)
+        return view('admin.access.departmentResourceAccessDetail')->with('resource_list', $resourceList)
                                                      ->with('choose_resource', json_encode($departResour['data']))
                                                      ->with('depart_info', $depart)
                                                      ->with('did', $did);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Cp;
+namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -22,17 +22,10 @@ class HomeController extends Controller
     public function welcome()
     {
         // if(CpAccess::checkUserInDepartByMark(CpAccess::theUid(), CpAccess::$saleMark)) {
-        //     // $assign = [
-        //     //     'start' => date('Y-m-d'),
-        //     //     'end' => date('Y-m-d'),
-        //     //     'seller_id' => CpAccess::theUid(),
-        //     // ];
-        //     // return view('cp.sellerProcess.sellerPanels', $assign);
         //     header('location:/sellerProcess/sellerPanels');
         //     exit();
         // }
-
-        return view('cp.home.welcome');
+        return view('admin.home.welcome');
     }
 
     /**
@@ -73,7 +66,7 @@ class HomeController extends Controller
             'old_url'   => 'http://' .config('app.url'). '/admin',
         ];
         Session::put('home_login_error_msg', '');
-        return view('cp.home.login', $assign);
+        return view('admin.home.login', $assign);
     }
 
     /**
@@ -115,10 +108,10 @@ class HomeController extends Controller
             if ($login == false) {
                 throw new Exception("登录失败，请重试", 1);
             }
-            return redirect('/home/welcome');
+            return redirect('/cp/home/welcome');
         } catch (Exception $e) {
             $ret = Session::put('home_login_error_msg', sprintf('%s[%s]', $e->getMessage(), $e->getCode()));
-            return redirect('/home/login');
+            return redirect('/cp/home/login');
         }
     }
 }

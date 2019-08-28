@@ -1,0 +1,33 @@
+.filter {
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 98%;
+}
+
+.filter .ivu-col {
+    white-space: nowrap;
+}
+
+.filter .ivu-row label {
+    display: inline-block;
+    min-width: 80px;
+}
+
+.filter .ivu-row:nth-child(n+2) {
+    margin-top: 20px;
+}
+
+.list{
+    margin-top:20px;
+    margin-left:auto;
+    margin-right:auto;
+    width:98%;
+    text-align:center
+}
+.ivu-page{
+margin-top:10px;
+}
+.ivu-alert {
+text-align:left
+}

@@ -53,6 +53,8 @@ return [
     */
 
     'url' => env('APP_URL', 'http://localhost'),
+    'zsfucai_url' => env('ZSFUCAI_URL', env('ZSFC_URL', 'zsfucai.cn')),
+    'shanhujia_url' => env('SHANHUJIA_URL', 'zsfucai.cn'),
 
     /*
     |--------------------------------------------------------------------------
@@ -177,6 +179,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // easywechat
+        Overtrue\LaravelWeChat\ServiceProvider::class,
     ],
 
     /*
@@ -225,6 +229,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+        // easywechat
+        'EasyWeChat' => Overtrue\LaravelWeChat\Facade::class,
 
     ],
 
