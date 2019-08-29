@@ -544,8 +544,8 @@
                 <Icon type="person"></Icon>
                 {{$cp_base_user_name}}
             </template>
-                <Menu-item name="10-1"><a href="/user/password" target="_blank">修改密码</a></Menu-item>
-                <Menu-item name="10-2"><a href="/home/logout">退出登录</a></Menu-item>
+                <Menu-item name="10-1"><a href="/cp/user/password" target="_blank">修改密码</a></Menu-item>
+                <Menu-item name="10-2"><a href="/cp/home/logout">退出登录</a></Menu-item>
         </Submenu>        
     </i-menu>
 

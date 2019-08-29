@@ -10,4 +10,9 @@ class OauthAccessTokens extends Model
     protected $table = 'oauth_access_tokens';
     protected $connection = 'passport';
 
+    public static function getToken($token)
+    {
+        return self::where('token', $token)->first();
+    }
+
 }

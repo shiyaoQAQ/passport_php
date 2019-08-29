@@ -51,7 +51,7 @@ class HomeController extends Controller
      */
     public function logout(){
         CpUserModule::logout();
-        return redirect('/home/login');
+        return redirect('/cp/home/login');
     }
 
     /**

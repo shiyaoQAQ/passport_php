@@ -368,20 +368,20 @@ class CpUserModule {
         return true;
     }
 
-    // /**
-    //  * 注销登录
-    //  * 只实现了微信小程序的注销
-    //  */
-    // public static function logout()
-    // {
-    //     if (YC_Util::isFromWxapp()) {
-    //         self::logoutWxapp();
-    //     } else {
+    /**
+     * 注销登录
+     * 只实现了微信小程序的注销
+     */
+    public static function logout()
+    {
+        // if (YC_Util::isFromWxapp()) {
+        //     self::logoutWxapp();
+        // } else {
 
-    //     }
-    //     Session::flush();
-    //     return true;
-    // }
+        // }
+        Session::flush();
+        return true;
+    }
 
     // //把wxapp的ID和用户绑定在一起
     // public static function bindWxapp($user) {

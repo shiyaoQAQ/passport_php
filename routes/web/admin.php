@@ -11,7 +11,7 @@
 |
 */
 
-use App\Http\Controllers\Admin\OauthManageController;
+// passport.zsfucai.cn/cp/xxx
 
 Route::group(['middleware' => ['cpauth']], function () {
     // 组织架构

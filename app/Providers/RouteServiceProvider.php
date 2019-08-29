@@ -60,6 +60,13 @@ class RouteServiceProvider extends ServiceProvider
             ->group(base_path('routes/web/user.php'));
     }
 
+    protected function mapRpcRoutes()
+    {
+        Route::prefix('rpc')
+            ->namespace($this->namespace . '\Rpc')
+            ->group(base_path('routes/rpc.php'));
+    }
+
     /**
      * Define the "api" routes for the application.
      *

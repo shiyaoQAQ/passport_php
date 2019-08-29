@@ -9,12 +9,12 @@ class OauthErrorCode
     const ARGUMENT_INVALID = 1010001;
     /** @message 客户端未找到 */
     const CLIENT_NOT_FOUND = 1010002;
-    /** @message 错误码1010003 */
-    const ERROR_1010003 = 1010003;
-    /** @message 错误码1010004 */
-    const ERROR_1010004 = 1010004;
-    /** @message 错误码1010005 */
-    const ERROR_1010005 = 1010005;
+    /** @message 不存在的token */
+    const TOKEN_NOT_FOUND = 1010003;
+    /** @message token无效 */
+    const TOKEN_IS_NUKED = 1010004;
+    /** @message token已过期 */
+    const TOKEN_IS_EXPIRED = 1010005;
     /** @message 错误码1010006 */
     const ERROR_1010006 = 1010006;
     /** @message 错误码1010007 */
