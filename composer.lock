@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bdb58bb5769fc2710e4b3079a572f143",
+    "content-hash": "c27af253673abe6abfb0e1d8037cf935",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -2968,11 +2968,11 @@
         },
         {
             "name": "rd/laravel-phplib",
-            "version": "dev-master",
+            "version": "dev-dev",
             "source": {
                 "type": "git",
                 "url": "git@git.youcai123.cn:rd/laravel-phplib.git",
-                "reference": "504cbbcc49c7ec03a19bd2fc699ecaba2f7c3bff"
+                "reference": "eaf2c02ebceb3a55ea00a3b4db441504c305047d"
             },
             "type": "library",
             "extra": {
@@ -2988,7 +2988,10 @@
                 ],
                 "psr-4": {
                     "Pascal\\": "Pascal/src"
-                }
+                },
+                "files": [
+                    "Pascal/helpers.php"
+                ]
             },
             "license": [
                 "MIT"
@@ -3006,7 +3009,7 @@
                 "sdk",
                 "zsfucai"
             ],
-            "time": "2019-08-27T07:27:37+00:00"
+            "time": "2019-08-29T09:55:55+00:00"
         },
         {
             "name": "sentry/sdk",

@@ -11,6 +11,8 @@
 |
 */
 
+use App\Http\Controllers\Admin\OauthManageController;
+
 Route::group(['middleware' => ['cpauth']], function () {
     // 组织架构
     Route::get('/department', 'AccessController@department');
@@ -61,4 +63,9 @@ Route::group(['middleware' => ['cpauth']], function () {
     Route::get('/user/addDepartmentUser', 'UserController@addDepartmentUser');
     Route::post('/user/addDepartmentUser', 'UserController@addDepartmentUserJson');
     Route::delete('/user/dimission', 'UserController@dimission');
+    // Oauth配置
+    Route::get('/oauth/clients', 'OauthManageController@listClients');
+    Route::get('/oauth/clients/json', 'OauthManageController@listJsonClients');
+    Route::post('/oauth/clients', 'OauthManageController@storeClients');
+
 });
