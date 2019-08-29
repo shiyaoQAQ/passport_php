@@ -2,7 +2,7 @@
 @section('title', '新增\关闭账户')
 
 @section('content')
-    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         .ivu-modal-body td {
         }
@@ -20,6 +20,7 @@
             min-height: 450px;;
         }
     </style>
+    @verbatim
         <div id="editUser" v-cloak>
             <Card>
                 <Tabs>
@@ -45,14 +46,14 @@
                             <form-item label="用户角色" prop="role">
                                 <i-select placeholder="请选择用户角色" v-model="formData.role" filterable>
                                     <i-option v-for="(value, key) in roleList" :value="key"
-                                              :key="key">@{{ value }}</i-option>
+                                              :key="key">{{ value }}</i-option>
                                 </i-select>
                             </form-item>
                             <form-item label="当前状态">
                                 <Tag v-if="!formData.leave">在职</Tag>
                                 <Tag color="error" v-if="formData.leave && formData.uid">离职</Tag>
                             </form-item>
-                            <form-item label="所在组织" v-if="formData.dpList.length !=0">
+                            <form-item label="所在组织" v-if="formData.dpList.length !=0 ">
                                 <Tag type="dot" v-for="value in formData.dpList" :key="value">{{value}}</Tag>
                             </form-item>
                             <form-item style="margin-top:50px">
@@ -64,100 +65,156 @@
                 </Tabs>
             </Card>
         </div>
+    @endverbatim
 
 <script>
-   var vm = new Vue({
-            el: '#editUser',
-            data() {
-                return {
-                    submitLoading:false,
-                    formData:{
-                        uid:'',
-                        mobile:'',
-                        password:'',
-                        name:'',
-                        role:'',
-                        email:'',
-                        leave:false,
-                        dpList:[]
-                    },
-                    roleList:[],
-                    formRuleValidate:{
-                        mobile: [
-                            {required: true,  message: '请填写手机号', trigger: 'blur'}
-                        ],
-                        password: [
-                            {required: true, message: '请选择密码', trigger: 'blur'}
-                        ],
-                        name: [
-                            {required: true,  message: '请填写姓名', trigger: 'blur'}
-                        ],
-                        role: [
-                            {required: true,  message: '请选择角色', trigger: 'blur'}
-                        ],
-                    }
-                }
+    function ajax(argument){
+        if(argument.successData !== false){
+            argument.successData = true
+        }
+        if(argument.failData !== false){
+            argument.failData = true
+        }
+        if(argument.showSuccess !== true){
+            argument.showSuccess = false
+        }
+        if(argument.showFail !== false){
+            argument.showFail = true
+        }
+        $.ajax({
+            type: argument.type,
+            url: argument.url,
+            data: argument.data,
+            dataType: argument.dataType,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
-            computed: {},
-            methods: {
-                seach(){
-                    _this = this;
-                    $.ajax({
-                        url:'/cp/user/search',
-                        type:'GET',
-                        dataType:'JSON',
-                        data:{mobile:_this.formData.mobile},
-                        success:function(data){
-                            _this.formData.email = data.email
-                            _this.formData.uid = data.uid
-                            _this.formData.password = data.password
-                            _this.formData.name = data.user_name
-                            _this.formData.role = data.role
-                            _this.formData.leave = data.leave
-                            _this.formData.dpList = data.dpList
-                        },
-                    });
-                },
-                dimission(){
-                    _this = this ;
-                    if (confirm('确认将该用户离职吗？')) {
-                        $.ajax({
-                                url:'/cp/user/dimission',
-                                type:'delete',
-                                dataType:'JSON',
-                                data:_this.formData,
-                                showSuccess:true,
-                                success:function(){
-                                    _this.seach();
-                                }
-                            });
-                    }
-                },
-                save(){
-                    _this = this;
-                    _this.$refs['formData'].validate((valid) => {
-                        if (valid) {
-                            $.ajax({
-                                url:'/cp/user/add',
-                                type:'POST',
-                                dataType:'JSON',
-                                data:_this.formData,
-                                showSuccess:true,
-                                success:function(){
-                                    _this.seach();
-                                }
-                            });
+            success: function (res) {
+                if (res.code == 0) {
+                    if(typeof argument.success === "function"){
+                        if(argument.successData === true){
+                            argument.success(res.data);
+                        }else{
+                            argument.success(res);
                         }
-                    });
+                    }
+                    if(res.msg != '' && argument.showSuccess){
+                        if(res.msg.length >19){
+                            cp.$Notice.success({desc :res.msg});
+                        }else{
+                            cp.$Notice.success({title: res.msg});
+                        }
+                    }
+                }else {
+                    if(typeof argument.fail === "function"){
+                        if(argument.failData === true){
+                            argument.fail(res.data);
+                        }else{
+                            argument.fail(res);
+                        }
+                    }
+                    if(res.msg != '' && argument.showFail){
+                        if(res.msg.length >19){
+                            cp.$Notice.error({desc :res.msg});
+                        }else{
+                            cp.$Notice.error({title: res.msg});
+                        }
+                    }
+                }
+            }
+        });
+    }
+    var vm = new Vue({
+        el: '#editUser',
+        data() {
+            return {
+                submitLoading:false,
+                formData:{
+                    uid:'',
+                    mobile:'',
+                    password:'',
+                    name:'',
+                    role:'',
+                    email:'',
+                    leave:false,
+                    dpList:[]
+                },
+                roleList:[],
+                formRuleValidate:{
+                    mobile: [
+                        {required: true,  message: '请填写手机号', trigger: 'blur'}
+                    ],
+                    password: [
+                        {required: true, message: '请选择密码', trigger: 'blur'}
+                    ],
+                    name: [
+                        {required: true,  message: '请填写姓名', trigger: 'blur'}
+                    ],
+                    role: [
+                        {required: true,  message: '请选择角色', trigger: 'blur'}
+                    ],
+                }
+            }
+        },
+        computed: {},
+        methods: {
+            seach(){
+                _this = this;
+                ajax({
+                    url:'/cp/user/search',
+                    type:'GET',
+                    dataType:'JSON',
+                    data:{mobile:_this.formData.mobile},
+                    success:function(data){
+                        _this.formData.email = data.email
+                        _this.formData.uid = data.uid
+                        _this.formData.password = data.password
+                        _this.formData.name = data.user_name
+                        _this.formData.role = data.role
+                        _this.formData.leave = data.leave
+                        _this.formData.dpList = data.dpList
+                    },
+                });
+            },
+            dimission(){
+                _this = this ;
+                if (confirm('确认将该用户离职吗？')) {
+                    ajax({
+                            url:'/cp/user/dimission',
+                            type:'delete',
+                            dataType:'JSON',
+                            data:_this.formData,
+                            showSuccess:true,
+                            success:function(){
+                                _this.seach();
+                            }
+                        });
                 }
             },
-            created(){
-                this.roleList = @json($cp_role_list);
-            },
-            mounted(){
+            save(){
+                _this = this;
+                _this.$refs['formData'].validate((valid) => {
+                    if (valid) {
+                        ajax({
+                            url:'/cp/user/add',
+                            type:'POST',
+                            dataType:'JSON',
+                            data:_this.formData,
+                            showSuccess:true,
+                            success:function(){
+                                _this.seach();
+                            }
+                        });
+                    }
+                });
             }
+        },
+        created(){
+            this.roleList = @json($cp_role_list);
+        },
+        mounted(){
+        }
    });
 </script>
 
-    
 @endsection

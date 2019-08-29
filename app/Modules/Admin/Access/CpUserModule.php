@@ -4,6 +4,7 @@ namespace App\Modules\Admin\Access;
 
 use App\Modules\Admin\Access\Models\CpUser;
 use App\Modules\User\UserBase\Models\EcsUser;
+use App\Modules\User\UserBase\UserModule;
 // use App\Models\User\WxappUserToken;
 use App\Exceptions\WorkException;
 use App\Modules\Admin\WorkWechat\WorkWeChatModule;

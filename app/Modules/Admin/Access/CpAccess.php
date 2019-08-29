@@ -1180,15 +1180,15 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         if (!empty($department['mark']) && in_array($department['mark'], self::$saleWithDissionMark)) {
             $userDepartList = self::getUserDepartByUid($uid); 
             if (sizeof($userDepartList) <= 1) {
-                if (SalesModule::hasCustomer($uid)) {
-                    return self::modelReturn(800031,'此销售私海有客户，如果删除账号请记得先重新分配其私海客户');
-                }
+                // if (SalesModule::hasCustomer($uid)) {
+                //     return self::modelReturn(800031,'此销售私海有客户，如果删除账号请记得先重新分配其私海客户');
+                // }
                 // 先干掉 后面加回来
                 // $kaCompany = KaModule::hasKaCompay($uid);
-                $kaCompany = null;
-                if (!empty($kaCompany)) {
-                    return self::modelReturn(800032,'此销售有KA客户['. $kaCompany->company_name .']，如果删除账号请记得先重新分配其KA客户');
-                }
+                // $kaCompany = null;
+                // if (!empty($kaCompany)) {
+                //     return self::modelReturn(800032,'此销售有KA客户['. $kaCompany->company_name .']，如果删除账号请记得先重新分配其KA客户');
+                // }
             }
         }
         $admiUid = self::theUid();
