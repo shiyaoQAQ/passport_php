@@ -9,5 +9,11 @@ class OauthAuthCodes extends Model
 {
     protected $table = 'oauth_auth_codes';
     protected $connection = 'passport';
+    protected $guarded = [];
+    public $timestamps = false;
 
+    public static function getCodeInfo($code)
+    {
+        return self::where('code', $code)->first();
+    }
 }

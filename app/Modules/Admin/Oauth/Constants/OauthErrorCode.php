@@ -25,18 +25,18 @@ class OauthErrorCode
     const CLIENT_NOT_FOUND_2 = 1010009;
     /** @message 客户端已被封禁 */
     const CLIENT_IS_NUKED = 1010010;
-    /** @message 错误码1010011 */
-    const ERROR_1010011 = 1010011;
-    /** @message 错误码1010012 */
-    const ERROR_1010012 = 1010012;
-    /** @message 错误码1010013 */
-    const ERROR_1010013 = 1010013;
-    /** @message 错误码1010014 */
-    const ERROR_1010014 = 1010014;
-    /** @message 错误码1010015 */
-    const ERROR_1010015 = 1010015;
-    /** @message 错误码1010016 */
-    const ERROR_1010016 = 1010016;
+    /** @message 验证方式错误 */
+    const GRANT_TYPE_ERROR = 1010011;
+    /** @message 获取token的参数错误 */
+    const TOKEN_ARGUMENT_ERROR = 1010012;
+    /** @message 客户端未找到 */
+    const CLIENT_NOT_FOUND_3 = 1010013;
+    /** @message 不存在的code */
+    const CODE_NOT_FOUND = 1010014;
+    /** @message code无效 */
+    const CODE_IS_NUKED = 1010015;
+    /** @message code已过期 */
+    const CODE_IS_EXPIRED = 1010016;
     /** @message 错误码1010017 */
     const ERROR_1010017 = 1010017;
     /** @message 错误码1010018 */

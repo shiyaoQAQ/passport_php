@@ -23,6 +23,8 @@ class CpUserAuth
         // '/api/login/getToken',
         '/cp/home/login',
         '/cp/home/wxcode',
+        // 用已授权的code换token接口 不需要用户已登录
+        '/oauth/token',
     ];
 
     public function handle($request, Closure $next)

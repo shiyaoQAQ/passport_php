@@ -70,6 +70,8 @@ Route::group(['middleware' => ['cpauth']], function () {
     // Oauth本身登录
     Route::get('/oauth/show', 'OauthController@oauthShow');
     Route::post('/oauth/authorization', 'OauthController@oauthAuthorization');
-    Route::get('/oauth/token', 'OauthController@getOauthToken');
-
+    
 });
+
+// 通过code获取token接口实质上不需要有任何权限
+Route::post('/oauth/token', 'OauthController@getOauthToken');

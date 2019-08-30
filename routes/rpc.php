@@ -13,7 +13,8 @@
 
 // passport.zsfucai.cn/rpc/xxxx
 
-Route::group(['middleware' => ['rpcauth']], function () {
+// rpcauth
+Route::group(['middleware' => []], function () {
     Route::get('/admin/getAdminInfoByToken', 'CpUserRpc@getAdminInfoByToken');
 
 });

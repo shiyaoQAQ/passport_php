@@ -19,5 +19,8 @@ class OauthConst
         1 => '封禁',
     ];
 
+    // 生成secret的salt
     public static $salt = 'passportSALT!@#$zxa';
+    // 生成code的salt
+    public static $codeSalt = 'pc!@#odeSALT!@#$zxa';
 }

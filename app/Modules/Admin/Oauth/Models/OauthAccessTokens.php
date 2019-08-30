@@ -9,6 +9,7 @@ class OauthAccessTokens extends Model
 {
     protected $table = 'oauth_access_tokens';
     protected $connection = 'passport';
+    protected $guarded = [];
 
     public static function getToken($token)
     {

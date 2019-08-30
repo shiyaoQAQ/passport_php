@@ -2972,7 +2972,7 @@
             "source": {
                 "type": "git",
                 "url": "git@git.youcai123.cn:rd/laravel-phplib.git",
-                "reference": "eaf2c02ebceb3a55ea00a3b4db441504c305047d"
+                "reference": "f5b6c7226a3076b60944447267ccb85a04a9c62c"
             },
             "type": "library",
             "extra": {
@@ -3009,7 +3009,7 @@
                 "sdk",
                 "zsfucai"
             ],
-            "time": "2019-08-29T09:55:55+00:00"
+            "time": "2019-08-30T07:38:55+00:00"
         },
         {
             "name": "sentry/sdk",
