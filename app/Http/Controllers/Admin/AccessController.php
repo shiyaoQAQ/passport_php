@@ -137,11 +137,7 @@ class AccessController extends Controller
     public function getActionGroup(Request $request) {
         $did = $request->input('did');
         //所有权限节点
-        $allProjectAction = CpAccess::getActionList();
-        $allAction = [];
-        foreach ($allProjectAction as $projectAction) {
-            $allAction = array_merge($projectAction ?: [], $allAction);
-        }
+        $allAction = CpAccess::getActionList();
         //权限组，部门配置
         $departGroup = CpAccess::getActionGroupByDid($did);
         if ($departGroup['code'] == 0 && !empty($departGroup['data'])) {

@@ -49,9 +49,6 @@ Route::group(['middleware' => ['cpauth']], function () {
     Route::post('/longrentdepartment/ajaxdeletedepart', 'AccessController@delDepart');
     // 首页和登录
     Route::get('/', 'HomeController@welcome');
-    Route::get('/home/login', 'HomeController@login');
-    Route::post('/home/login', 'HomeController@storeLogin');
-    Route::get('/home/wxcode', 'HomeController@wxCode');
     Route::get('/home/welcome', 'HomeController@welcome');
     Route::get('/home/logout', 'HomeController@logout');
     // CP用户
@@ -73,5 +70,8 @@ Route::group(['middleware' => ['cpauth']], function () {
     
 });
 
+Route::get('/home/login', 'HomeController@login');
+Route::post('/home/login', 'HomeController@storeLogin');
+Route::get('/home/wxcode', 'HomeController@wxCode');
 // 通过code获取token接口实质上不需要有任何权限
 Route::post('/oauth/token', 'OauthController@getOauthToken');

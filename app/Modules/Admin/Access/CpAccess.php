@@ -98,7 +98,11 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         ];
         if (is_null($project)) {
             // 分模块返回
-            return $result;
+            $allAction = [];
+            foreach ($result as $projectAction) {
+                $allAction = array_merge($projectAction ?: [], $allAction);
+            }
+            return $allAction;
         } else {
             return array_get($result, $project ?: 0) ?: [];
         }
@@ -107,7 +111,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
     private static function _getDescByDocComment($obj)
     {
         $doc  = $obj->getDocComment();
-        $mdoc = preg_match("/@desc.+/", $doc, $m);
+        preg_match("/@desc.+/", $doc, $m);
         if (empty($m)) {
             return '';
         }
@@ -723,17 +727,30 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         return true;
     }
 
-
     /**
-     * 检查用户是否有访问权限
+     * 检查passport项目的权限
      */
-    public static function checkAccess() {
+    public static function checkPassportAccess()
+    {
         $route = \Route::currentRouteAction();
         if (empty($route)) {
             return self::modelReturn(1, '路由不存在');
         }
         list($class, $action) = explode('@', $route);
-        $actionList = self::getAccess(self::theUid());
+
+        $request = \App::make('request');
+        $params  = array_merge($request->route()->parameters() ?? [] , $request->all() ?? []);
+        $result = self::checkAccess('passport', $class, $action, $params);
+        return $result;
+    }
+
+    /**
+     * 检查用户是否有访问权限
+     * 对应项目 类 方法 请求参数
+     */
+    public static function checkAccess($project, $class, $action, $params)
+    {
+        $actionList = self::getAccess(self::theUid(), $project);
         if ($actionList['code'] != 0 || empty($actionList['data'])) {
             return self::modelReturn(2, '没有权限');
         }
@@ -741,18 +758,46 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         if(!isset($actionList['all']['all']) && !isset($actionList[$class][$action])){
             return self::modelReturn(3, '没有权限');
         }
-        self::initMenu($actionList);
-        $ret = self::initAccessPath($class);  
-        if($ret['code'] != 0){
-            return $ret;
+        // 这里校验资源粒度的配置
+        $allAccessPath = self::$allAccessPath;
+        $showAccessList = [];
+        $theUid = self::theUid();
+        $userResourceList = self::getUserResouceList($theUid);
+        $userResourceList = $userResourceList['data'] ?? [];
+        foreach ($allAccessPath as $accessKey => $accessPath) {
+            if(!in_array($class, $accessPath['controllers'])){
+                continue;
+            }
+            $showAccessList[$accessKey]['desc'] = $accessPath['desc'];
+            $resourceList = self::$resourceList[$accessPath['resource']]['resource'];
+            if(empty($resourceList)){
+                continue;
+            }
+            foreach ($resourceList as $rKey => $rDesc) {
+                if(isset($userResourceList[$accessPath['resource']][$rKey])){
+                    $showAccessList[$accessKey]['options'][$rKey] = $rDesc;
+                }
+            }
+            //如果都为空，没有权限
+            if(empty($showAccessList[$accessKey]['options'])){
+                return self::modelReturn(4, '没有权限'); 
+            }
         }
-        self::checkAccessPath($class);
+        // 校验资源
+        $pathResult = self::checkAccessPath($class, $params);
+        if ($pathResult['code'] != 0) {
+            return $pathResult;
+        }
         return self::modelReturn(0, 'suc');
     }
 
-    public static function initMenu($actionList)
+    public static function getMenu()
     {
-
+        $actionList = self::getAccess(self::theUid());
+        $actionList = array_get($actionList, 'data');
+        if (empty($actionList)) {
+            return [];
+        }
         $allMenuList = config('menu.cp_menu'); 
         $actionMd5 = md5(json_encode($actionList) . json_encode($allMenuList));
         $actionMd5Key  = "action_list_md5_key";
@@ -815,11 +860,11 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
             Session::put($actionMd5Key, $actionMd5); 
             Session::put($actionMenuKey, json_encode($actionMenu));
         }
-        \View::share('show_access_menu_list', $actionMenu);
+        return $actionMenu;
     }
 
     //初始化全局控制权限相关(目前仓库使用)
-    public static function initAccessPath($class)
+    public static function getAccessPath($class)
     {
         $allAccessPath = self::$allAccessPath;
         $showAccessList = [];
@@ -840,9 +885,10 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                     $showAccessList[$accessKey]['options'][$rKey] = $rDesc;
                 }
             }
-            //如果都为空，没有权限
+            // 如果都为空，则不显示
             if(empty($showAccessList[$accessKey]['options'])){
-                return self::modelReturn(4, '没有权限'); 
+                unset($showAccessList[$accessKey]);
+                continue;
             }
             $accessList = array_keys($showAccessList[$accessKey]['options']);
             \Session::put('access_path_all_' . $accessKey, json_encode($accessList));
@@ -867,36 +913,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
             }
         }
         unset($access);
-        //有城市与仓库两个筛选条件的页面，根据城市显示相应城市的仓库
-        // if (!empty($showAccessList['city']) && $showAccessList['city']['choose'] != self::ACCESS_VAL_ALL) {
-        //     $accessInfo = [];
-        //     $storeName = [];
-        //     $storeInfo = array_get(StoreModule::$cityStoreList, $showAccessList['city']['choose'] ?: 0, []);
-        //     dd($storeInfo);
-        //     foreach ($storeInfo as $stores) {
-        //         $storeAccess[] = $stores['access'];
-        //     }
-        //     $storeAccess['all'] = self::ACCESS_VAL_ALL;
-        //     if (!empty($showAccessList['express']['options'])) {
-        //             foreach ($showAccessList['express']['options'] as $expressk => $store) {
-        //             if (in_array($expressk, $storeAccess)) {
-        //                 $accessInfo[$expressk] = $store;
-        //             }
-        //         }
-        //         $showAccessList['express']['options'] = $accessInfo;
-        //     }
-        //     //权限更新后重置已选项
-        //     if (!empty($showAccessList['express']) && $showAccessList['express']['choose'] != self::ACCESS_VAL_ALL) {
-        //         $currentChoose = self::getAccessVal('express', $showAccessList['express']['options']);
-        //         if ($currentChoose != self::ACCESS_VAL_ALL && !in_array($currentChoose, array_keys($showAccessList['express']['options']))) {
-        //             self::selectAccess('express', self::ACCESS_VAL_ALL);
-        //             $currentChoose = self::ACCESS_VAL_ALL;
-        //         }
-        //         $showAccessList['express']['choose'] = $currentChoose;
-        //     }
-        // }
-        \View::share('show_access_list', $showAccessList);
-        return self::modelReturn(0, 'ok');
+        return $showAccessList;
     }
 
     public static function initParentAccessPath($access, $choose, $accessList)
@@ -930,7 +947,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
     }
 
     //检查是否有当前资源权限
-    public static function checkAccessPath($class)
+    public static function checkAccessPath($class, $params)
     {
         $keyCodeMap = [
             self::ACCESS_KEY_EXPRESS => StoreModule::$resourceToStore,
@@ -939,8 +956,6 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         // if (!in_array(self::theUid(), [11111])) {
         //     return true;
         // }
-        $request = \App::make('request');
-        $params  = array_merge($request->route()->parameters() ?? [] , $request->all() ?? []);
         $callbackData = [];
         foreach (self::$allAccessPath as $accessKey => $oneAccess) {
             if(!isset($oneAccess['rules'][$class])){
@@ -973,12 +988,13 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                 $accessDetailList = self::getAccessDetail($accessKey, $keyCodeMap[$accessKey] ?? []);
                 if (!in_array($backData[$accessConf['callback']['data_key']], $accessDetailList)) {
                     $errorMsg = sprintf("没有当前%s权限，请切换%s或联系管理员开通权限", $oneAccess['desc'], $oneAccess['desc']);
-                    throw new WorkException($errorMsg, 20000);
+                    // throw new WorkException($errorMsg, 20000);
+                    return self::modelReturn(20000, $errorMsg);
                 }
             } 
         }
         unset($callbackData);
-        return true;
+        return self::modelReturn(0, 'ok');;
     }
 
     //切换全局权限
@@ -1045,26 +1061,8 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         return $mapList;
     }
 
-    //在菜单上提供
-    // public static $allAccessPath1 = array(
-    //     'express' => array(
-    //         'desc'     => '仓库',
-    //         'resource' => 'expressStore',
-    //         'controllers' => array(
-    //             'App\Http\Controllers\Cp\Express',
-    //             'App\Http\Controllers\Cp\ExpressBase',
-    //             'App\Http\Controllers\Cp',
-    //         ),
-    //     ),
-    // );    
-
-    // //判断全局权限
-    // public static function hasKeyAccess()
-    // {
-    //     $accessConfigs = self::$allAccessPath;
-    // }
-
-    public static function hasAccess($uid, $class, $action) {
+    public static function hasAccess($uid, $class, $action)
+    {
         $actionList = self::getAccess($uid); 
         if ($actionList['code'] != 0 || empty($actionList['data'])) {
             return self::modelReturn(1, '没有权限');
@@ -1074,7 +1072,8 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                  self::modelReturn(0, 'suc') : self::modelReturn(1, '没有权限');        
     } 
 
-    public static function hasResource($uid, $controller, $resource) {
+    public static function hasResource($uid, $controller, $resource)
+    {
         $resourceList = self::getUserResouceList($uid);
         if ($resourceList['code'] != 0) {
             return false;
@@ -1084,7 +1083,8 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                  self::modelReturn(0, 'suc') : self::modelReturn(1, '没有权限');
     }    
 
-    public static function getUserResouceList($uid) {
+    public static function getUserResouceList($uid)
+    {
        //获取用户部门
         $dUserDep = new CpDepartmentUser();
         $userDepartInfo = $dUserDep->getUserDepartByUid($uid); 
@@ -1120,7 +1120,8 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
     /**
      * 获取访问权限
      */
-    public static function getAccess($uid) {
+    public static function getAccess($uid, $project = null)
+    {
         //获取用户部门
         $dUserDep = new CpDepartmentUser();
         $userDepartInfo = $dUserDep->getUserDepartByUid($uid); 
@@ -1130,7 +1131,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         $dids = \YC_Util::extractList($userDepartInfo, 'department_id');
         //获取部门权限关系表
         $dDG = new CpDepartmentAction();
-        $departActionList = $dDG->getByDids($dids);
+        $departActionList = $dDG->getByDids($dids, $project);
         if(empty($departActionList)) {
             return self::modelReturn(0, '', array());
         }
@@ -1161,7 +1162,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                 }
             }
         }
-        return self::modelReturn(0, '',$actionList);
+        return self::modelReturn(0, '', $actionList);
     }    
 
     public static function delDepartUser($uid, $did) {

@@ -12,41 +12,8 @@ use App\Exceptions\WorkException;
  */
 class CpUserAuth
 {
-    /**
-     * The URIs that should be excluded from cp auth.
-     *
-     * @var array
-     */
-    protected $except = [
-        // '/api/login/getCaptcha',
-        // '/api/login/checkCaptcha',
-        // '/api/login/getToken',
-        '/cp/home/login',
-        '/cp/home/wxcode',
-        // 用已授权的code换token接口 不需要用户已登录
-        '/oauth/token',
-    ];
-
     public function handle($request, Closure $next)
     {
-        // 白名单
-        $arr = parse_url($request->url());
-        if(in_array($arr['path'], $this->except)){
-            return $next($request);
-        }
-        // if(\YC_Util::isFromWxapp()){
-        //     try {
-        //         $this->dealWxapp($request);
-        //         // \Session::put('user_id', 10027);
-        //     } catch (Exception $e) {
-        //         $res = array(
-        //             'code' => $e->getCode(),
-        //             'msg'  => $e->getMessage(),
-        //         );
-        //         echo json_encode($res);
-        //         die;
-        //     }
-        // }
         $ret = CpAccess::auth();
     	if ($ret['code'] != 0) {
             if(\Request::ajax() || \YC_Util::isFromWxapp()){
@@ -56,48 +23,55 @@ class CpUserAuth
                 );
                 echo json_encode($res);
                 die;
-            }else{
+            } else {
                 return redirect('/cp/home/login');
             }
-    	}else{
-            $ret = CpAccess::checkAccess();
-            if($ret['code'] != 0){
-                if(\Request::ajax() || \YC_Util::isFromWxapp()){
-                    $res = array(
-                        'code' => 402,    
-                        'msg'  => '没有权限进行当前操作，请联系管理员开通权限！',
-                    );
-                    echo json_encode($res);
-                    die;
-                }else{
-                    throw new WorkException('没有权限访问当前页面，请联系管理员开通权限！[' .  $ret['code'] . ']', $ret['code']);
-                }
-            }
-            return $next($request);
-    	}
-    }
-
-    /**
-     * 处理来自微信小程序的Token
-     */
-    public function dealWxapp($request){
-        $token = $request->header('token');
-        try {
-            CpUserModule::wxappTokenAuth($token);      
-        } catch (Exception $e) {
-            $code = $e->getCode();            
-            if($code !== 401){
-                $code = 403;
-            }
-            throw new Exception($e->getMessage(), $code);
         }
-    } 
+        
+        // 正常已登录的case
+        // 渲染菜单
+        if (!(\Request::ajax() || \YC_Util::isFromWxapp())) {
+            $this->initMenu();
+        }
+
+        // 校验权限
+        $ret = CpAccess::checkPassportAccess();
+        if ($ret['code'] != 0) {
+            if ($ret['code'] > 10) {
+                $code = $ret['code'];
+                $msg = $ret['msg'];
+            } else {
+                $code = 402;
+                $msg = '没有权限进行当前操作，请联系管理员开通权限！';
+            }
+            if(\Request::ajax() || \YC_Util::isFromWxapp()){
+                $res = array(
+                    'code' => $code,
+                    'msg'  => $msg,
+                );
+                echo json_encode($res);
+                die;
+            } else {
+                throw new WorkException($msg, $code);
+            }
+        }
+        return $next($request);
+    }
 
     /**
-     * 格式化返回数据
+     * 初始化菜单
      */
-    public function json($code, $msg = '', $data = null)
+    public function initMenu()
     {
-
+        $route = \Route::currentRouteAction();
+        if (empty($route)) {
+            return self::modelReturn(1, '路由不存在');
+        }
+        list($class, $action) = explode('@', $route);
+        $menu = CpAccess::getMenu();
+        \View::share('show_access_menu_list', $menu); 
+        $showAccessList = CpAccess::getAccessPath($class);
+        \View::share('show_access_list', $showAccessList);
     }
+
 }

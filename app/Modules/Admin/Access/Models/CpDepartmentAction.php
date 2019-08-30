@@ -12,23 +12,37 @@ class CpDepartmentAction extends Model
 
     protected $table = 'cp_department_action';
 
-	public function getByDids($dids){
-		$ret = self::whereIn('department_id', $dids)->get();
+	public function getByDids($dids, $project = null)
+	{
+		if ($project) {
+			$ret = self::whereIn('department_id', $dids)
+				->whereIn('project', [
+					$project,
+					'all'
+				])
+				->get();
+		} else {
+			$ret = self::whereIn('department_id', $dids)
+				->get();
+		}
 		return empty($ret) ? array() : $ret->toArray();
 	}    
 
-    public function getGroupByDid($did){
+	public function getGroupByDid($did)
+	{
 		$ret = self::where(array('department_id'=>$did,'action_type'=>self::TYPE_GROUP))->get();
 		return empty($ret) ? array() : $ret->toArray();    	
     }
 
 
-    public function getDepartByGroupId($gid){
+	public function getDepartByGroupId($gid)
+	{
 		$ret = self::where(array('group_id'=>$gid,'action_type'=>self::TYPE_GROUP))->get();
 		return empty($ret) ? array() : $ret->toArray();
 	}    
 
-    public function getDeaprtActionList($did){
+	public function getDeaprtActionList($did)
+	{
 		$ret = self::where(array('department_id'=>$did,'action_type'=>self::TYPE_ACTION))->get()->toArray();
 		return empty($ret) ? array() : $ret;
     }
