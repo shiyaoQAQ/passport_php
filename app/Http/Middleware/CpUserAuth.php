@@ -18,9 +18,9 @@ class CpUserAuth
      * @var array
      */
     protected $except = [
-        '/api/login/getCaptcha',
-        '/api/login/checkCaptcha',
-        '/api/login/getToken',
+        // '/api/login/getCaptcha',
+        // '/api/login/checkCaptcha',
+        // '/api/login/getToken',
         '/cp/home/login',
         '/cp/home/wxcode',
     ];

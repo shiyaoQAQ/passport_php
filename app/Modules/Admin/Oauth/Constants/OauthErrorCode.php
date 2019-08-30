@@ -15,32 +15,32 @@ class OauthErrorCode
     const TOKEN_IS_NUKED = 1010004;
     /** @message token已过期 */
     const TOKEN_IS_EXPIRED = 1010005;
-    /** @message 错误码1010006 */
-    const ERROR_1010006 = 1010006;
-    /** @message 错误码1010007 */
-    const ERROR_1010007 = 1010007;
+    /** @message oauth参数错误 */
+    const OAUTH_ARGUMENT_INVAILD = 1010006;
+    /** @message 无效的响应类型 */
+    const INVALID_RESPONSE_TYPE = 1010007;
     /** @message 错误码1010008 */
     const ERROR_1010008 = 1010008;
-    // /** @message 错误码1010009 */
-    // const ERROR_1010009 = 1010009;
-    // /** @message 错误码1010010 */
-    // const ERROR_1010010 = 1010010;
-    // /** @message 错误码1010011 */
-    // const ERROR_1010011 = 1010011;
-    // /** @message 错误码1010012 */
-    // const ERROR_1010012 = 1010012;
-    // /** @message 错误码1010013 */
-    // const ERROR_1010013 = 1010013;
-    // /** @message 错误码1010014 */
-    // const ERROR_1010014 = 1010014;
-    // /** @message 错误码1010015 */
-    // const ERROR_1010015 = 1010015;
-    // /** @message 错误码1010016 */
-    // const ERROR_1010016 = 1010016;
-    // /** @message 错误码1010017 */
-    // const ERROR_1010017 = 1010017;
-    // /** @message 错误码1010018 */
-    // const ERROR_1010018 = 1010018;
+    /** @message 客户端未找到 */
+    const CLIENT_NOT_FOUND_2 = 1010009;
+    /** @message 客户端已被封禁 */
+    const CLIENT_IS_NUKED = 1010010;
+    /** @message 错误码1010011 */
+    const ERROR_1010011 = 1010011;
+    /** @message 错误码1010012 */
+    const ERROR_1010012 = 1010012;
+    /** @message 错误码1010013 */
+    const ERROR_1010013 = 1010013;
+    /** @message 错误码1010014 */
+    const ERROR_1010014 = 1010014;
+    /** @message 错误码1010015 */
+    const ERROR_1010015 = 1010015;
+    /** @message 错误码1010016 */
+    const ERROR_1010016 = 1010016;
+    /** @message 错误码1010017 */
+    const ERROR_1010017 = 1010017;
+    /** @message 错误码1010018 */
+    const ERROR_1010018 = 1010018;
     // /** @message 错误码1010019 */
     // const ERROR_1010019 = 1010019;
     // /** @message 错误码1010020 */
