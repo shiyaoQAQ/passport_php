@@ -44,7 +44,7 @@ class CpUserAuth
                 $code = 402;
                 $msg = '没有权限进行当前操作，请联系管理员开通权限！';
             }
-            if(\Request::ajax() || \YC_Util::isFromWxapp()){
+            if(\Request::ajax() || \YC_Util::isFromWxapp()) {
                 $res = array(
                     'code' => $code,
                     'msg'  => $msg,

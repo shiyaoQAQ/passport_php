@@ -657,11 +657,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
 
     public static function theUid()
     {
-        $pdaUserId = \Session::get('sort_uid') ?? 0;
         $userId = \Session::get('user_id') ?? 0;
-        if(!empty($pdaUserId)){
-            return $pdaUserId;
-        }
         return $userId;
     }
 
@@ -750,6 +746,16 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
      */
     public static function checkAccess($project, $class, $action, $params)
     {
+        /**
+         * 简单做一个权限白名单
+         */
+        $whiteActionList = [
+            'oauthCallback',
+        ];
+        if (in_array($action, $whiteActionList)) {
+            return self::modelReturn(0, 'suc');
+        }
+
         $actionList = self::getAccess(self::theUid(), $project);
         if ($actionList['code'] != 0 || empty($actionList['data'])) {
             return self::modelReturn(2, '没有权限');
@@ -1701,7 +1707,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
             $accessDetailList = self::getAccessDetail($accessKey, $keyCodeMap[$accessKey] ?? []);
             if (isset($queryData[$ormKey])) {
                 $queryInfo = is_array($queryData[$ormKey]) ? $queryData[$ormKey] : [$queryData[$ormKey]];
-                $accessDetailList = array_intersect($accessDetailList, $queryInfo);            
+                $accessDetailList = array_intersect($accessDetailList, $queryInfo);
             } elseif (self::ACCESS_VAL_ALL == self::getAccessVal($accessKey)) {
                 $accessDetailList[] = 0;
             }

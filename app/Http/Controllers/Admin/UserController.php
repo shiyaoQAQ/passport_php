@@ -64,7 +64,7 @@ class UserController extends Controller
      * @desc 进入修改密码页面
      */
     public function password(){
-        return view('cp.access.password');
+        return view('admin.access.password');
     }
 
     /**

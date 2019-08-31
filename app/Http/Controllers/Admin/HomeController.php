@@ -28,23 +28,23 @@ class HomeController extends Controller
         return view('admin.home.welcome');
     }
 
-    /**
-     * @desc 临时oauth接口
-     */
-    public function tempOauth(Request $request)
-    {
-        $user = UserModule::getUserInfo(CpAccess::theUid());
-        $user = empty($user) ? [] : $user->toArray();
-        // 生成token
-        $timestamp = time();
-        $token = \YC_Util::getLaravelToken($user, $timestamp);
-        return redirect('http://cp.' . config('app.shanhujia_url') . '/login/tempOauth/check?' . http_build_query([
-            'refer' => $request->input('refer'),
-            'token' => $token,
-            'time' => $timestamp,
-            'user_name' => $user['user_name'],
-        ]));
-    }
+    // /**
+    //  * @desc 临时oauth接口
+    //  */
+    // public function tempOauth(Request $request)
+    // {
+    //     $user = UserModule::getUserInfo(CpAccess::theUid());
+    //     $user = empty($user) ? [] : $user->toArray();
+    //     // 生成token
+    //     $timestamp = time();
+    //     $token = \YC_Util::getLaravelToken($user, $timestamp);
+    //     return redirect('http://cp.' . config('app.shanhujia_url') . '/login/tempOauth/check?' . http_build_query([
+    //         'refer' => $request->input('refer'),
+    //         'token' => $token,
+    //         'time' => $timestamp,
+    //         'user_name' => $user['user_name'],
+    //     ]));
+    // }
 
     /**
      * @desc 退出登录

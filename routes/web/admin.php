@@ -46,6 +46,7 @@ Route::group(['middleware' => ['cpauth']], function () {
     Route::post('/longrentdepartment/ajax_set_depart_resource', 'AccessController@setDepartResourceDetail');
     Route::get('/longrentdepartment/depart_resource_detail', 'AccessController@departResourceDetail');
     Route::post('/access/selectAccess', 'AccessController@selectAccess');
+    Route::get('/access/selectAccess', 'AccessController@selectAccess');
     Route::post('/longrentdepartment/ajaxdeletedepart', 'AccessController@delDepart');
     // 首页和登录
     Route::get('/', 'HomeController@welcome');

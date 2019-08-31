@@ -15,6 +15,8 @@
 
 // rpcauth
 Route::group(['middleware' => ['rpcauth']], function () {
-    Route::get('/admin/getAdminInfoByToken', 'CpUserRpc@getAdminInfoByToken');
+    Route::get('/cpuser/getAdminInfoByToken', 'CpUserRpc@getAdminInfoByToken');
+    Route::get('/cpuser/checkAccess', 'CpUserRpc@checkAccess');
+    Route::get('/cpuser/renderMenu', 'CpUserRpc@renderMenu');
 
 });
