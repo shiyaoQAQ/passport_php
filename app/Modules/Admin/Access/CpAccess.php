@@ -321,7 +321,8 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
     /**
      * 添加部门用户
      */
-    public static function addDepartUser($did, $accout) {
+    public static function addDepartUser($did, $accout)
+    {
         $userInfo = EcsUser::where('mobile_phone', $accout)->first();
         if (empty($userInfo)) {
             return self::modelReturn(1, '用户不存在');
@@ -655,6 +656,11 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         return self::modelReturn(0, '验证成功');
     }
 
+    public static function setTheUid($userId)
+    {
+        \Session::put('user_id', $userId);
+    }
+
     public static function theUid()
     {
         $userId = \Session::get('user_id') ?? 0;
@@ -806,13 +812,12 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         }
         $allMenuList = config('menu.cp_menu'); 
         $actionMd5 = md5(json_encode($actionList) . json_encode($allMenuList));
-        $actionMd5Key  = "action_list_md5_key";
-        $actionMenuKey = 'action_list_menu_key';
-        $sessinActionMd5 = Session::get($actionMd5Key);
-        $sessionMenuList = Session::get($actionMenuKey);
+
+        $cacheActionMd5 = app('redis')->get(AccessConst::REDIS_ACTION_MD5KEY . self::theUid());
+        $cacheMenuList = app('redis')->get(AccessConst::REDIS_ACTION_MENUKEY . self::theUid());
         //如果缓存里有，且用户的权限摘要没有变，就取缓存里的菜单
-        if (!empty($sessinActionMd5) && $sessinActionMd5 == $actionMd5 && !empty($sessionMenuList)) {
-            $actionMenu = json_decode($sessionMenuList, true);
+        if (!empty($cacheActionMd5) && $cacheActionMd5 == $actionMd5 && !empty($cacheMenuList)) {
+            $actionMenu = json_decode($cacheMenuList, true);
         } else {
             if (isset($actionList['all']['all'])) {
                 $actionMenu = $allMenuList;
@@ -863,8 +868,8 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
 
                 }                
             }
-            Session::put($actionMd5Key, $actionMd5); 
-            Session::put($actionMenuKey, json_encode($actionMenu));
+            app('redis')->setex(AccessConst::REDIS_ACTION_MD5KEY . self::theUid(), 36000, $actionMd5);
+            app('redis')->setex(AccessConst::REDIS_ACTION_MENUKEY . self::theUid(), 36000, json_encode($actionMenu));
         }
         return $actionMenu;
     }
@@ -897,7 +902,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                 continue;
             }
             $accessList = array_keys($showAccessList[$accessKey]['options']);
-            \Session::put('access_path_all_' . $accessKey, json_encode($accessList));
+            app('redis')->setex(AccessConst::REDIS_ACCESS_PATH_ALL . self::theUid() . ':' . $accessKey, 36000, json_encode($accessList));
             $showAccessList[$accessKey]['options']['all'] = '全部';
             $showAccessList[$accessKey]['options'] = array_reverse($showAccessList[$accessKey]['options'], true);
             $showAccessList[$accessKey]['parent_access'] = $accessPath['parent_access'] ?? '';
@@ -915,7 +920,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                 $choose = count(self::getAccessDetail($access['parent_access'])) == 1 ? self::getAccessDetail($access['parent_access'])[0] : 'all';
                 $access['options'] = self::initParentAccessPath($access['parent_access'], $choose, $access['options']);
                 $access['options']['all'] = '全部';
-                \Session::put('access_path_all_' . $accessKey, json_encode(array_keys($access['options'])));
+                app('redis')->setex(AccessConst::REDIS_ACCESS_PATH_ALL . self::theUid() . ':' . $accessKey, 36000,json_encode(array_keys($access['options'])));
             }
         }
         unset($access);
@@ -1015,12 +1020,12 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         if(!isset($resourceList[$accessVal]) && $accessVal != 'all'){
             return self::modelReturn(2, '全局参数不存在');
         }
-        \Session::put('access_path_' . $accessKey, $accessVal);
+        app('redis')->setex(AccessConst::REDIS_ACCESS_PATH . self::theUid() . ':' . $accessKey, 36000, $accessVal);
         return self::modelReturn(0, $accessPath['desc'] . '切换成功');
     }
 
     public static function getAccessVal($key, $accessList = []){
-        $nowChoose = \Session::get('access_path_' . $key);
+        $nowChoose = app('redis')->get(AccessConst::REDIS_ACCESS_PATH . self::theUid() . ':' . $key);
         if(empty($nowChoose)){
             $nowChoose = 'all';
             if ($key == self::ACCESS_KEY_CITY && in_array(CityModule::ADCODE_BJ, array_keys($accessList))) {
@@ -1036,7 +1041,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
     {
         $accessVal = self::getAccessVal($key);
         if($accessVal == self::ACCESS_VAL_ALL){
-            $allAccess = \Session::get('access_path_all_' . $key);
+            $allAccess = app('redis')->get(AccessConst::REDIS_ACCESS_PATH_ALL . self::theUid() . ':' . $key);
             $accessList = json_decode($allAccess, true);
         }else{
             $accessList = [$accessVal];
@@ -1054,7 +1059,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
     // 获取资源列表
     public static function getAccessList($key, $mapCode = []) 
     {
-        $allAccess = \Session::get('access_path_all_' . $key);
+        $allAccess = app('redis')->get(AccessConst::REDIS_ACCESS_PATH_ALL . self::theUid() . ':' . $key);
         $accessList = json_decode($allAccess, true);
         // 对应映射
         if(empty($mapCode)){

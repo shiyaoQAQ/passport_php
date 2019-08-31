@@ -444,4 +444,10 @@ class AccessConst
     // zsfucai shanhujia权限组的redis key
     const REDIS_ZSFUCAI_ACCESS_LIST = 'zf:st:zsfucai_access_list';
     const REDIS_SHANHUJIA_ACCESS_LIST = 'zf:st:shanhujia_access_list';
+
+    // 菜单缓存key
+    const REDIS_ACTION_MD5KEY  = "ps:st:action_list_md5_key:";
+    const REDIS_ACTION_MENUKEY = 'ps:st:action_list_menu_key:';
+    const REDIS_ACCESS_PATH_ALL = "ps:st:access_path_all:";
+    const REDIS_ACCESS_PATH = "ps:st:access_path:";
 }
