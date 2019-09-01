@@ -108,6 +108,10 @@ class HomeController extends Controller
             if ($login == false) {
                 throw new Exception("登录失败，请重试", 1);
             }
+            $oldUrl = \Session::get('passportCurrentUrl');
+            if ($oldUrl) {
+                return redirect($oldUrl);    
+            }
             return redirect('/cp/home/welcome');
         } catch (Exception $e) {
             $ret = Session::put('home_login_error_msg', sprintf('%s[%s]', $e->getMessage(), $e->getCode()));

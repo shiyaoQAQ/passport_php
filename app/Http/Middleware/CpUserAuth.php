@@ -24,6 +24,9 @@ class CpUserAuth
                 echo json_encode($res);
                 die;
             } else {
+                // 记录当前url
+                $currentUrl = url()->full();
+                \Session::put('passportCurrentUrl', $currentUrl);
                 return redirect('/cp/home/login');
             }
         }
