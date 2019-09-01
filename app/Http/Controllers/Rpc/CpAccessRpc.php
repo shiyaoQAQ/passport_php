@@ -72,10 +72,11 @@ class CpAccessRpc extends Controller
 
         $menu = CpAccess::getMenu();
         $showAccessList = CpAccess::getAccessPath($class);
-        return $this->rpcReturn(0, 'ok', [
+        $result = [
             'show_access_menu_list' => $menu,
             'show_access_list' => $showAccessList,
-        ]);
+        ];
+        return $this->rpcReturn(0, 'ok', $result);
     }
 
     /**

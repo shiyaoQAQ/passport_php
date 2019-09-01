@@ -986,10 +986,12 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                 }
                 //不重复调用第三方接口
                 $callbackMd5 = md5($accessConf['callback']['class'] . $accessConf['callback']['function'] . $paramVal);
+                dd($accessConf['callback']['class'] . "\n". $accessConf['callback']['function'] ."\n". $paramVal);
                 if (isset($callbackData[$callbackMd5])) {
                     $backData = $callbackData[$callbackMd5];
                 } else {
-                    $backData = call_user_func(array($accessConf['callback']['class'], $accessConf['callback']['function']), $paramVal); 
+                    // $backData = call_user_func(array($accessConf['callback']['class'], $accessConf['callback']['function']), $paramVal);
+                    // 调用rpc请求回调数据
                     $callbackData[$callbackMd5] = $backData;
                 }
                 if (!isset($backData[$accessConf['callback']['data_key']]) || empty($backData[$accessConf['callback']['data_key']])) {

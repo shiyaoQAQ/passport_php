@@ -195,6 +195,12 @@ class AccessConst
                    'store-cd-by-pda' => '八益仓库PDA',
                 ],
             ],
+            'custom' => [
+                'desc' => '客户详情页操作资源',
+                'resource' => [
+                    'custom-change-phone' => '手机号编辑',
+                ],
+            ],
     );
 
     const ACCESS_VAL_ALL = 'all';

@@ -1,7 +1,7 @@
 <?php
 return [
-    'rpc'      => [
-        'connect_timeout_ms' => 100,
+    'rpc' => [
+        'connect_timeout_ms' => 500,
         'timeout_ms' => 3000,
         'retry' => 1,
         'headers'    => [
@@ -25,7 +25,14 @@ return [
         'passportservice' => [
             'id' => 'passportservice',
             'name' => 'passportservice',
-            'address' => 'passport.'. env('ZSFUCAI_URL', 'zsfucai.cn'),
+            'address' => env('PASSPORT_URL', 'passport.zsfucai.cn'),
+            'ssl' => false,
+            'port' => 80,
+        ],
+        'cpzsfucaiservice' => [
+            'id' => 'cpzsfucaiservice',
+            'name' => 'cpzsfucaiservice',
+            'address' => 'cp.' . env('ZSFUCAI_URL', 'zsfucai.cn'),
             'ssl' => false,
             'port' => 80,
         ],
