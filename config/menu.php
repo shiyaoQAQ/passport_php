@@ -2,6 +2,7 @@
 
 $passportUrl = 'http://'. config('app.url');
 $zsfucaiCpUrl = 'https://cp.' . config('app.zsfucai_url');
+$shanhujiaCpUrl = 'https://cp.' . config('app.shanhujia_url');
 
 return [
     'cp_menu' => [
@@ -246,6 +247,13 @@ return [
                 $zsfucaiCpUrl . "/gainloss/list" => '损益单列表',
                 $zsfucaiCpUrl . "/stock/list" => '库存查询',
                 $zsfucaiCpUrl . "/inoutquery/list" => '产品出入库查询',
+            ],
+        ],
+        '珊瑚家开发' => [
+            'logo' => 'model-s',
+            'menu_list' => [
+                $shanhujiaCpUrl . "/" => '珊瑚家欢迎页',
+                $shanhujiaCpUrl . "/goods" => '商品',
             ],
         ],
     ],
