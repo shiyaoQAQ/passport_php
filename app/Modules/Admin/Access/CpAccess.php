@@ -986,12 +986,13 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                 }
                 //不重复调用第三方接口
                 $callbackMd5 = md5($accessConf['callback']['class'] . $accessConf['callback']['function'] . $paramVal);
-                dd($accessConf['callback']['class'] . "\n". $accessConf['callback']['function'] ."\n". $paramVal);
                 if (isset($callbackData[$callbackMd5])) {
                     $backData = $callbackData[$callbackMd5];
                 } else {
                     // $backData = call_user_func(array($accessConf['callback']['class'], $accessConf['callback']['function']), $paramVal);
                     // 调用rpc请求回调数据
+                    $rpc = new \Pascal\Rpc\Zsfucai\CpAccessRpc;
+                    $backData = $rpc->getAccessCallbackData($accessConf['callback']['class'], $accessConf['callback']['function'], $paramVal);
                     $callbackData[$callbackMd5] = $backData;
                 }
                 if (!isset($backData[$accessConf['callback']['data_key']]) || empty($backData[$accessConf['callback']['data_key']])) {
@@ -1194,15 +1195,15 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         if (!empty($department['mark']) && in_array($department['mark'], self::$saleWithDissionMark)) {
             $userDepartList = self::getUserDepartByUid($uid); 
             if (sizeof($userDepartList) <= 1) {
-                // if (SalesModule::hasCustomer($uid)) {
-                //     return self::modelReturn(800031,'此销售私海有客户，如果删除账号请记得先重新分配其私海客户');
-                // }
-                // 先干掉 后面加回来
-                // $kaCompany = KaModule::hasKaCompay($uid);
-                // $kaCompany = null;
-                // if (!empty($kaCompany)) {
-                //     return self::modelReturn(800032,'此销售有KA客户['. $kaCompany->company_name .']，如果删除账号请记得先重新分配其KA客户');
-                // }
+                $salesRpc = new \Pascal\Rpc\Zsfucai\SalesRpc;
+                $kaNumber = $salesRpc->getSalerKaNumber($uid);
+                if ($kaNumber!=0) {
+                    return self::modelReturn(800031,'销售有KA客户' . $kaNumber . '个，如果删除账号请记得先重新分配其KA客户');
+                }
+                $customerNumber = $salesRpc->getSalerCustomerNumber($uid);
+                if($customerNumber!=0){
+                    return self::modelReturn(800031,'此销售私海有客户，如果删除账号请记得先重新分配其私海客户');
+                }
             }
         }
         $admiUid = self::theUid();
@@ -1210,6 +1211,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         $ret = $dUserDep->del($did, $uid, $admiUid);
         return $ret ? self::modelReturn(0, '删除成功') : self::modelReturn(800015,'用户删除失败');
     }
+
     public static function delActionGroup($id) {
         if (empty($id)) {
             return self::modelReturn(800028,'ID不能为空');

@@ -15,10 +15,8 @@ use Cache;
 use Session;
 use \YC_Log;
 use \DB;
-// use App\Modules\SalesModule;
 use App\Modules\Admin\Access\Models\CpDepartmentUser;
 use App\Modules\Admin\Access\Models\CpDepartment;
-// use App\Modules\Ka\KaModule;
 
 class CpUserModule {
 
@@ -202,15 +200,14 @@ class CpUserModule {
         $dDepart = new CpDepartment();
         $departInfo = $dDepart->getDeaprtByMark(CpAccess::MARK_SALE_DIMISSION); 
         $did = array_pluck($departInfo, 'id')[0];
-        // $kaNumber = KaModule::getSalerCompList([$user->uid])['total'];
-        $kaNumber = 0;
+        $salesRpc = new \Pascal\Rpc\Zsfucai\SalesRpc;
+        $kaNumber = $salesRpc->getSalerKaNumber($user->uid);
         if($kaNumber!=0){
-            throw new WorkException(sprintf("名下有%s个KA私海客户，不能离职，请联系其上级尽快处理;",$kaNumber), 100000404);
+            throw new WorkException(sprintf("名下有%s个KA私海客户，不能离职，请联系其上级尽快处理;",$kaNumber), 1000000);
         }
-        // $customerNumber = SalesModule::customerNumber($user->uid);
-        $customerNumber = 0;
+        $customerNumber = $salesRpc->getSalerCustomerNumber($user->uid);
         if($customerNumber!=0){
-            throw new WorkException(sprintf("名下有%s个个人客户，不能离职，请联系其上级尽快处理;",$customerNumber), 100000404);
+            throw new WorkException(sprintf("名下有%s个个人客户，不能离职，请联系其上级尽快处理;",$customerNumber), 1000000);
         }
         DB::beginTransaction();
         try{
@@ -847,7 +844,6 @@ class CpUserModule {
         try{
             $re1 = CpUserModule::addUser($data)['code'];
             $re2 = CpAccess::addDepartUser($data['departmentId'], $userMobile)['code'];
-            // SalesModule::addSellerInfo();
             if ($re1['code'] == 0 && $re2['code'] == 0) {
                 $message = sprintf("%s uid: %s 在 %s 添加 %s 账户 %s - %s 成功",CpAccess::theName(), CpAccess::theUid(), date('Y-m-d H:i:s'), $title, array_get($data,'name'), $userMobile);
                 DB::commit();
