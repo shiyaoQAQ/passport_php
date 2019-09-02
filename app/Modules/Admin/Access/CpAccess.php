@@ -1880,4 +1880,41 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         
         return self::modelReturn(0, '', $userAccess);
     }
+
+    /**
+    * 获取城市客服组
+    */
+    public static function getCityServiceMap($cityList)
+    {
+        $dDepart = new CpDepartment();
+        $departInfo = $dDepart->getDeaprtByMark(self::$servicerMark);
+        if (empty($departInfo)) {
+            return self::modelReturn(800024, '部门信息不存在');
+        }
+        $departIds = self::getDepartByResource('cityList', $cityList);
+        $dids = array();
+        $groupDidList = [];
+        foreach ($departInfo as $departDetail) {
+            if(!in_array($departDetail['id'], $departIds['data'])) {
+                continue;
+            }
+            $dids[] = $departDetail['id'];
+            $chidlDepart = $dDepart->getChildDepart($departDetail['id']);
+            $chidlDepartIds = \YC_Util::filterArrayInfo($chidlDepart, 'id');
+            $groupDidList[$departDetail['id']] = $chidlDepartIds;
+            $groupDidList[$departDetail['id']][] = $departDetail['id'];
+        }
+        $dUserDep = new CpDepartmentUser();
+        $groupUserList = [];
+        foreach ($groupDidList as $groupIds) {
+            $userList = $dUserDep->getUserByDidIn($groupIds);
+            if (empty($userList)) {
+                continue;
+            }
+            foreach ($userList as $oneDepartUser) {
+                $groupUserList[$oneDepartUser['uid']] = CpUserModule::getName($oneDepartUser['uid']);
+            }
+        }
+        return $groupUserList;
+    }
 }

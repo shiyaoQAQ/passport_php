@@ -231,34 +231,34 @@ class CpAccessRpc extends Controller
     {
         $uid = $request->input('uid');
         $did = $request->input('did');
-        $result = delDepartUser($uid, $did);
+        $result = CpAccess::delDepartUser($uid, $did);
         return $this->rpcReturn($result['code'], $result['msg'], $result['data']);
     }
 
     public function getDepartResourceList(Request $request)
     {
         $did = $request->input('did');
-        $result = getDepartResourceList($did);
+        $result = CpAccess::getDepartResourceList($did);
         return $this->rpcReturn($result['code'], $result['msg'], $result['data']);
     }
 
     public function getUserDepartByUid(Request $request)
     {
         $uid = $request->input('uid');
-        $result = getUserDepartByUid($uid);
+        $result = CpAccess::getUserDepartByUid($uid);
         return $this->rpcReturn(0, 'ok', $result);
     }
 
     public function getDepartmentByMark(Request $request)
     {
         $mark = $request->input('mark');
-        $result = getDepartmentByMark($mark);
+        $result = CpAccess::getDepartmentByMark($mark);
         return $this->rpcReturn(0, 'ok', $result);
     }
 
     public function getNewSaleGroupWithName(Request $request)
     {
-        $result = getNewSaleGroupWithName();
+        $result = CpAccess::getNewSaleGroupWithName();
         return $this->rpcReturn(0, 'ok', $result);
     }
 
@@ -266,7 +266,7 @@ class CpAccessRpc extends Controller
     {
         $userId = $request->input('userId');
         $mark = $request->input('mark');
-        $result = checkUserInDepartByMark($userId, $mark);
+        $result = CpAccess::checkUserInDepartByMark($userId, $mark);
         return $this->rpcReturn(0, 'ok', $result);
     }
 
@@ -274,14 +274,14 @@ class CpAccessRpc extends Controller
     {
         $userId = $request->input('userId');
         $controller = $request->input('controller');
-        $result = getUserAccessMark($userId, $controller);
+        $result = CpAccess::getUserAccessMark($userId, $controller);
         return $this->rpcReturn($result['code'], $result['msg'], $result['data']);
     }
 
     public function getCityServiceMap(Request $request)
     {
         $cityList = $request->input('cityList');
-        $result = getCityServiceMap($cityList);
+        $result = CpAccess::getCityServiceMap($cityList);
         return $this->rpcReturn(0, 'ok', $result);
     }
 }
