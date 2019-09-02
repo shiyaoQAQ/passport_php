@@ -31,5 +31,19 @@ class OauthClients extends Model
         $this->save();
     }
 
+    /**
+     * 获取内部项目列表
+     *
+     * @param array $filter
+     * @return void
+     */
+    public function getOwnProjects($filter = [])
+    {
+        $constructor = self::select(['*']);
+        $constructor->where('is_own_project', 1);
+        $list = $constructor->get();
+        return $list;
+    }
+
 
 }

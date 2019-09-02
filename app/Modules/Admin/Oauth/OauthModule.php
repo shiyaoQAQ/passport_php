@@ -111,6 +111,15 @@ class OauthModule
         ];
     }
 
+    /**
+     * 根据code获取accessToken
+     *
+     * @param [type] $clientId
+     * @param [type] $code
+     * @param [type] $signature
+     * @param [type] $body
+     * @return void
+     */
     public static function getTokenByAuthorizationCode($clientId, $code, $signature, $body)
     {
         $client = OauthClients::find($clientId);
@@ -138,6 +147,45 @@ class OauthModule
         return $token;
     }
 
+    /**
+     * 获取内部项目的client_ids
+     *
+     * @return void
+     */
+    public static function getOwnProjectIds()
+    {
+        $ownProject = OauthClients::getOwnProjects();
+        $ownProject = $ownProject->isEmpty() ? [] : $ownProject->toArray();
+        $ids = array_column($ownProject, 'id');
+        return $ids;
+    }
+
+    /**
+     * * 封禁（使失效）用户的accessToken
+     * 必须有clientId 禁止全局乱搞
+     *
+     * @param [int] $userId
+     * @param [int] $clientId 一般只封禁/失效单个client的token 但是还是支持传入数组吧
+     * @return void
+     */
+    public static function nukeUserToken($userId, $clientId)
+    {
+        if (empty ($clientId)) {
+            return false;
+        }
+        if (empty ($userId)) {
+            return false;
+        }
+        // 失效用户的token
+        if (is_array($clientId)) {
+            foreach ($clientId as $oneId) {
+                OauthAccessTokens::nukeUserToken($userId, $oneId);
+            }
+        } else {
+            OauthAccessTokens::nukeUserToken($userId, $clientId);
+        }
+        return true;
+    }
 
 }
 

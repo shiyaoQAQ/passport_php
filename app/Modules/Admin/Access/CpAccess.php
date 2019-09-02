@@ -28,15 +28,15 @@ use App\Modules\Admin\Access\Models\Sales\DmSellerOriginationChart;
  */
 class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
 {
-    public static function getCreateUserType($uid){
-        if(empty($uid)){
-            return '';
-        }
-        if(in_array($uid, array(10, 11))){
-            return 'kfxd';
-        }
-        return 'xsxd';
-    }
+    // public static function getCreateUserType($uid){
+    //     if(empty($uid)){
+    //         return '';
+    //     }
+    //     if(in_array($uid, array(10, 11))){
+    //         return 'kfxd';
+    //     }
+    //     return 'xsxd';
+    // }
 
     private static function travleDir($path)
     {
@@ -124,23 +124,23 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         return $mDesc;
     }
 
-    /**
-     * 获取部门树关系结构
-     */
-    public static function getDepartTreeData($did)
-    {
-        $objDepart = new CpDepartment();
-        $treeInfo  = $objDepart->getDepartmentTree($did);
-        return $treeInfo;
-    }
+    // /**
+    //  * 获取部门树关系结构
+    //  */
+    // public static function getDepartTreeData($did)
+    // {
+    //     $objDepart = new CpDepartment();
+    //     $treeInfo  = $objDepart->getDepartmentTree($did);
+    //     return $treeInfo;
+    // }
 
-    /**
-     * 获取所有的部门信息
-     */
-    public static function getAllDepart()
-    {
-        $objDepart = new CpDepartment();
-    }
+    // /**
+    //  * 获取所有的部门信息
+    //  */
+    // public static function getAllDepart()
+    // {
+    //     $objDepart = new CpDepartment();
+    // }
 
 
     /**
@@ -623,37 +623,6 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
             }
         }
         return self::modelReturn(0, '', $allChildId);
-    }    
-
-    /**
-     * 检验来自己ECT的检验
-     * @return [type] [description]
-     */
-    public static function fromEctCheck($token, $time) {
-        $ret = \YC_Util::checkLaravelToken($token); 
-        if ($ret == false) {
-            throw new WorkException('验证失败', 1000001);
-        }
-        if ($time < time()-300 || $time > time()+300) {
-            throw new WorkException('验证失败', 1000002);
-        }
-        $objEcsUser = new EcsUser();
-        $userInfo = $objEcsUser->getById($ret);
-        if (empty($userInfo)) {
-            throw new WorkException('用户不存在', 1000001);
-        }
-        $cpUser = CpUser::where('uid', $userInfo['user_id'])->first();
-        if (empty($cpUser)) {
-            throw new WorkException('新系统用户不存在', 1000001);
-        }
-        $md5Str = substr(base64_decode($token), 12);
-        $checkStr = $userInfo['user_name'] . $cpUser->mobile . $userInfo['user_id'] . \YC_Util::$laravelTokenKey . $time;
-        if ($md5Str != md5($checkStr)) {
-            throw new WorkException('验证失败', 1000003);
-        }
-        \Session::put('user_id', $userInfo['user_id']);
-        \Session::put('user_name', $userInfo['user_name']);
-        return self::modelReturn(0, '验证成功');
     }
 
     public static function setTheUid($userId)
@@ -669,7 +638,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
 
     public static function theName()
     {
-        $userId = \Session::get('user_name') ?? 0;
+        $userId = \Session::get('user_name') ?? '';
         return $userId;
     }
 
@@ -686,48 +655,48 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         return self::modelReturn(0, 'suc');
     }
 
-    /**
-     * 检查用户是否有修改返利支付状态的权限
-     */
-    public static function hasRebatePayStatusAccess()
-    {
-        if (self::theUid() != self::REBATE_PAY_STATUS_USER) {
-            return false;
-        }
-        return true;
-    }
+    // /**
+    //  * 检查用户是否有修改返利支付状态的权限
+    //  */
+    // public static function hasRebatePayStatusAccess()
+    // {
+    //     if (self::theUid() != self::REBATE_PAY_STATUS_USER) {
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
-    /**
-     * 检查用户是否有企业可读的权限
-     */
-    public static function hasCompCusomterAccess($companyId)
-    {
-        if (empty($companyId)) {
-            return true;
-        }
+    // /**
+    //  * 检查用户是否有企业可读的权限
+    //  */
+    // public static function hasCompCusomterAccess($companyId)
+    // {
+    //     if (empty($companyId)) {
+    //         return true;
+    //     }
 
-        $uid = self::theUid();
-        if ($uid == self::REBATE_PAY_STATUS_USER) {
-            return true;
-        }
-        $accessId = self::$compSalerMap[$companyId];
-        if ($uid != $accessId) {
-            //获取当前销售所属的子用户
-            // $salerList = self::getUserChildUser($uid, CpAccess::$saleMark);
-            // $uids = [];
-            // if ($salerList['code'] == 0 && !empty($salerList['data'])) {
-            //     $uids = array_keys($salerList['data']);
-            // } 
+    //     $uid = self::theUid();
+    //     if ($uid == self::REBATE_PAY_STATUS_USER) {
+    //         return true;
+    //     }
+    //     $accessId = self::$compSalerMap[$companyId];
+    //     if ($uid != $accessId) {
+    //         //获取当前销售所属的子用户
+    //         // $salerList = self::getUserChildUser($uid, CpAccess::$saleMark);
+    //         // $uids = [];
+    //         // if ($salerList['code'] == 0 && !empty($salerList['data'])) {
+    //         //     $uids = array_keys($salerList['data']);
+    //         // } 
 
-            // if (! in_array($accessId, $uids)) {
-            //     return false;
-            // } else {
-            //     return true;                
-            // }
-            return false;
-        }
-        return true;
-    }
+    //         // if (! in_array($accessId, $uids)) {
+    //         //     return false;
+    //         // } else {
+    //         //     return true;                
+    //         // }
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
     /**
      * 检查passport项目的权限

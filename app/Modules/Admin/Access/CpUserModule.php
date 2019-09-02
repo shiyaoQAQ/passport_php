@@ -371,11 +371,13 @@ class CpUserModule {
      */
     public static function logout()
     {
-        // if (YC_Util::isFromWxapp()) {
-        //     self::logoutWxapp();
-        // } else {
+        // 删除几个内部项目的token
+        $uid = CpAccess::theUid();
+        $ownProjectIds = OauthModule::getOwnProjectIds();
+        if (!empty ($ownProjectIds)) {
+            OauthModule::nukeUserToken($uid, $ownProjectIds);
+        }
 
-        // }
         Session::flush();
         return true;
     }
