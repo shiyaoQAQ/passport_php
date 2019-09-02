@@ -70,6 +70,7 @@ class AccessConst
                     'opf-wholesale-order' => '1.5批可查看',
                     'can-dblink-price' => '不可自定义价格',
                     'opf-wholesale-edit' => '可修改1.5批商户',
+                    'order-refund-super' => '手动退款超级权限'
                 ),
             ),
             'refund'=>array(

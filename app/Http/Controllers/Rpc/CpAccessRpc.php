@@ -227,6 +227,61 @@ class CpAccessRpc extends Controller
         return $this->rpcReturn($result['code'], $result['msg'], $result['data']);
     }
 
+    public function delDepartUser(Request $request)
+    {
+        $uid = $request->input('uid');
+        $did = $request->input('did');
+        $result = delDepartUser($uid, $did);
+        return $this->rpcReturn($result['code'], $result['msg'], $result['data']);
+    }
 
+    public function getDepartResourceList(Request $request)
+    {
+        $did = $request->input('did');
+        $result = getDepartResourceList($did);
+        return $this->rpcReturn($result['code'], $result['msg'], $result['data']);
+    }
 
+    public function getUserDepartByUid(Request $request)
+    {
+        $uid = $request->input('uid');
+        $result = getUserDepartByUid($uid);
+        return $this->rpcReturn(0, 'ok', $result);
+    }
+
+    public function getDepartmentByMark(Request $request)
+    {
+        $mark = $request->input('mark');
+        $result = getDepartmentByMark($mark);
+        return $this->rpcReturn(0, 'ok', $result);
+    }
+
+    public function getNewSaleGroupWithName(Request $request)
+    {
+        $result = getNewSaleGroupWithName();
+        return $this->rpcReturn(0, 'ok', $result);
+    }
+
+    public function checkUserInDepartByMark(Request $request)
+    {
+        $userId = $request->input('userId');
+        $mark = $request->input('mark');
+        $result = checkUserInDepartByMark($userId, $mark);
+        return $this->rpcReturn(0, 'ok', $result);
+    }
+
+    public function getUserAccessMark(Request $request)
+    {
+        $userId = $request->input('userId');
+        $controller = $request->input('controller');
+        $result = getUserAccessMark($userId, $controller);
+        return $this->rpcReturn($result['code'], $result['msg'], $result['data']);
+    }
+
+    public function getCityServiceMap(Request $request)
+    {
+        $cityList = $request->input('cityList');
+        $result = getCityServiceMap($cityList);
+        return $this->rpcReturn(0, 'ok', $result);
+    }
 }

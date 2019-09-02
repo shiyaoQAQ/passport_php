@@ -35,4 +35,12 @@ Route::group(['middleware' => ['rpcauth']], function () {
     Route::get('/cpaccess/hasResource', 'CpAccessRpc@hasResource');
     Route::get('/cpaccess/getUserResouceList', 'CpAccessRpc@getUserResouceList');
     Route::get('/cpaccess/getAccess', 'CpAccessRpc@getAccess');
+    Route::get('/cpaccess/delDepartUser', 'CpAccessRpc@delDepartUser');
+    Route::get('/cpaccess/getDepartResourceList', 'CpAccessRpc@getDepartResourceList');
+    Route::get('/cpaccess/getUserDepartByUid', 'CpAccessRpc@getUserDepartByUid');
+    Route::get('/cpaccess/getDepartmentByMark', 'CpAccessRpc@getDepartmentByMark');
+    Route::get('/cpaccess/getNewSaleGroupWithName', 'CpAccessRpc@getNewSaleGroupWithName');
+    Route::get('/cpaccess/checkUserInDepartByMark', 'CpAccessRpc@checkUserInDepartByMark');
+    Route::get('/cpaccess/getUserAccessMark', 'CpAccessRpc@getUserAccessMark');
+    Route::get('/cpaccess/getCityServiceMap', 'CpAccessRpc@getCityServiceMap');
 });
