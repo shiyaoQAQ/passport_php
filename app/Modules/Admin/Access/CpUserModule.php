@@ -559,11 +559,11 @@ class CpUserModule {
     {
         $cpUser = CpUser::where('uid', $uid)->first();
         if (empty($cpUser)) {
-            throw new WorkException("用户不存在", 100000404);
+            throw new WorkException("用户不存在", 1000404);
         }
         $user = EcsUser::where('user_id', $cpUser->uid)->first();
         if (empty($cpUser)) {
-            throw new WorkException("用户不存在", 100000405);
+            throw new WorkException("用户不存在", 1000405);
         }
         return $cpUser;
     }
@@ -572,7 +572,7 @@ class CpUserModule {
     {
         $user = EcsUser::where('user_id', $uid)->first();
         if (empty($user)) {
-            throw new Exception("用户不存在", 100000406);
+            throw new Exception("用户不存在", 1000406);
         }
         return $user;
     }
@@ -587,11 +587,11 @@ class CpUserModule {
     {
         $cpUser = CpUser::where('mobile', $mobile)->first();
         if (empty($cpUser)) {
-            throw new Exception("用户不存在", 100000407);
+            throw new Exception("用户不存在", 1000407);
         }
         $user = EcsUser::where('user_id', $cpUser->uid)->first();
-        if (empty($cpUser)) {
-            throw new Exception("用户不存在", 100000408);
+        if (empty($user)) {
+            throw new Exception("用户不存在", 1000408);
         }
         return $cpUser;
     }
@@ -606,7 +606,7 @@ class CpUserModule {
     {
         $user = EcsUser::where('mobile_phone', $mobile)->first();
         if (empty($user)) {
-            throw new Exception("用户不存在", 100000410);
+            throw new Exception("用户不存在", 1000410);
         }
         return $user;
     }
@@ -615,11 +615,11 @@ class CpUserModule {
     {
         $user = EcsUser::where('mobile_phone', $mobile)->first();
         if (empty($user)) {
-            throw new Exception("用户不存在", 100000411);
+            throw new Exception("用户不存在", 1000411);
         }        
         $cpUser = CpUser::where('uid', $user->user_id)->first();
         if (empty($cpUser)) {
-            throw new Exception("用户不存在", 100000412);
+            throw new Exception("用户不存在", 1000412);
         }
         return $cpUser;
     }

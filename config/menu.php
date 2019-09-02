@@ -250,7 +250,7 @@ return [
             ],
         ],
         '珊瑚家开发' => [
-            'logo' => 'model-s',
+            'logo' => 'ios-home',
             'menu_list' => [
                 $shanhujiaCpUrl . "/" => '珊瑚家欢迎页',
                 $shanhujiaCpUrl . "/goods" => '商品',
