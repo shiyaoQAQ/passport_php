@@ -9,6 +9,7 @@ use \Exception;
 use \Session;
 use \YC_Util;
 use App\Modules\Admin\Access\CpAccess;
+use App\Modules\Admin\Oauth\Constants\OauthErrorCode;
 use App\Modules\User\UserBase\UserModule;
 
 /**

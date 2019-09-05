@@ -716,18 +716,38 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
     }
 
     /**
-     * 检查用户是否有访问权限
-     * 对应项目 类 方法 请求参数
+     * 简单的做一个权限白名单列表
      */
-    public static function checkAccess($project, $class, $action, $params)
+    public static function checkActionWhiteList($project, $class, $action)
     {
         /**
          * 简单做一个权限白名单
          */
         $whiteActionList = [
+            // 所有oauth回调都不需要权限控制
             'oauthCallback',
         ];
         if (in_array($action, $whiteActionList)) {
+            return true;
+        }
+        $whiteControllerList = [
+            // passport的oauth模块需要用户登录 但不需要有权限
+            'App\Http\Controllers\Admin\HomeController',
+        ];
+        if (in_array($class, $whiteControllerList)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * 检查用户是否有访问权限
+     * 对应项目 类 方法 请求参数
+     */
+    public static function checkAccess($project, $class, $action, $params)
+    {
+        if (self::checkActionWhiteList($project, $class, $action)) {
             return self::modelReturn(0, 'suc');
         }
 
