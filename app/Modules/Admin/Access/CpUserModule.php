@@ -216,8 +216,10 @@ class CpUserModule {
                 'is_deleted'=>'1'
             ]);
             $ecsUser = UserModule::getUserInfo($user->uid);
-            $ecsUser->password = self::DEFAULTPWD;
-            $ecsUser->save();
+            if ($ecsUser) {
+                $ecsUser->password = self::DEFAULTPWD;
+                $ecsUser->save();
+            }
             $ret = CpAccess::addDepartUser($did, $mobile);
             $code = $ret['code'];
             if($code == 0){

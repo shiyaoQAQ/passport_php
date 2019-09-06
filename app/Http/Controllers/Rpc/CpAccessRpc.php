@@ -11,7 +11,7 @@ use App\Modules\User\UserBase\UserModule;
 use Pascal\Core\Rpc\Component\RpcControllerTrait;
 
 /**
- * @desc CpUser信息相关Rpc
+ * @desc CpAccess信息相关Rpc
  */
 class CpAccessRpc extends Controller
 {
