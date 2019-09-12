@@ -40,7 +40,7 @@ class OauthClients extends Model
     public function getOwnProjects($filter = [])
     {
         $constructor = self::select(['*']);
-        $constructor->where('is_own_project', 1);
+        $constructor->where('is_trusted', 1);
         $list = $constructor->get();
         return $list;
     }
