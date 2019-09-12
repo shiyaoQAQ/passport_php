@@ -53,7 +53,7 @@ class OauthController extends Controller
         }
         // 显示页面 待用户确认
         // 如果是内部项目 直接生成code重定向回原有地址
-        if ($client->is_own_project) {
+        if ($client->is_trusted) {
             $userId = CpAccess::theUid();
             $code = OauthModule::getAuthorizationCode($clientId, $userId, $scope);
             return redirect($redirectUri . '?' . http_build_query([

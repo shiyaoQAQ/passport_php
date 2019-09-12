@@ -150,11 +150,11 @@ class EcsUser extends Model
     public static function createSimpleUser($data = [])
     {
         $user = new self;
-        $user->user_name = $data['user_name'] ?? $data['mobile'];
+        $user->user_name = array_get($data, 'user_name') ?: $data['mobile'];
         $user->reg_time = time();
         $user->mobile_phone = $data['mobile'];
-        $user->city_id = $data['city_id'] ?: 0;
-        $user->refer = $data['refer'] ?: 'default';
+        $user->city_id = array_get($data, 'city_id') ?: 0;
+        $user->refer = array_get($data, 'refer') ?: 'default';
         $user->is_validated = 0;
         $user->alias = '';
         $user->msn = '';
@@ -164,7 +164,7 @@ class EcsUser extends Model
         $user->last_time = '2017-01-01 00:00:00';
         $user->birthday = '2017-01-01';
         $user->credit_line = 0;
-        $user->user_rank = $data['user_rank'] ?? UserConst::DEFAULT_RANK;
+        $user->user_rank = array_get($data, 'user_rank') ?: UserConst::DEFAULT_RANK;
         $user->role = UserConst::ROLE_USER;
         $user->save();
         return $user;
