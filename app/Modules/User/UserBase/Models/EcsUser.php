@@ -17,23 +17,23 @@ class EcsUser extends Model
         return $this->hasOne('App\Modules\Admin\Access\Models\CpUser', 'uid', 'user_id');
     }
 
-    // public function add($data)
-    // {
-    //     if (isset($data['user_id'])) {
-    //         unset($data['reg_time']);
-    //         self::where('user_id', $data['user_id'])->update($data);
-    //         return $data['user_id'];
-    //     }
-    //     $one = self::where('mobile_phone', $data['mobile_phone'])->first();
-    //     if (empty($one)) {
-    //         $id = self::insertGetId($data);
-    //     } else {
-    //         unset($data['reg_time']);
-    //         self::where('mobile_phone', $data['mobile_phone'])->update($data);
-    //         $id = $one->user_id;
-    //     }
-    //     return $id;
-    // }
+    public function add($data)
+    {
+        if (isset($data['user_id'])) {
+            unset($data['reg_time']);
+            self::where('user_id', $data['user_id'])->update($data);
+            return $data['user_id'];
+        }
+        $one = self::where('mobile_phone', $data['mobile_phone'])->first();
+        if (empty($one)) {
+            $id = self::insertGetId($data);
+        } else {
+            unset($data['reg_time']);
+            self::where('mobile_phone', $data['mobile_phone'])->update($data);
+            $id = $one->user_id;
+        }
+        return $id;
+    }
 
     /**
      * 获取用户基础信息
