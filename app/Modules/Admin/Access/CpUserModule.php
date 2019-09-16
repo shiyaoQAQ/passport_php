@@ -200,12 +200,14 @@ class CpUserModule {
         $dDepart = new CpDepartment();
         $departInfo = $dDepart->getDeaprtByMark(CpAccess::MARK_SALE_DIMISSION); 
         $did = array_pluck($departInfo, 'id')[0];
-        $salesRpc = new \Pascal\Rpc\Zsfucai\SalesRpc;
-        $kaNumber = $salesRpc->getSalerKaNumber($user->uid);
+        // $salesRpc = new \Pascal\Rpc\Zsfucai\SalesRpc;
+        // $kaNumber = $salesRpc->getSalerKaNumber($user->uid);
+        $kaNumber = 0;
         if($kaNumber!=0){
             throw new WorkException(sprintf("名下有%s个KA私海客户，不能离职，请联系其上级尽快处理;",$kaNumber), 1000000);
         }
-        $customerNumber = $salesRpc->getSalerCustomerNumber($user->uid);
+        // $customerNumber = $salesRpc->getSalerCustomerNumber($user->uid);
+        $customerNumber = 0;
         if($customerNumber!=0){
             throw new WorkException(sprintf("名下有%s个个人客户，不能离职，请联系其上级尽快处理;",$customerNumber), 1000000);
         }

@@ -1184,12 +1184,14 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         if (!empty($department['mark']) && in_array($department['mark'], self::$saleWithDissionMark)) {
             $userDepartList = self::getUserDepartByUid($uid); 
             if (sizeof($userDepartList) <= 1) {
-                $salesRpc = new \Pascal\Rpc\Zsfucai\SalesRpc;
-                $kaNumber = $salesRpc->getSalerKaNumber($uid);
+                // $salesRpc = new \Pascal\Rpc\Zsfucai\SalesRpc;
+                // $kaNumber = $salesRpc->getSalerKaNumber($uid);
+                $kaNumber = 0;
                 if ($kaNumber!=0) {
                     return self::modelReturn(800031,'销售有KA客户' . $kaNumber . '个，如果删除账号请记得先重新分配其KA客户');
                 }
-                $customerNumber = $salesRpc->getSalerCustomerNumber($uid);
+                // $customerNumber = $salesRpc->getSalerCustomerNumber($uid);
+                $customerNumber = 0;
                 if($customerNumber!=0){
                     return self::modelReturn(800031,'此销售私海有客户，如果删除账号请记得先重新分配其私海客户');
                 }
