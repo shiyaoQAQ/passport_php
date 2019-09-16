@@ -22,8 +22,8 @@ class AccessController extends Controller
      * @param  Request $request [description]
      * @return [type]           [description]
      */
-    public function department(Request $request){
-        
+    public function department(Request $request)
+    {
         $objCpAcc = new CpAccess();
         $data = [
             'accessProjectList' => AccessConst::$accessProjectList,

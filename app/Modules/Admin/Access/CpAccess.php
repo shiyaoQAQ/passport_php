@@ -793,6 +793,47 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         return self::modelReturn(0, 'suc');
     }
 
+    /**
+     * 获取
+     *
+     * @param string $project
+     * @return void
+     */
+    public static function getRouteMap($project = null)
+    {
+        $zsfucai = app('redis')->get(AccessConst::REDIS_ZSFUCAI_ROUTE_MAP);
+        $zsfucai = json_decode($zsfucai, true);
+        $shanhujia = app('redis')->get(AccessConst::REDIS_SHANHUJIA_ROUTE_MAP);
+        $shanhujia = json_decode($shanhujia, true);
+
+        // 获取passport本身的路由映射
+        $routeList = app()->routes->getRoutes();
+        $ownRouteMap = [];
+        foreach ($routeList as $route){
+            if ($route->methods[0] != 'GET') {
+                continue;
+            }
+            $actionName = $route->getActionName();
+            if ($actionName == 'Closure') {
+                continue;
+            }
+            $ownRouteMap[$route->uri] = $route->getActionName();
+        }
+        unset($route);
+        
+        $result = [
+            'zsfucai' => $zsfucai,
+            'shanhujia' => $shanhujia,
+            'passport' => $ownRouteMap,
+        ];
+        if (is_null($project)) {
+            // 分模块返回
+            return $result;
+        } else {
+            return array_get($result, $project ?: 0) ?: [];
+        }
+    }
+
     public static function getMenu()
     {
         $actionList = self::getAccess(self::theUid());
@@ -800,37 +841,45 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         if (empty($actionList)) {
             return [];
         }
-        $allMenuList = config('menu.cp_menu'); 
+        $allMenuList = config('menu.cp_menu');
         $actionMd5 = md5(json_encode($actionList) . json_encode($allMenuList));
 
         $cacheActionMd5 = app('redis')->get(AccessConst::REDIS_ACTION_MD5KEY . self::theUid());
         $cacheMenuList = app('redis')->get(AccessConst::REDIS_ACTION_MENUKEY . self::theUid());
         //如果缓存里有，且用户的权限摘要没有变，就取缓存里的菜单
-        if (!empty($cacheActionMd5) && $cacheActionMd5 == $actionMd5 && !empty($cacheMenuList)) {
+        if (!empty($cacheActionMd5) && $cacheActionMd5 == $actionMd5 && !empty($cacheMenuList) && $cacheMenuList != "[]") {
             $actionMenu = json_decode($cacheMenuList, true);
         } else {
             if (isset($actionList['all']['all'])) {
                 $actionMenu = $allMenuList;
             } else {
                 $actionMenu = [];
-                $routeList = app()->routes->getRoutes();
-                $routeMap = [];
-                foreach ($routeList as $route){
-                    if ($route->methods[0] == 'POST') {
-                        continue;
-                    }
-                    $routeMap['/' . $route->uri] = $route->getActionName();
+                // 获取route映射
+                $routeMap = self::getRouteMap();
+                $allMenuUrl = config('menu.menu_url');
+                foreach ($allMenuUrl as $project => &$url) {
+                    $url = parse_url($url);
+                    $url['project'] = $project;
                 }
-                unset($route);
+                $pathToAction = function ($path) use ($routeMap, $allMenuUrl) {
+                    $pathInfo = parse_url($path);
+                    $host = array_get($pathInfo, 'host') ?: 'errorHost';
+                    $projectInfo = array_first($allMenuUrl, function($value) use ($host) {
+                        return $value['host'] == $host;
+                    });
+                    $project = array_get($projectInfo, 'project');
+                    $realPath = ltrim($pathInfo['path'], '/');
+                    $route = $routeMap[$project][$realPath];
+                    return $route;
+                };
+                // dd($allMenuUrl);
                 foreach ($allMenuList as $firMenuNmae => $menuDetail) {
                     foreach ($menuDetail['menu_list'] as $path => $secMenuName) {
                         if(is_array($secMenuName)){
                             $thirdList = [];
-                            foreach ($secMenuName as $itemPath => $itemName ) {
-                                $route = $routeMap[$itemPath];
-                                if ($route == 'Closure') {
-                                    continue;
-                                }
+                            foreach ($secMenuName as $itemPath => $itemName) {
+                                // 通过path获取所属模块
+                                $route = $pathToAction($itemPath);
                                 list($class, $action) = explode('@', $route);
                                 if (isset($actionList[$class][$action])) {
                                     $thirdList[$itemPath] = $itemName;
@@ -841,13 +890,8 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                                 $actionMenu[$firMenuNmae]['menu_list'][$path] = $thirdList;
                             }
                         }else{
-                            if (!isset($routeMap[$path])) {
-                                continue;
-                            }
-                            $route = $routeMap[$path];
-                            if ($route == 'Closure') {
-                                continue;
-                            }
+                            // 通过path获取所属模块
+                            $route = $pathToAction($path);
                             list($class, $action) = explode('@', $route);
                             if (isset($actionList[$class][$action])) {
                                 $actionMenu[$firMenuNmae]['logo'] = $menuDetail['logo'];

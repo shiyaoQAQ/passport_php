@@ -280,4 +280,9 @@ return [
             ],
         ],
     ],
+    'menu_url' => [
+        'passport' => $passportUrl,
+        'zsfucai' => $zsfucaiCpUrl,
+        'shanhujia' => $shanhujiaCpUrl,
+    ],
 ];
