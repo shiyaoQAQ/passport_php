@@ -2,7 +2,7 @@
 
 $passportUrl = 'http://'. config('app.url');
 $zsfucaiCpUrl = 'https://cp.' . config('app.zsfucai_url');
-$shanhujiaCpUrl = 'https://cp.' . config('app.shanhujia_url');
+$shanhujiaCpUrl = 'http://cp.' . config('app.shanhujia_url');
 if (config('app.env') == 'dev' && $referUrl = app('request')->input('devurl')) {
     // 获取refer
     // 获取其他人的环境名
