@@ -12,6 +12,6 @@
 */
 
 Route::get('/', function () {
-    echo 'test';
+    echo '前端用户passport开发中，后台请输入passport.zsfucai.cn/cp';
 });
 
