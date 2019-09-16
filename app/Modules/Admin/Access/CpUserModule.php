@@ -53,6 +53,8 @@ class CpUserModule {
         10 => '搬运工',
         11 => '售后',
         12 => '城市经理',
+        13 => '设计',
+        14 => '运营',
     );
 
     const MP_ROLE_DRIVER = 'driver';

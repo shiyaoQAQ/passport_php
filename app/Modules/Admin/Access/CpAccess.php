@@ -1166,7 +1166,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
             }
         }
         return self::modelReturn(0, '', $actionList);
-    }    
+    }
 
     public static function delDepartUser($uid, $did) {
         if (empty($did)) {
