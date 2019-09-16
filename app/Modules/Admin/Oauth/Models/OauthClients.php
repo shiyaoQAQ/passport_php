@@ -37,7 +37,7 @@ class OauthClients extends Model
      * @param array $filter
      * @return void
      */
-    public function getOwnProjects($filter = [])
+    public static function getOwnProjects($filter = [])
     {
         $constructor = self::select(['*']);
         $constructor->where('is_trusted', 1);
