@@ -271,7 +271,7 @@ return [
                 $zsfucaiCpUrl . "/inoutquery/list" => '产品出入库查询',
             ],
         ],
-        '珊瑚家开发' => [
+        '珊瑚家' => [
             'logo' => 'ios-home',
             'menu_list' => [
                 $shanhujiaCpUrl . "/" => '珊瑚家欢迎页',
