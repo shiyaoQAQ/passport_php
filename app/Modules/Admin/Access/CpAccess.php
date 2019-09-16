@@ -733,6 +733,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         $whiteControllerList = [
             // passport的oauth模块需要用户登录 但不需要有权限
             'App\Http\Controllers\Admin\HomeController',
+            'App\Http\Controllers\Admin\OauthController',
         ];
         if (in_array($class, $whiteControllerList)) {
             return true;
