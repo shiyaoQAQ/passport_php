@@ -68,7 +68,11 @@ class CpDepartmentAction extends Model
 					'action_type'   => self::TYPE_ACTION,
 					'project'   => $project,
 				);	
-			$one = self::where(array('con_action'=>$action['con_action'], 'department_id'=> $action['department_id']))->first();
+			$one = self::where(array(
+				'con_action'=>$action['con_action'],
+				'department_id'=> $action['department_id'],
+				'project' => $project,
+			))->first();
 			if(empty($one)){
 				DB::table($this->table)->insert($action);
 			}
