@@ -169,10 +169,10 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
     /**
      * 获取部门单个权限详情
      */
-    public static function getDeaprtActionList($did)
+    public static function getDeaprtActionList($did, $project = null)
     {
         $dDG = new CpDepartmentAction(); 
-        $ret = $dDG->getDeaprtActionList($did);
+        $ret = $dDG->getDeaprtActionList($did, $project);
         return self::modelReturn(0, '', $ret);
     }
 
@@ -753,10 +753,10 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         }
 
         $actionList = self::getAccess(self::theUid(), $project);
-        if ($actionList['code'] != 0 || empty($actionList['data'])) {
+        if (empty($actionList)) {
             return self::modelReturn(2, '没有权限');
         }
-        $actionList = $actionList['data'];
+        // $actionList = $actionList['data'];
         if(!isset($actionList['all']['all']) && !isset($actionList[$class][$action])){
             return self::modelReturn(3, '没有权限');
         }
@@ -837,7 +837,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
     public static function getMenu()
     {
         $actionList = self::getAccess(self::theUid());
-        $actionList = array_get($actionList, 'data');
+        // $actionList = array_get($actionList, 'data');
         if (empty($actionList)) {
             return [];
         }
@@ -870,7 +870,12 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                     $project = array_get($projectInfo, 'project');
                     $realPath = ltrim($pathInfo['path'], '/');
                     $route = $routeMap[$project][$realPath];
-                    return $route;
+                    list($class, $action) = explode('@', $route);
+                    return [
+                        $project,
+                        $class,
+                        $action
+                    ];
                 };
                 // dd($allMenuUrl);
                 foreach ($allMenuList as $firMenuNmae => $menuDetail) {
@@ -879,9 +884,9 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                             $thirdList = [];
                             foreach ($secMenuName as $itemPath => $itemName) {
                                 // 通过path获取所属模块
-                                $route = $pathToAction($itemPath);
-                                list($class, $action) = explode('@', $route);
-                                if (isset($actionList[$class][$action])) {
+                                list($project, $class, $action) = $pathToAction($itemPath);
+                                
+                                if (isset($actionList[$project][$class][$action])) {
                                     $thirdList[$itemPath] = $itemName;
                                 }
                             }
@@ -891,9 +896,8 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                             }
                         }else{
                             // 通过path获取所属模块
-                            $route = $pathToAction($path);
-                            list($class, $action) = explode('@', $route);
-                            if (isset($actionList[$class][$action])) {
+                            list($project, $class, $action) = $pathToAction($path);
+                            if (isset($actionList[$project][$class][$action])) {
                                 $actionMenu[$firMenuNmae]['logo'] = $menuDetail['logo'];
                                 $actionMenu[$firMenuNmae]['menu_list'][$path] = $secMenuName;
                             }
@@ -1109,13 +1113,13 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         return $mapList;
     }
 
-    public static function hasAccess($uid, $class, $action)
+    public static function hasAccess($uid, $project, $class, $action)
     {
-        $actionList = self::getAccess($uid); 
-        if ($actionList['code'] != 0 || empty($actionList['data'])) {
+        $actionList = self::getAccess($uid, $project); 
+        if (empty($actionList)) {
             return self::modelReturn(1, '没有权限');
         }
-        $actionList = $actionList['data'];
+        // $actionList = $actionList['data'];
         return (isset($actionList['all']['all']) || isset($actionList[$class][$action])) ? 
                  self::modelReturn(0, 'suc') : self::modelReturn(1, '没有权限');        
     } 
@@ -1174,23 +1178,25 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         $dUserDep = new CpDepartmentUser();
         $userDepartInfo = $dUserDep->getUserDepartByUid($uid); 
         if (empty($userDepartInfo)) {
-            return self::modelReturn(0, '', array());
+            return [];
         }
         $dids = \YC_Util::extractList($userDepartInfo, 'department_id');
         //获取部门权限关系表
         $dDG = new CpDepartmentAction();
         $departActionList = $dDG->getByDids($dids, $project);
         if(empty($departActionList)) {
-            return self::modelReturn(0, '', array());
+            return [];
         }
         //开始处理权限
-        $groupIds = array();
-        $actionList = array();
+        $groupIds = [];
+        $actionList = [];
+        $groupProjectMap = [];
         foreach ($departActionList as $key => $actionDetail) {
             if($actionDetail['action_type'] == CpDepartmentAction::TYPE_GROUP) {
                 $groupIds[] = $actionDetail['group_id'];
-            }else{
-                $actionList[$actionDetail['controller']][$actionDetail['action']] = $actionDetail;
+                $groupProjectMap[$actionDetail['group_id']] = $actionDetail['project'];
+            } else {
+                $actionList[$actionDetail['project']][$actionDetail['controller']][$actionDetail['action']] = $actionDetail;
                 unset($departActionList[$key]);
             }
         }
@@ -1205,12 +1211,17 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                             'controller'    => $one['controller'], 
                             'action'        => $one['action'],
                             'data_limit'    => $one['data_limit'],
+                            'project'    => $groupProjectMap[$one['gid']],
                         );
-                    $actionList[$tmp['controller']][$tmp['action']] = $tmp;
+                    $actionList[$one['gid']][$tmp['controller']][$tmp['action']] = $tmp;
                 }
             }
         }
-        return self::modelReturn(0, '', $actionList);
+        if ($project) {
+            return $actionList[$project];
+        } else {
+            return $actionList;
+        }
     }
 
     public static function delDepartUser($uid, $did) {

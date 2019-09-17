@@ -263,7 +263,7 @@ class AccessController extends Controller
             die('请重试');
         }
         $depart = $depart['data'];
-        $actionList = array_get(CpAccess::getDeaprtActionList($did), 'data');
+        $actionList = array_get(CpAccess::getDeaprtActionList($did, $project), 'data');
         $ret = CpAccess::getActionList($project);
         return view('admin.access.departmentActionAccess')
             ->with('action_list', $ret)

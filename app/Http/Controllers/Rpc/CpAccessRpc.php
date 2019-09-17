@@ -199,7 +199,8 @@ class CpAccessRpc extends Controller
         $uid = $request->input('uid');
         $class = $request->input('class');
         $action = $request->input('action');
-        $result = CpAccess::hasAccess($uid, $class, $action);
+        $project = $request->input('project');
+        $result = CpAccess::hasAccess($uid, $project, $class, $action);
         return $this->rpcReturn($result['code'], $result['msg'], $result['data']);
     }
 
@@ -223,8 +224,9 @@ class CpAccessRpc extends Controller
     {
         $uid = $request->input('uid');
         $project = $request->input('project') ?: [];
-        $result = CpAccess::getAccess($uid, $project);
-        return $this->rpcReturn($result['code'], $result['msg'], $result['data']);
+        // $result = CpAccess::getAccess($uid, $project);
+        // return $this->rpcReturn($result['code'], $result['msg'], $result['data']);
+        return $this->rpcReturn(500, '接口停止使用，需要重构', []);
     }
 
     public function delDepartUser(Request $request)

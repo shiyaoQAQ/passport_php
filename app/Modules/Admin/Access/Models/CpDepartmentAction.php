@@ -41,9 +41,15 @@ class CpDepartmentAction extends Model
 		return empty($ret) ? array() : $ret->toArray();
 	}    
 
-	public function getDeaprtActionList($did)
+	public function getDeaprtActionList($did, $project = null)
 	{
-		$ret = self::where(array('department_id'=>$did,'action_type'=>self::TYPE_ACTION))->get()->toArray();
+		$constructor= self::where('department_id', $did)
+			->where('action_type', self::TYPE_ACTION);
+		if ($project) {
+			$constructor->where('project', $project);
+		}
+		$ret = $constructor->get()
+			->toArray();
 		return empty($ret) ? array() : $ret;
     }
 
