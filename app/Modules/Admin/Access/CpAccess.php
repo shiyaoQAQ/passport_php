@@ -756,7 +756,6 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         if (empty($actionList)) {
             return self::modelReturn(2, '没有权限');
         }
-        // $actionList = $actionList['data'];
         if(!isset($actionList['all']['all']) && !isset($actionList[$class][$action])){
             return self::modelReturn(3, '没有权限');
         }
@@ -1218,7 +1217,14 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
             }
         }
         if ($project) {
-            return $actionList[$project];
+            $result = $actionList[$project];
+            // 获取all hack进去 后面重构这部分代码吧
+            if (isset($actionList['all']) && $actionList['all']) {
+                $all = $actionList['all'];
+                $result = array_merge($result, $all);
+            }
+
+            return $result;
         } else {
             return $actionList;
         }
