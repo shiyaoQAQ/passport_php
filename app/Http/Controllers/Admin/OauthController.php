@@ -101,9 +101,25 @@ class OauthController extends Controller
         // 获取code
         $userId = CpAccess::theUid();
         $code = OauthModule::getAuthorizationCode($clientId, $userId, $scope);
-        return redirect($redirectUri . '?' . http_build_query([
+        // 判断原来域名中是否有?
+        // $redirectUri = 'http://jkstest2.youcai123.cn/jenkins/securityRealm/finishLogin';
+        $realUri = $redirectUri;
+        if (strpos($redirectUri, '?') !== false) {
+            // 获取参数
+            $parseUri = parse_url($redirectUri);
+            if (empty(array_get($parseUri, 'query'))) {
+                // 这里是判断 http://jkstest2.youcai123.cn/jenkins/securityRealm/finishLogin? 以?结尾的异常case
+                $realUri .= '';
+            } else {
+                $realUri .= '&';
+            }
+        } else {
+            $realUri .= '?';
+        }
+        $realUri .= http_build_query([
             'code' => $code,
-        ]));
+        ]);
+        return redirect($realUri);
     }
 
     /**
@@ -119,13 +135,22 @@ class OauthController extends Controller
             case 'authorization_code':
                 $code = $request->input('code');
                 $clientId = $request->input('client_id');
+                // 同时取签名和秘钥两种校验方式 签名更安全 秘钥更简单
                 $signature = $request->input('signature');
+                $clientSecret = $request->input('client_secret');
                 $body = $request->all();
                 unset($body['signature']);
-                if (empty($code) || empty($clientId) || empty($signature)) {
+                if (empty($code) || empty($clientId) || (empty($signature) && empty($clientSecret))) {
                     throwError(OauthErrorCode::TOKEN_ARGUMENT_ERROR);
                 }
-                $result = OauthModule::getTokenByAuthorizationCode($clientId, $code, $signature, $body);
+                if ($clientSecret) {
+                    $result = OauthModule::getTokenByAuthorizationCodeAndSecret($clientId, $code, $signature, $body);
+                } else {
+                    $result = OauthModule::getTokenByAuthorizationCodeAndSignature($clientId, $code, $clientSecret, $body);
+                }
+                break;
+            case 'test':
+                // 密码获取和手机号获取待开发
                 break;
             default:
                 throwError(OauthErrorCode::GRANT_TYPE_ERROR);

@@ -67,6 +67,7 @@ Route::group(['middleware' => ['cpauth']], function () {
     Route::post('/oauth/clients', 'OauthManageController@storeClients');
     // Oauth本身登录
     Route::get('/oauth/show', 'OauthController@oauthShow');
+    Route::get('/oauth/authorize', 'OauthController@oauthShow');
     Route::post('/oauth/authorization', 'OauthController@oauthAuthorization');
     
 });

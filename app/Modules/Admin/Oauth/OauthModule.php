@@ -18,7 +18,7 @@ class OauthModule
     {
         $client = OauthClients::find($clientId);
         if (empty ($client)) {
-            throwError(OauthErrorCode::CLIENT_NOT_FOUND_2);
+            throwWorkError(OauthErrorCode::CLIENT_NOT_FOUND_2);
         }
         return $client;
     }
@@ -49,11 +49,11 @@ class OauthModule
     {
         $client = OauthClients::find($clientId);
         if (empty ($client)) {
-            throwError(OauthErrorCode::CLIENT_NOT_FOUND_2);
+            throwWorkError(OauthErrorCode::CLIENT_NOT_FOUND_2);
         }
         // 判断客户端是否被封禁
         if ($client->is_nuked) {
-            throwError(OauthErrorCode::CLIENT_IS_NUKED);
+            throwWorkError(OauthErrorCode::CLIENT_IS_NUKED);
         }
         // 校验本次redirectUri的host是否和创建客户端预设的域名一样
         // ？？？？ TODO
@@ -112,7 +112,7 @@ class OauthModule
     }
 
     /**
-     * 根据code获取accessToken
+     * 根据code和签名获取accessToken
      *
      * @param [type] $clientId
      * @param [type] $code
@@ -120,27 +120,66 @@ class OauthModule
      * @param [type] $body
      * @return void
      */
-    public static function getTokenByAuthorizationCode($clientId, $code, $signature, $body)
+    public static function getTokenByAuthorizationCodeAndSignature($clientId, $code, $signature, $body)
     {
         $client = OauthClients::find($clientId);
         if (empty ($client)) {
-            throwError(OauthErrorCode::CLIENT_NOT_FOUND_3);
+            throwWorkError(OauthErrorCode::CLIENT_NOT_FOUND_3);
         }
 
         // 取code
         $codeInfo = OauthAuthCodes::getCodeInfo($code);
         if (empty ($codeInfo)) {
-            throwError(OauthErrorCode::CODE_NOT_FOUND);
+            throwWorkError(OauthErrorCode::CODE_NOT_FOUND);
         }
         if ($codeInfo->is_nuked) {
-            throwError(OauthErrorCode::CODE_IS_NUKED);
+            throwWorkError(OauthErrorCode::CODE_IS_NUKED);
         }
         if ($codeInfo->expires_at < date('Y-m-d H:i:s')) {
-            throwError(OauthErrorCode::CODE_IS_EXPIRED);
+            throwWorkError(OauthErrorCode::CODE_IS_EXPIRED);
         }
 
         // 校验签名
         \YC_Util::checkSignature($signature, $client->id, $client->secret, $body);
+        
+        // 颁发token
+        $token = self::getAccessToken($codeInfo->client_id, $codeInfo->user_id, $codeInfo->scopes);
+        return $token;
+    }
+
+     /**
+     * 根据code和密钥获取accessToken
+     *
+     * @param [type] $clientId
+     * @param [type] $code
+     * @param [type] $secret
+     * @param [type] $body
+     * @return void
+     */
+    public static function getTokenByAuthorizationCodeAndSecret($clientId, $code, $secret, $body)
+    {
+        $client = OauthClients::find($clientId);
+        if (empty ($client)) {
+            throwWorkError(OauthErrorCode::CLIENT_NOT_FOUND_3);
+        }
+
+        // 取code
+        $codeInfo = OauthAuthCodes::getCodeInfo($code);
+        if (empty ($codeInfo)) {
+            throwWorkError(OauthErrorCode::CODE_NOT_FOUND);
+        }
+        if ($codeInfo->is_nuked) {
+            throwWorkError(OauthErrorCode::CODE_IS_NUKED);
+        }
+        if ($codeInfo->expires_at < date('Y-m-d H:i:s')) {
+            throwWorkError(OauthErrorCode::CODE_IS_EXPIRED);
+        }
+
+        // 校验密钥
+        if ($secret != $client->secret) {
+            throwWorkError(OauthErrorCode::CODE_IS_EXPIRED);
+        }
+        // \YC_Util::checkSignature($signature, $client->id, $client->secret, $body);
         
         // 颁发token
         $token = self::getAccessToken($codeInfo->client_id, $codeInfo->user_id, $codeInfo->scopes);
