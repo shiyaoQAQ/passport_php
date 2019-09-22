@@ -64,6 +64,18 @@ class CpUserModule {
         return self::$cpRoleList;
     }
 
+    /**
+     * 通过uid找cpUserInfo
+     *
+     * @param [type] $uid
+     * @return void
+     */
+    public static function getCpUserInfo($uid, $argument = [])
+    {
+        $cpUser = CpUser::getUserInfo($uid, $argument);
+        return $cpUser;
+    }
+
     public static function addUser($data)
     {
         $userMobile = '8' . substr($data['mobile'], 1);

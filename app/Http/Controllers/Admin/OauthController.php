@@ -144,9 +144,9 @@ class OauthController extends Controller
                     throwError(OauthErrorCode::TOKEN_ARGUMENT_ERROR);
                 }
                 if ($clientSecret) {
-                    $result = OauthModule::getTokenByAuthorizationCodeAndSecret($clientId, $code, $signature, $body);
+                    $result = OauthModule::getTokenByAuthorizationCodeAndSecret($clientId, $code, $clientSecret, $body);
                 } else {
-                    $result = OauthModule::getTokenByAuthorizationCodeAndSignature($clientId, $code, $clientSecret, $body);
+                    $result = OauthModule::getTokenByAuthorizationCodeAndSignature($clientId, $code, $signature, $body);
                 }
                 break;
             case 'test':

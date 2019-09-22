@@ -51,10 +51,17 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function mapWebRoutes()
     {
+        // admin相关路由
         Route::middleware('web')
             ->prefix('cp')
             ->namespace($this->namespace . '\Admin')
             ->group(base_path('routes/web/admin.php'));
+        // oauth admin相关路由
+        Route::middleware('web')
+            ->prefix('cp')
+            ->namespace($this->namespace . '\OpenAdmin')
+            ->group(base_path('routes/web/openAdmin.php'));
+        // 普通用户相关路由
         Route::middleware('web')
             ->namespace($this->namespace . '\User')
             ->group(base_path('routes/web/user.php'));

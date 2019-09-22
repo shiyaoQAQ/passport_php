@@ -58,6 +58,7 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'cpauth' => \App\Http\Middleware\CpUserAuth::class,
+        'cpOauthTokenAuth' => \App\Http\Middleware\CpOauthTokenAuth::class,
         'rpcauth' => \Pascal\Core\Rpc\RpcAuthMiddleware::class,
     ];
 }
