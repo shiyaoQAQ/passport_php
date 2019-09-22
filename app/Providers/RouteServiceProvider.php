@@ -57,7 +57,7 @@ class RouteServiceProvider extends ServiceProvider
             ->namespace($this->namespace . '\Admin')
             ->group(base_path('routes/web/admin.php'));
         // oauth admin相关路由
-        Route::middleware('web')
+        Route::middleware('api')
             ->prefix('cp')
             ->namespace($this->namespace . '\OpenAdmin')
             ->group(base_path('routes/web/openAdmin.php'));
