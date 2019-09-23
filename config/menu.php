@@ -3,7 +3,8 @@
 $passportUrl = 'http://'. config('app.url');
 $zsfucaiCpUrl = 'https://cp.' . config('app.zsfucai_url');
 $shanhujiaCpUrl = 'http://cp.' . config('app.shanhujia_url');
-if (config('app.env') == 'dev' && $referUrl = app('request')->input('devurl')) {
+
+if (config('app.env') == 'dev' && php_sapi_name() != 'cli' && $referUrl = app('request')->input('devurl')) {
     // 获取refer
     // 获取其他人的环境名
     $youcaiindex = 0;
