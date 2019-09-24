@@ -14,7 +14,20 @@
 // passport.zsfucai.cn/cp/xxx
 
 Route::group(['middleware' => ['cpauth']], function () {
-    // 组织架构
+    // 新组织架构
+    Route::get('/departments', 'DepartmentController@showDepartment');
+    Route::get('/departments/tree', 'DepartmentController@showDepartmentTree');
+    // Route::get('/departments/{did}/parent', 'DepartmentController@getDepartmentParent');
+    Route::get('/departments/{did}/parent', 'DepartmentController@getDepartmentParent');
+    // Route::get('/departments/{did}/user', 'DepartmentController@getDepartmentUser');
+    Route::get('/departments/{did}/user', 'DepartmentController@getDepartmentUser');
+    // Route::get('/departments/{did}/action', 'DepartmentController@getDepartmentAction');
+    Route::get('/departments/{did}/action', 'DepartmentController@getDepartmentAction');
+    // Route::get('/departments/{did}/resource', 'DepartmentController@getDepartmentResource');
+    Route::get('/departments/{did}/resource', 'DepartmentController@getDepartmentResource');
+    
+
+    // 旧组织架构
     Route::get('/department', 'AccessController@department');
     Route::get('/longrentdepartment/ajaxdeparttree', 'AccessController@getDepartTree');
     Route::get('/longrentdepartment/ajaxrenderdeparttree', 'AccessController@getTree');
@@ -23,6 +36,7 @@ Route::group(['middleware' => ['cpauth']], function () {
     Route::get('/longrentdepartment/ajaxgetdepartuser', 'AccessController@getDepartUser');
     Route::get('/longrentdepartment/ajaxgetactiongroup', 'AccessController@getActionGroup');
     Route::get('/longrentdepartment/ajax_get_depart_resource', 'AccessController@getDepartResource');
+
     Route::get('/longrentdepartment/actionaccessdetail', 'AccessController@actionAccessDetail');
     Route::get('/longrentdepartment/actiongroupaccessdetail', 'AccessController@actionGroupAccessDetail');
     Route::post('/longrentdepartment/setdepartaction', 'AccessController@setDepartAction');
@@ -45,9 +59,10 @@ Route::group(['middleware' => ['cpauth']], function () {
     Route::post('/longrentdepartment/setresourcegroup', 'AccessController@setResourceGroupAccess');
     Route::post('/longrentdepartment/ajax_set_depart_resource', 'AccessController@setDepartResourceDetail');
     Route::get('/longrentdepartment/depart_resource_detail', 'AccessController@departResourceDetail');
+    Route::post('/longrentdepartment/ajaxdeletedepart', 'AccessController@delDepart');
+
     Route::post('/access/selectAccess', 'AccessController@selectAccess');
     Route::get('/access/selectAccess', 'AccessController@selectAccess');
-    Route::post('/longrentdepartment/ajaxdeletedepart', 'AccessController@delDepart');
     // 首页和登录
     Route::get('/', 'HomeController@welcome');
     Route::get('/home/welcome', 'HomeController@welcome');
@@ -71,7 +86,6 @@ Route::group(['middleware' => ['cpauth']], function () {
     Route::post('/oauth/authorization', 'OauthController@oauthAuthorization');
     
     Route::get('/layout', 'HomeController@layout');
-    Route::get('/departments', 'DepartmentController@showDepartment');
 });
 
 Route::get('/home/login', 'HomeController@login');

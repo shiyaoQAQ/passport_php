@@ -6,7 +6,8 @@
 
 import Vue from 'vue';
 import Router from 'vue-router';
-import App from '../app.vue'
+import App from '../app.vue';
+import Index from '../page/index/index.vue';
 
 Vue.use(Router);
 
@@ -21,7 +22,13 @@ export default new Router({
             path: '/app',
             name: 'app',
             component: App,
-            // children: [],
+            children: [
+                {
+                    path : '/index',
+                    name : 'index',
+                    component : Index,
+                }
+            ],
             // redirect: ''
         },
         {

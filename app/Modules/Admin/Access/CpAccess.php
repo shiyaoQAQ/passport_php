@@ -98,11 +98,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         ];
         if (is_null($project)) {
             // 分模块返回
-            $allAction = [];
-            foreach ($result as $projectAction) {
-                $allAction = array_merge($projectAction ?: [], $allAction);
-            }
-            return $allAction;
+            return $result;
         } else {
             return array_get($result, $project ?: 0) ?: [];
         }
