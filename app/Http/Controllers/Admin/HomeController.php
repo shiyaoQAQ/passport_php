@@ -119,4 +119,28 @@ class HomeController extends Controller
             return redirect('/cp/home/login');
         }
     }
+
+    /**
+     * @desc 获取导航栏信息
+     */
+    public function layout(Request $request)
+    {
+        $url = base64_decode($request->input('controller'));
+        // $arr = parse_url($url);
+        // if (count(explode('order', $arr['path'])) > 1) {
+        //     $controller = 'OrderController';
+        // } else {
+        // }
+        $controller = '';
+
+        $menu = CpAccess::getMenu();
+        $showAccessList = CpAccess::getAccessPath($controller);
+        return $this->json(0, 'ok', [
+            'show_access_menu_list' => $menu, 
+            'show_access_list' => $showAccessList, 
+            'change_password' => "http://" . config('app.passport_url') . "/cp/user/password",
+            'logout' => "http://" . config('app.passport_url') . "/cp/home/logout",
+            'user_name' => CpAccess::theName(),
+        ]);
+    }
 }

@@ -131,7 +131,7 @@ export default {
     methods: {
         layout(){
             this.$Request({
-                url: '/layout',
+                url: '/cp/layout',
                 method:'get',
                 data: {
                     controller: Base64.encode(location.href),
