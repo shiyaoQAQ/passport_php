@@ -268,6 +268,367 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??ref--0-0!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/actionGroupList/index.vue?vue&type=script&lang=js&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    data: function data() {
+        var _this2 = this;
+
+        return {
+            modal: false,
+            // filter: {
+            // },
+            dataList: {},
+            modalData: {},
+            // accessProjectList : {!! json_encode($accessProjectList) !!},
+            // action_group_list : {!! json_encode($action_group_list) !!},
+            accessProjectList: [],
+            actionGroupList: [],
+            // 表格字段
+            actionGroupColumn: [{
+                title: 'ID',
+                width: 80,
+                key: 'id'
+            }, {
+                title: '名称',
+                key: 'name'
+            }, {
+                title: '描述',
+                key: 'desc'
+            }, {
+                title: '所属项目',
+                key: 'project'
+            }, {
+                title: '创建时间',
+                key: 'ctime'
+            }, {
+                title: '操作',
+                key: 'action',
+                width: 240,
+                align: 'center',
+                render: function render(h, params) {
+                    return h('div', [h('Button', {
+                        props: {
+                            type: 'info',
+                            size: 'small'
+                        },
+                        style: {
+                            margin: '0 5px 0 5px'
+                        },
+                        on: {
+                            click: function click() {
+                                _this2.editItem(params.row);
+                            }
+                        }
+                    }, '编辑'), h('Button', {
+                        props: {
+                            type: 'info',
+                            size: 'small'
+                        },
+                        style: {
+                            margin: '0 5px 0 5px'
+                        },
+                        on: {
+                            click: function click() {
+                                _this2.jumpPage('actiongroupaccessdetail', params.row);
+                            }
+                        }
+                    }, '权限编辑'), h('Button', {
+                        props: {
+                            type: 'error',
+                            size: 'small'
+                        },
+                        style: {
+                            margin: '0 5px 0 5px'
+                        },
+                        on: {
+                            click: function click() {
+                                // console.log(params);
+                                _this2.deleteItem(params.row);
+                            }
+                        }
+                    }, '删除')]);
+                }
+            }],
+            //搜索时使用的权限组列表
+            searchList: [],
+            modalConfig: {
+                loading: true,
+                operate: null,
+                searchLoading: false
+            },
+            thirdCityInfo: []
+        };
+    },
+
+    methods: {
+        // 获取数据
+        getDataList: function getDataList() {
+            var _this = this;
+            // if (page == null) {
+            //     page = this.dataList.current_page
+            // }
+            // _this.filter.page = page
+
+            $.ajax({
+                type: "get",
+                url: "/cp/departments/actionGroup",
+                data: this.filter,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: "json",
+                success: function success(response) {
+                    if (response.code === 0) {
+                        _this.actionGroupList = response.data.action_group_list;
+                    }
+                }
+            });
+        },
+
+        // 获取页面初始化数据
+        getInitData: function getInitData() {
+            var _this = this;
+            // 获取可选项目列表
+            $.ajax({
+                type: "get",
+                url: "/cp/departments/actionGroup/accessProject",
+                data: this.filter,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: "json",
+                success: function success(response) {
+                    if (response.code === 0) {
+                        _this.accessProjectList = response.data.access_project_list;
+                    }
+                }
+            });
+        },
+
+        //添加权限组
+        createItem: function createItem() {
+            this.modalConfig.operate = 'add';
+            this.modalData = {
+                name: '',
+                desc: '',
+                project: null
+            }, this.modal = true;
+        },
+
+        //编辑权限组
+        editItem: function editItem(item) {
+            this.modalConfig.operate = 'edit';
+            //将该item的数据 绑定到模态框上
+            this.modalData = this.copyObject(item);
+            this.modal = true;
+        },
+
+        //校验并存储权限组
+        storeItem: function storeItem() {
+            var _this = this;
+            // tp_id
+            if (this.modalData.name.length == 0) {
+                alert('请输入权限组名称');
+                _this.modalConfig.loading = false;
+                _this.$nextTick(function () {
+                    _this.modalConfig.loading = true;
+                });
+                return false;
+            }
+            if (!this.modalData.project) {
+                alert('请选择所属项目');
+                _this.modalConfig.loading = false;
+                _this.$nextTick(function () {
+                    _this.modalConfig.loading = true;
+                });
+                return false;
+            }
+            var group_id = this.modalData.id;
+            $.ajax({
+                url: '/cp/longrentdepartment/ajaxaddactiongroup',
+                type: "POST",
+                data: this.modalData,
+                dataType: 'JSON',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function success(response) {
+                    if (response.code === 0) {
+                        _this.modalConfig.loading = false;
+                        _this.$nextTick(function () {
+                            _this.modalConfig.loading = true;
+                        });
+                        _this.modal = false;
+                        //保存完后更新一次列表
+                        _this.$Message.success({
+                            title: '',
+                            content: '保存成功'
+                        });
+                        _this.getDataList();
+                    } else {
+                        _this.$Message.error({
+                            title: '',
+                            content: '保存失败！错误信息：' + response.msg + response.code
+                        });
+                        _this.modalConfig.loading = false;
+                        _this.$nextTick(function () {
+                            _this.modalConfig.loading = true;
+                        });
+                    }
+                },
+                error: function error() {
+                    _this.$Message.error({
+                        title: '',
+                        content: '网络错误，保存失败'
+                    });
+                    _this.modalConfig.loading = false;
+                    _this.$nextTick(function () {
+                        _this.modalConfig.loading = true;
+                    });
+                }
+            });
+        },
+
+        // 删除权限组
+        deleteItem: function deleteItem(item) {
+            if (!confirm('真的要执行删除操作吗？')) {
+                return false;
+            }
+            var _this = this;
+            //后台交互
+            $.ajax({
+                url: '/cp/longrentdepartment/ajaxdelactiongroup',
+                type: "POST",
+                data: {
+                    id: item.id
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: "json",
+                success: function success(response) {
+                    if (response.code == 0) {
+                        //保存完后更新一次列表
+                        _this.$Message.success({
+                            title: '',
+                            content: response.msg
+                        });
+                        _this.getDataList();
+                    } else {
+                        _this.$Message.error({
+                            title: '',
+                            content: '删除失败！错误信息：' + response.msg + response.code
+                        });
+                    }
+                },
+                error: function error() {
+                    _this.$Message.error({
+                        title: '',
+                        content: '网络错误，保存失败'
+                    });
+                }
+            });
+        },
+
+        //复制对象
+        copyObject: function copyObject(obj) {
+            if ((typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) != 'object') {
+                return obj;
+            }
+            var newobj = {};
+            for (var attr in obj) {
+                newobj[attr] = this.copyObject(obj[attr]);
+            }
+            return newobj;
+        },
+
+        // 页面跳转
+        jumpPage: function jumpPage(pa, v) {
+            if (pa == 'actiongroupaccessdetail') {
+                window.location = '/cp/longrentdepartment/actiongroupaccessdetail?id=' + v.id;
+            }
+        }
+    },
+    created: function created() {},
+    mounted: function mounted() {
+        this.getDataList();
+        this.getInitData();
+    }
+});
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__("./node_modules/jquery/dist/jquery.js")))
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??ref--0-0!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/index/index.vue?vue&type=script&lang=js&":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -898,6 +1259,364 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??ref--0-0!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupList/index.vue?vue&type=script&lang=js&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    data: function data() {
+        var _this2 = this;
+
+        return {
+            modal: false,
+            // filter: {
+            // },
+            dataList: {},
+            modalData: {},
+            // accessProjectList : {!! json_encode($accessProjectList) !!},
+            // resource_group_list : {!! json_encode($resource_group_list) !!},
+            // accessProjectList : [],
+            resourceGroupList: [],
+            // 表格字段
+            resourceGroupColumn: [{
+                title: 'ID',
+                width: 80,
+                key: 'id'
+            }, {
+                title: '名称',
+                key: 'name'
+            }, {
+                title: '描述',
+                key: 'desc'
+            }, {
+                title: '创建时间',
+                key: 'ctime'
+            }, {
+                title: '操作',
+                key: 'resource',
+                width: 240,
+                align: 'center',
+                render: function render(h, params) {
+                    return h('div', [h('Button', {
+                        props: {
+                            type: 'info',
+                            size: 'small'
+                        },
+                        style: {
+                            margin: '0 5px 0 5px'
+                        },
+                        on: {
+                            click: function click() {
+                                _this2.editItem(params.row);
+                            }
+                        }
+                    }, '编辑'), h('Button', {
+                        props: {
+                            type: 'info',
+                            size: 'small'
+                        },
+                        style: {
+                            margin: '0 5px 0 5px'
+                        },
+                        on: {
+                            click: function click() {
+                                _this2.jumpPage('resourcegroupdetail', params.row);
+                            }
+                        }
+                    }, '资源编辑'), h('Button', {
+                        props: {
+                            type: 'error',
+                            size: 'small'
+                        },
+                        style: {
+                            margin: '0 5px 0 5px'
+                        },
+                        on: {
+                            click: function click() {
+                                // console.log(params);
+                                _this2.deleteItem(params.row);
+                            }
+                        }
+                    }, '删除')]);
+                }
+            }],
+            //搜索时使用的资源组列表
+            searchList: [],
+            modalConfig: {
+                loading: true,
+                operate: null,
+                searchLoading: false
+            },
+            thirdCityInfo: []
+        };
+    },
+
+    methods: {
+        // 获取数据
+        getDataList: function getDataList() {
+            var _this = this;
+            // if (page == null) {
+            //     page = this.dataList.current_page
+            // }
+            // _this.filter.page = page
+
+            $.ajax({
+                type: "get",
+                url: "/cp/departments/resourceGroup",
+                data: this.filter,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: "json",
+                success: function success(response) {
+                    if (response.code === 0) {
+                        _this.resourceGroupList = response.data.resource_group_list;
+                    }
+                }
+            });
+        },
+
+        // 获取页面初始化数据
+        getInitData: function getInitData() {
+            var _this = this;
+            // // 获取可选项目列表
+            // $.ajax({
+            //     type: "get",
+            //     url: "/cp/departments/resourceGroup/accessProject",
+            //     data: this.filter,
+            //     headers: {
+            //         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            //     },
+            //     dataType: "json",
+            //     success: function (response) {
+            //         if (response.code === 0) {
+            //             _this.accessProjectList = response.data.access_project_list
+            //         }
+            //     }
+            // })
+        },
+
+        //添加资源组
+        createItem: function createItem() {
+            this.modalConfig.operate = 'add';
+            this.modalData = {
+                name: '',
+                desc: '',
+                project: null
+            }, this.modal = true;
+        },
+
+        //编辑资源组
+        editItem: function editItem(item) {
+            this.modalConfig.operate = 'edit';
+            //将该item的数据 绑定到模态框上
+            this.modalData = this.copyObject(item);
+            this.modal = true;
+        },
+
+        //校验并存储资源组
+        storeItem: function storeItem() {
+            var _this = this;
+            // tp_id
+            if (this.modalData.name.length == 0) {
+                alert('请输入资源组名称');
+                _this.modalConfig.loading = false;
+                _this.$nextTick(function () {
+                    _this.modalConfig.loading = true;
+                });
+                return false;
+            }
+            // if(!this.modalData.project){
+            //     alert('请选择所属项目');
+            //     _this.modalConfig.loading = false
+            //     _this.$nextTick(() => { _this.modalConfig.loading = true; })
+            //     return false;
+            // }
+            var group_id = this.modalData.id;
+            $.ajax({
+                url: '/cp/longrentdepartment/ajaxaddresourcegroup',
+                type: "POST",
+                data: this.modalData,
+                dataType: 'JSON',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function success(response) {
+                    if (response.code === 0) {
+                        _this.modalConfig.loading = false;
+                        _this.$nextTick(function () {
+                            _this.modalConfig.loading = true;
+                        });
+                        _this.modal = false;
+                        //保存完后更新一次列表
+                        _this.$Message.success({
+                            title: '',
+                            content: '保存成功'
+                        });
+                        _this.getDataList();
+                    } else {
+                        _this.$Message.error({
+                            title: '',
+                            content: '保存失败！错误信息：' + response.msg + response.code
+                        });
+                        _this.modalConfig.loading = false;
+                        _this.$nextTick(function () {
+                            _this.modalConfig.loading = true;
+                        });
+                    }
+                },
+                error: function error() {
+                    _this.$Message.error({
+                        title: '',
+                        content: '网络错误，保存失败'
+                    });
+                    _this.modalConfig.loading = false;
+                    _this.$nextTick(function () {
+                        _this.modalConfig.loading = true;
+                    });
+                }
+            });
+        },
+
+        // 删除资源组
+        deleteItem: function deleteItem(item) {
+            if (!confirm('真的要执行删除操作吗？')) {
+                return false;
+            }
+            var _this = this;
+            //后台交互
+            $.ajax({
+                url: '/cp/longrentdepartment/ajaxdelresourcegroup',
+                type: "POST",
+                data: {
+                    id: item.id
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: "json",
+                success: function success(response) {
+                    if (response.code == 0) {
+                        //保存完后更新一次列表
+                        _this.$Message.success({
+                            title: '',
+                            content: response.msg
+                        });
+                        _this.getDataList();
+                    } else {
+                        _this.$Message.error({
+                            title: '',
+                            content: '删除失败！错误信息：' + response.msg + response.code
+                        });
+                    }
+                },
+                error: function error() {
+                    _this.$Message.error({
+                        title: '',
+                        content: '网络错误，保存失败'
+                    });
+                }
+            });
+        },
+
+        //复制对象
+        copyObject: function copyObject(obj) {
+            if ((typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) != 'object') {
+                return obj;
+            }
+            var newobj = {};
+            for (var attr in obj) {
+                newobj[attr] = this.copyObject(obj[attr]);
+            }
+            return newobj;
+        },
+
+        // 页面跳转
+        jumpPage: function jumpPage(pa, v) {
+            if (pa == 'resourcegroupdetail') {
+                window.location = '/cp/longrentdepartment/resourcegroupdetail?id=' + v.id;
+            }
+        }
+    },
+    created: function created() {},
+    mounted: function mounted() {
+        this.getDataList();
+        this.getInitData();
+    }
+});
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__("./node_modules/jquery/dist/jquery.js")))
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/base/js/compontents/menu/index.vue?vue&type=style&index=0&id=12e2d18e&lang=less&scoped=true&":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -928,12 +1647,32 @@ exports.push([module.i, ".org-tree-container {\n  display: inline-block;\n  padd
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/actionGroupList/index.vue?vue&type=style&index=0&id=85925bfe&lang=less&scoped=true&":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
+// Module
+exports.push([module.i, ".page .pageCenter[data-v-85925bfe] {\n  width: 1200px;\n  background-color: #fff;\n  margin: 0 auto;\n  padding: 15px;\n}\n.page .createOperate Button[data-v-85925bfe] {\n  margin: 10px;\n}\n.page .actionGroupList[data-v-85925bfe] {\n  margin-bottom: 50px;\n}\n.ivu-modal-body .modalLI[data-v-85925bfe] {\n  margin-top: 20px;\n}\n.ivu-modal-body .modalLI span[data-v-85925bfe]:first-child {\n  display: inline-block;\n  width: 100px;\n  text-align: right;\n}\n", ""]);
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/index/index.vue?vue&type=style&index=0&id=e9683ca8&lang=less&scoped=true&":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
 exports.push([module.i, ".page[data-v-e9683ca8] {\n  min-height: 100rem;\n}\n.page .tree[data-v-e9683ca8] {\n  float: left;\n  width: 40%;\n  background-color: #fff;\n}\n.page .detail[data-v-e9683ca8] {\n  float: right;\n  width: 60%;\n  padding-left: 15px;\n}\n.page .detail .departmentInfo span[data-v-e9683ca8] {\n  display: inline-block;\n  min-width: 120px;\n  margin-right: 10px;\n}\n.page .detail .departmentOperateList[data-v-e9683ca8] {\n  margin-top: 10px;\n}\n.page .detail .departmentOperateList Button[data-v-e9683ca8] {\n  margin: 5px;\n}\n.page .detail .detailElement[data-v-e9683ca8] {\n  margin-bottom: 15px;\n}\n.page .detail .userInputBlock[data-v-e9683ca8] {\n  overflow: hidden;\n  margin-bottom: 20px;\n}\n.page .detail .userInputBlock .userInput[data-v-e9683ca8] {\n  float: left;\n  width: 30%;\n}\n.page .detail .userInputBlock Button[data-v-e9683ca8] {\n  float: left;\n  margin-left: 10px;\n}\n.page .detail .actionGroup[data-v-e9683ca8] {\n  padding: 5px;\n  display: block;\n}\n.page .detail .actionGroup .actionGroupTitle[data-v-e9683ca8] {\n  display: block;\n  font-size: 12px;\n}\n", ""]);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupList/index.vue?vue&type=style&index=0&id=3c79e969&lang=less&scoped=true&":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
+// Module
+exports.push([module.i, ".page .pageCenter[data-v-3c79e969] {\n  width: 1200px;\n  background-color: #fff;\n  margin: 0 auto;\n  padding: 15px;\n}\n.page .createOperate Button[data-v-3c79e969] {\n  margin: 10px;\n}\n.page .resourceGroupList[data-v-3c79e969] {\n  margin-bottom: 50px;\n}\n.ivu-modal-body .modalLI[data-v-3c79e969] {\n  margin-top: 20px;\n}\n.ivu-modal-body .modalLI span[data-v-3c79e969]:first-child {\n  display: inline-block;\n  width: 100px;\n  text-align: right;\n}\n", ""]);
 
 
 /***/ }),
@@ -1348,10 +2087,56 @@ if (content.locals) {
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/dist/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/actionGroupList/index.vue?vue&type=style&index=0&id=85925bfe&lang=less&scoped=true&":
+/***/ (function(module, exports, __webpack_require__) {
+
+var content = __webpack_require__("./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/actionGroupList/index.vue?vue&type=style&index=0&id=85925bfe&lang=less&scoped=true&");
+
+if (typeof content === 'string') {
+  content = [[module.i, content, '']];
+}
+
+var options = {}
+
+options.insert = "head";
+options.singleton = false;
+
+var update = __webpack_require__("./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js")(content, options);
+
+if (content.locals) {
+  module.exports = content.locals;
+}
+
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/dist/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/index/index.vue?vue&type=style&index=0&id=e9683ca8&lang=less&scoped=true&":
 /***/ (function(module, exports, __webpack_require__) {
 
 var content = __webpack_require__("./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/index/index.vue?vue&type=style&index=0&id=e9683ca8&lang=less&scoped=true&");
+
+if (typeof content === 'string') {
+  content = [[module.i, content, '']];
+}
+
+var options = {}
+
+options.insert = "head";
+options.singleton = false;
+
+var update = __webpack_require__("./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js")(content, options);
+
+if (content.locals) {
+  module.exports = content.locals;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupList/index.vue?vue&type=style&index=0&id=3c79e969&lang=less&scoped=true&":
+/***/ (function(module, exports, __webpack_require__) {
+
+var content = __webpack_require__("./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupList/index.vue?vue&type=style&index=0&id=3c79e969&lang=less&scoped=true&");
 
 if (typeof content === 'string') {
   content = [[module.i, content, '']];
@@ -2126,6 +2911,156 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/actionGroupList/index.vue?vue&type=template&id=85925bfe&scoped=true&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "page" }, [
+    _c(
+      "div",
+      { staticClass: "pageCenter" },
+      [
+        _c("h2", [_vm._v("权限组管理")]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "createOperate" },
+          [
+            _c(
+              "Button",
+              { attrs: { type: "info" }, on: { click: _vm.createItem } },
+              [_vm._v("添 加")]
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "actionGroupList" },
+          [
+            _c("Table", {
+              attrs: {
+                "highlight-row": "",
+                columns: _vm.actionGroupColumn,
+                data: _vm.actionGroupList
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "Modal",
+          {
+            attrs: { loading: _vm.modalConfig.loading, "ok-text": "保存" },
+            on: { "on-ok": _vm.storeItem },
+            model: {
+              value: _vm.modal,
+              callback: function($$v) {
+                _vm.modal = $$v
+              },
+              expression: "modal"
+            }
+          },
+          [
+            this.modalConfig.operate == "add"
+              ? _c("h3", [_vm._v("添加")])
+              : _c("h3", [_vm._v("编辑")]),
+            _vm._v(" "),
+            _c("ul", [
+              _c(
+                "li",
+                { staticClass: "modalLI" },
+                [
+                  _c("span", [_vm._v("名称:")]),
+                  _vm._v(" "),
+                  _c("i-input", {
+                    staticStyle: { width: "300px" },
+                    model: {
+                      value: _vm.modalData.name,
+                      callback: function($$v) {
+                        _vm.$set(_vm.modalData, "name", $$v)
+                      },
+                      expression: "modalData.name"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "li",
+                { staticClass: "modalLI" },
+                [
+                  _c("span", [_vm._v("描述:")]),
+                  _vm._v(" "),
+                  _c("i-input", {
+                    staticStyle: { width: "300px" },
+                    model: {
+                      value: _vm.modalData.desc,
+                      callback: function($$v) {
+                        _vm.$set(_vm.modalData, "desc", $$v)
+                      },
+                      expression: "modalData.desc"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "li",
+                { staticClass: "modalLI" },
+                [
+                  _c("span", [_vm._v("所属项目:")]),
+                  _vm._v(" "),
+                  _c(
+                    "i-select",
+                    {
+                      staticStyle: { width: "300px" },
+                      attrs: { disabled: this.modalConfig.operate != "add" },
+                      model: {
+                        value: _vm.modalData.project,
+                        callback: function($$v) {
+                          _vm.$set(_vm.modalData, "project", $$v)
+                        },
+                        expression: "modalData.project"
+                      }
+                    },
+                    _vm._l(_vm.accessProjectList, function(desc, index) {
+                      return _c(
+                        "i-option",
+                        { key: index, attrs: { value: index } },
+                        [_vm._v(_vm._s(desc) + " ")]
+                      )
+                    }),
+                    1
+                  )
+                ],
+                1
+              )
+            ])
+          ]
+        )
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/index/index.vue?vue&type=template&id=e9683ca8&scoped=true&":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2816,6 +3751,124 @@ var render = function() {
           )
         : _vm._e()
     ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupList/index.vue?vue&type=template&id=3c79e969&scoped=true&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "page" }, [
+    _c(
+      "div",
+      { staticClass: "pageCenter" },
+      [
+        _c("h2", [_vm._v("资源组管理")]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "createOperate" },
+          [
+            _c(
+              "Button",
+              { attrs: { type: "info" }, on: { click: _vm.createItem } },
+              [_vm._v("添 加")]
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "resourceGroupList" },
+          [
+            _c("Table", {
+              attrs: {
+                "highlight-row": "",
+                columns: _vm.resourceGroupColumn,
+                data: _vm.resourceGroupList
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "Modal",
+          {
+            attrs: { loading: _vm.modalConfig.loading, "ok-text": "保存" },
+            on: { "on-ok": _vm.storeItem },
+            model: {
+              value: _vm.modal,
+              callback: function($$v) {
+                _vm.modal = $$v
+              },
+              expression: "modal"
+            }
+          },
+          [
+            this.modalConfig.operate == "add"
+              ? _c("h3", [_vm._v("添加")])
+              : _c("h3", [_vm._v("编辑")]),
+            _vm._v(" "),
+            _c("ul", [
+              _c(
+                "li",
+                { staticClass: "modalLI" },
+                [
+                  _c("span", [_vm._v("名称:")]),
+                  _vm._v(" "),
+                  _c("i-input", {
+                    staticStyle: { width: "300px" },
+                    model: {
+                      value: _vm.modalData.name,
+                      callback: function($$v) {
+                        _vm.$set(_vm.modalData, "name", $$v)
+                      },
+                      expression: "modalData.name"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "li",
+                { staticClass: "modalLI" },
+                [
+                  _c("span", [_vm._v("描述:")]),
+                  _vm._v(" "),
+                  _c("i-input", {
+                    staticStyle: { width: "300px" },
+                    model: {
+                      value: _vm.modalData.desc,
+                      callback: function($$v) {
+                        _vm.$set(_vm.modalData, "desc", $$v)
+                      },
+                      expression: "modalData.desc"
+                    }
+                  })
+                ],
+                1
+              )
+            ])
+          ]
+        )
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = []
@@ -6332,6 +7385,90 @@ var render = function render(h, context) {
 
 /***/ }),
 
+/***/ "./resources/assets/cp/department/js/page/actionGroupList/index.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__index_vue_vue_type_template_id_85925bfe_scoped_true___ = __webpack_require__("./resources/assets/cp/department/js/page/actionGroupList/index.vue?vue&type=template&id=85925bfe&scoped=true&");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__index_vue_vue_type_script_lang_js___ = __webpack_require__("./resources/assets/cp/department/js/page/actionGroupList/index.vue?vue&type=script&lang=js&");
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__index_vue_vue_type_style_index_0_id_85925bfe_lang_less_scoped_true___ = __webpack_require__("./resources/assets/cp/department/js/page/actionGroupList/index.vue?vue&type=style&index=0&id=85925bfe&lang=less&scoped=true&");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_runtime_componentNormalizer_js__ = __webpack_require__("./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_runtime_componentNormalizer_js__["a" /* default */])(
+  __WEBPACK_IMPORTED_MODULE_1__index_vue_vue_type_script_lang_js___["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_0__index_vue_vue_type_template_id_85925bfe_scoped_true___["a" /* render */],
+  __WEBPACK_IMPORTED_MODULE_0__index_vue_vue_type_template_id_85925bfe_scoped_true___["b" /* staticRenderFns */],
+  false,
+  null,
+  "85925bfe",
+  null
+  
+)
+
+/* hot reload */
+if (false) {
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  api.install(require('vue'))
+  if (api.compatible) {
+    module.hot.accept()
+    if (!api.isRecorded('85925bfe')) {
+      api.createRecord('85925bfe', component.options)
+    } else {
+      api.reload('85925bfe', component.options)
+    }
+    module.hot.accept("./index.vue?vue&type=template&id=85925bfe&scoped=true&", function () {
+      api.rerender('85925bfe', {
+        render: render,
+        staticRenderFns: staticRenderFns
+      })
+    })
+  }
+}
+component.options.__file = "resources/assets/cp/department/js/page/actionGroupList/index.vue"
+/* harmony default export */ __webpack_exports__["a"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/actionGroupList/index.vue?vue&type=script&lang=js&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_babel_loader_lib_index_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_script_lang_js___ = __webpack_require__("./node_modules/babel-loader/lib/index.js??ref--0-0!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/actionGroupList/index.vue?vue&type=script&lang=js&");
+/* unused harmony namespace reexport */
+ /* harmony default export */ __webpack_exports__["a"] = (__WEBPACK_IMPORTED_MODULE_0__node_modules_babel_loader_lib_index_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_script_lang_js___["a" /* default */]); 
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/actionGroupList/index.vue?vue&type=style&index=0&id=85925bfe&lang=less&scoped=true&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_style_index_0_id_85925bfe_lang_less_scoped_true___ = __webpack_require__("./node_modules/style-loader/dist/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/actionGroupList/index.vue?vue&type=style&index=0&id=85925bfe&lang=less&scoped=true&");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_style_index_0_id_85925bfe_lang_less_scoped_true____default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_style_index_0_id_85925bfe_lang_less_scoped_true___);
+/* unused harmony reexport namespace */
+ /* unused harmony default export */ var _unused_webpack_default_export = (__WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_style_index_0_id_85925bfe_lang_less_scoped_true____default.a); 
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/actionGroupList/index.vue?vue&type=template&id=85925bfe&scoped=true&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_template_id_85925bfe_scoped_true___ = __webpack_require__("./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/actionGroupList/index.vue?vue&type=template&id=85925bfe&scoped=true&");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_template_id_85925bfe_scoped_true___["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_template_id_85925bfe_scoped_true___["b"]; });
+
+
+/***/ }),
+
 /***/ "./resources/assets/cp/department/js/page/index/index.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -6416,6 +7553,90 @@ component.options.__file = "resources/assets/cp/department/js/page/index/index.v
 
 /***/ }),
 
+/***/ "./resources/assets/cp/department/js/page/resourceGroupList/index.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__index_vue_vue_type_template_id_3c79e969_scoped_true___ = __webpack_require__("./resources/assets/cp/department/js/page/resourceGroupList/index.vue?vue&type=template&id=3c79e969&scoped=true&");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__index_vue_vue_type_script_lang_js___ = __webpack_require__("./resources/assets/cp/department/js/page/resourceGroupList/index.vue?vue&type=script&lang=js&");
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__index_vue_vue_type_style_index_0_id_3c79e969_lang_less_scoped_true___ = __webpack_require__("./resources/assets/cp/department/js/page/resourceGroupList/index.vue?vue&type=style&index=0&id=3c79e969&lang=less&scoped=true&");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_runtime_componentNormalizer_js__ = __webpack_require__("./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_runtime_componentNormalizer_js__["a" /* default */])(
+  __WEBPACK_IMPORTED_MODULE_1__index_vue_vue_type_script_lang_js___["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_0__index_vue_vue_type_template_id_3c79e969_scoped_true___["a" /* render */],
+  __WEBPACK_IMPORTED_MODULE_0__index_vue_vue_type_template_id_3c79e969_scoped_true___["b" /* staticRenderFns */],
+  false,
+  null,
+  "3c79e969",
+  null
+  
+)
+
+/* hot reload */
+if (false) {
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  api.install(require('vue'))
+  if (api.compatible) {
+    module.hot.accept()
+    if (!api.isRecorded('3c79e969')) {
+      api.createRecord('3c79e969', component.options)
+    } else {
+      api.reload('3c79e969', component.options)
+    }
+    module.hot.accept("./index.vue?vue&type=template&id=3c79e969&scoped=true&", function () {
+      api.rerender('3c79e969', {
+        render: render,
+        staticRenderFns: staticRenderFns
+      })
+    })
+  }
+}
+component.options.__file = "resources/assets/cp/department/js/page/resourceGroupList/index.vue"
+/* harmony default export */ __webpack_exports__["a"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/resourceGroupList/index.vue?vue&type=script&lang=js&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_babel_loader_lib_index_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_script_lang_js___ = __webpack_require__("./node_modules/babel-loader/lib/index.js??ref--0-0!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupList/index.vue?vue&type=script&lang=js&");
+/* unused harmony namespace reexport */
+ /* harmony default export */ __webpack_exports__["a"] = (__WEBPACK_IMPORTED_MODULE_0__node_modules_babel_loader_lib_index_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_script_lang_js___["a" /* default */]); 
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/resourceGroupList/index.vue?vue&type=style&index=0&id=3c79e969&lang=less&scoped=true&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_style_index_0_id_3c79e969_lang_less_scoped_true___ = __webpack_require__("./node_modules/style-loader/dist/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupList/index.vue?vue&type=style&index=0&id=3c79e969&lang=less&scoped=true&");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_style_index_0_id_3c79e969_lang_less_scoped_true____default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_style_index_0_id_3c79e969_lang_less_scoped_true___);
+/* unused harmony reexport namespace */
+ /* unused harmony default export */ var _unused_webpack_default_export = (__WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_style_index_0_id_3c79e969_lang_less_scoped_true____default.a); 
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/resourceGroupList/index.vue?vue&type=template&id=3c79e969&scoped=true&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_template_id_3c79e969_scoped_true___ = __webpack_require__("./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupList/index.vue?vue&type=template&id=3c79e969&scoped=true&");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_template_id_3c79e969_scoped_true___["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_template_id_3c79e969_scoped_true___["b"]; });
+
+
+/***/ }),
+
 /***/ "./resources/assets/cp/department/js/router/router.js":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -6425,11 +7646,15 @@ component.options.__file = "resources/assets/cp/department/js/page/index/index.v
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__("./node_modules/vue-router/dist/vue-router.esm.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__app_vue__ = __webpack_require__("./resources/assets/cp/department/js/app.vue");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__page_index_index_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/index/index.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__page_actionGroupList_index_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/actionGroupList/index.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__page_resourceGroupList_index_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/resourceGroupList/index.vue");
 /*
  * @Author: GXY 
  * @Date: 2019-08-23 14:21:04 
  * @Describe: router
  */
+
+
 
 
 
@@ -6451,6 +7676,14 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             path: '/index',
             name: 'index',
             component: __WEBPACK_IMPORTED_MODULE_3__page_index_index_vue__["a" /* default */]
+        }, {
+            path: '/actionGroup',
+            name: 'actionGroupList',
+            component: __WEBPACK_IMPORTED_MODULE_4__page_actionGroupList_index_vue__["a" /* default */]
+        }, {
+            path: '/resourceGroup',
+            name: 'resourceGroupList',
+            component: __WEBPACK_IMPORTED_MODULE_5__page_resourceGroupList_index_vue__["a" /* default */]
         }]
         // redirect: ''
     }, {

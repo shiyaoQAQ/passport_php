@@ -1,6 +1,6 @@
 @extends('admin.layout')
 
-@section('title', '添加管理员')
+@section('title', '资源组管理')
 
 @section('content')
 <style type="text/css">
