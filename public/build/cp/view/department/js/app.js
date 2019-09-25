@@ -3243,7 +3243,7 @@ var render = function() {
                         ) {
                           return _c(
                             "Panel",
-                            { attrs: { name: index + "" } },
+                            { key: index, attrs: { name: index + "" } },
                             [
                               _vm._v(
                                 "\n                            " +
@@ -3274,11 +3274,12 @@ var render = function() {
                                 { attrs: { slot: "content" }, slot: "content" },
                                 _vm._l(projectInfo.controllerList, function(
                                   controllerInfo,
-                                  controller
+                                  controller,
+                                  index
                                 ) {
                                   return _c(
                                     "span",
-                                    { staticClass: "actionGroup" },
+                                    { key: index, staticClass: "actionGroup" },
                                     [
                                       _c(
                                         "span",
@@ -3294,10 +3295,12 @@ var render = function() {
                                       ),
                                       _vm._v(" "),
                                       _vm._l(controllerInfo.actions, function(
-                                        actionInfo
+                                        actionInfo,
+                                        index
                                       ) {
                                         return _c(
                                           "span",
+                                          { key: index },
                                           [
                                             actionInfo.desc
                                               ? _c(
@@ -3342,7 +3345,7 @@ var render = function() {
                         ) {
                           return _c(
                             "Panel",
-                            { attrs: { name: index + "" } },
+                            { key: index, attrs: { name: index + "" } },
                             [
                               _vm._v(
                                 "\n                            " +
@@ -3371,11 +3374,12 @@ var render = function() {
                                 { attrs: { slot: "content" }, slot: "content" },
                                 _vm._l(group.actions, function(
                                   controllerInfo,
-                                  controller
+                                  controller,
+                                  index
                                 ) {
                                   return _c(
                                     "span",
-                                    { staticClass: "actionGroup" },
+                                    { key: index, staticClass: "actionGroup" },
                                     [
                                       _c(
                                         "span",
@@ -3391,10 +3395,12 @@ var render = function() {
                                       ),
                                       _vm._v(" "),
                                       _vm._l(controllerInfo.actions, function(
-                                        actionInfo
+                                        actionInfo,
+                                        index
                                       ) {
                                         return _c(
                                           "span",
+                                          { key: index },
                                           [
                                             actionInfo.desc
                                               ? _c(
@@ -3469,11 +3475,12 @@ var render = function() {
                                 { attrs: { slot: "content" }, slot: "content" },
                                 _vm._l(_vm.departmentResource.tmp, function(
                                   controllerInfo,
-                                  controller
+                                  controller,
+                                  index
                                 ) {
                                   return _c(
                                     "span",
-                                    { staticClass: "actionGroup" },
+                                    { key: index, staticClass: "actionGroup" },
                                     [
                                       _c(
                                         "span",
@@ -3489,10 +3496,12 @@ var render = function() {
                                       ),
                                       _vm._v(" "),
                                       _vm._l(controllerInfo.resource, function(
-                                        resourceInfo
+                                        resourceInfo,
+                                        index
                                       ) {
                                         return _c(
                                           "span",
+                                          { key: index },
                                           [
                                             resourceInfo.desc
                                               ? _c(
@@ -3537,7 +3546,7 @@ var render = function() {
                         ) {
                           return _c(
                             "Panel",
-                            { attrs: { name: index + "" } },
+                            { key: index, attrs: { name: index + "" } },
                             [
                               _vm._v(
                                 "\n                            " +
@@ -3564,11 +3573,12 @@ var render = function() {
                                 { attrs: { slot: "content" }, slot: "content" },
                                 _vm._l(group.resources, function(
                                   controllerInfo,
-                                  controller
+                                  controller,
+                                  index
                                 ) {
                                   return _c(
                                     "span",
-                                    { staticClass: "actionGroup" },
+                                    { key: index, staticClass: "actionGroup" },
                                     [
                                       _c(
                                         "span",
@@ -3584,10 +3594,12 @@ var render = function() {
                                       ),
                                       _vm._v(" "),
                                       _vm._l(controllerInfo.resource, function(
-                                        resourceInfo
+                                        resourceInfo,
+                                        index
                                       ) {
                                         return _c(
                                           "span",
+                                          { key: index },
                                           [
                                             resourceInfo.desc
                                               ? _c(
@@ -6900,7 +6912,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -7064,7 +7076,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -7175,7 +7187,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -7415,7 +7427,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -7499,7 +7511,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -7583,7 +7595,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
