@@ -1171,7 +1171,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
     {
         //获取用户部门
         $dUserDep = new CpDepartmentUser();
-        $userDepartInfo = $dUserDep->getUserDepartByUid($uid); 
+        $userDepartInfo = $dUserDep->getUserDepartByUid($uid);
         if (empty($userDepartInfo)) {
             return [];
         }
@@ -1213,13 +1213,12 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
             }
         }
         if ($project) {
-            $result = $actionList[$project];
+            $result = $actionList[$project] ?: [];
             // 获取all hack进去 后面重构这部分代码吧
             if (isset($actionList['all']) && $actionList['all']) {
                 $all = $actionList['all'];
                 $result = array_merge($result, $all);
             }
-
             return $result;
         } else {
             return $actionList;
