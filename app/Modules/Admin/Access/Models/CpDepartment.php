@@ -77,6 +77,8 @@ class CpDepartment extends Model
         $childDepart = array();
         foreach ($allDepart as $depart) {
             if($depart['parent_id'] == $id){
+                $depart['isExpand'] = 0;
+                $depart['isChecked'] = 0;
                 $childDepart[] = $depart;
             }
         }

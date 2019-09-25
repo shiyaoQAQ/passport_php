@@ -167,8 +167,9 @@ export default {
                 props : {
                     label : 'name',
                     children : 'child',
+                    expand : 'isExpand',
                 },
-                collapsable : false,
+                collapsable : true,
                 horizontal : 'horizontal',
             },
             // 当前选定的节点信息

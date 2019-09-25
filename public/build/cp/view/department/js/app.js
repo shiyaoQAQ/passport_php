@@ -443,9 +443,10 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             departmentTreeConfig: {
                 props: {
                     label: 'name',
-                    children: 'child'
+                    children: 'child',
+                    expand: 'isExpand'
                 },
-                collapsable: false,
+                collapsable: true,
                 horizontal: 'horizontal'
             },
             // 当前选定的节点信息
