@@ -10,7 +10,9 @@
                     @on-node-click="departmentOnClick"
                 ></orgTree> -->
                 <orgTree 
-                    :data="departmentTree"
+                    v-for="tree,index in departmentTree"
+                    :key="index"
+                    :data="tree"
                     :props="departmentTreeConfig.props"
                     :collapsable="departmentTreeConfig.collapsable"
                     :horizontal="departmentTreeConfig.horizontal"
@@ -162,15 +164,15 @@ import OrgTree from '../../components/org-tree/index.js'
 export default {
     data() {
         return {
-            departmentTree : {},
+            departmentTree: [],
             departmentTreeConfig : {
                 props : {
                     label : 'name',
                     children : 'child',
-                    expand : 'isExpand',
+                    expand : 'expand',
                 },
                 collapsable : true,
-                horizontal : 'horizontal',
+                horizontal : true,
             },
             // 当前选定的节点信息
             department : null,
@@ -244,13 +246,41 @@ export default {
     methods: {
         // 获取组织架构树信息
         getDepartmentTree(pid = 1, checkId = null) {
-            var _this = this
             this.$Request({
                 url:`/cp/departments/tree`,
                 method:'GET',
                 formData : {},
                 success: (res) => {
-                    _this.departmentTree= res.data[0];
+                    this.addAttr(res.data);
+                    this.departmentTree = res.data;
+                    this.expandParent(this.departmentTree, pid, checkId);
+                }
+            })
+        },
+        addAttr(data) {
+            data.forEach((v,i) => {
+                v.expand = false;
+                if (v.child) {
+                    this.addAttr(v.child);
+                }
+            })
+        },
+        expandParent(data, pid, checkId) {
+            var _this = this;
+            data.forEach(function(v, i) {
+                v.clickSelect = false;
+                if (v.id == checkId) {
+                    v.clickSelect = true;
+                }
+                if (v.id == pid) {
+                    _this.$set(v, 'expand', true);
+                    _this.expandParent(_this.departmentTree, v.parent_id, checkId);
+                    new Error("StopForeach");
+                }
+                if (!v.child) {
+                    return false;
+                }else {
+                    _this.expandParent(v.child, pid, checkId)
                 }
             })
         },
@@ -433,7 +463,7 @@ export default {
                 success : function(data){
                     if (data.code == 0) {
                         _this.$Message.success(data.msg);
-                        _this.getDepartmentTree(_this.department.pid, _this.department.pid);
+                        _this.getDepartmentTree(_this.department.parent_id, _this.department.parent_id);
                         _this.unselectedDepartment()
                     }
                 },
@@ -448,15 +478,31 @@ export default {
             this.departmentResource = {}
         },
         // 部门节点展开事件
-        departmentOnExpand() {
-
+        departmentOnExpand(e, data) {
+            if ("expand" in data) {
+                data.expand = !data.expand;
+                if (!data.expand && data.children) {
+                    this.collapse(data.children);
+                }
+            } else {
+                this.$set(data, "expand", true);
+            }
+        },
+        collapse(list) {
+            var _this = this;
+            list.forEach(function(child) {
+                if (child.expand) {
+                    child.expand = false;
+                }
+                child.children && _this.collapse(child.children);
+            });
         },
         // 部门节点点击事件
         departmentOnClick(e, data) {
             // console.log(data);
             // 幂等性处理
             if (this.department == data) {
-                return
+                return;
             }
             this.department = data
             // 获取部门相关信息
@@ -464,6 +510,8 @@ export default {
             this.getDepartmentUser(data)
             this.getDepartmentAction(data)
             this.getDepartmentResource(data)
+            $('.org-tree-node-label-inner').removeClass('org-tree-node-label-inner-check')
+            e.target.className += ' org-tree-node-label-inner-check'
         },
         // 编辑独立权限
         editTmpAction(project) {

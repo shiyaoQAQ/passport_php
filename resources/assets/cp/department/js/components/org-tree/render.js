@@ -99,7 +99,10 @@ export const renderLabel = (h, data, context) => {
     },
     style: { width: labelWidth },
     on: {
-      click: e => clickHandler && clickHandler(e, data)
+      click: (e) => {
+        if (event.target !== event.currentTarget) return;
+        clickHandler && clickHandler(e, data)
+      }
     }
   }, childNodes)])
 }

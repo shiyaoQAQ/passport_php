@@ -272,7 +272,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_org_tree_index_js__ = __webpack_require__("./resources/assets/cp/department/js/components/org-tree/index.js");
+/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_org_tree_index_js__ = __webpack_require__("./resources/assets/cp/department/js/components/org-tree/index.js");
+//
+//
 //
 //
 //
@@ -439,15 +441,15 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
         var _this2 = this;
 
         return {
-            departmentTree: {},
+            departmentTree: [],
             departmentTreeConfig: {
                 props: {
                     label: 'name',
                     children: 'child',
-                    expand: 'isExpand'
+                    expand: 'expand'
                 },
                 collapsable: true,
-                horizontal: 'horizontal'
+                horizontal: true
             },
             // 当前选定的节点信息
             department: null,
@@ -513,16 +515,48 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
     methods: {
         // 获取组织架构树信息
         getDepartmentTree: function getDepartmentTree() {
+            var _this3 = this;
+
             var pid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
             var checkId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
-            var _this = this;
             this.$Request({
                 url: '/cp/departments/tree',
                 method: 'GET',
                 formData: {},
                 success: function success(res) {
-                    _this.departmentTree = res.data[0];
+                    _this3.addAttr(res.data);
+                    _this3.departmentTree = res.data;
+                    _this3.expandParent(_this3.departmentTree, pid, checkId);
+                }
+            });
+        },
+        addAttr: function addAttr(data) {
+            var _this4 = this;
+
+            data.forEach(function (v, i) {
+                v.expand = false;
+                if (v.child) {
+                    _this4.addAttr(v.child);
+                }
+            });
+        },
+        expandParent: function expandParent(data, pid, checkId) {
+            var _this = this;
+            data.forEach(function (v, i) {
+                v.clickSelect = false;
+                if (v.id == checkId) {
+                    v.clickSelect = true;
+                }
+                if (v.id == pid) {
+                    _this.$set(v, 'expand', true);
+                    _this.expandParent(_this.departmentTree, v.parent_id, checkId);
+                    new Error("StopForeach");
+                }
+                if (!v.child) {
+                    return false;
+                } else {
+                    _this.expandParent(v.child, pid, checkId);
                 }
             });
         },
@@ -721,7 +755,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 success: function success(data) {
                     if (data.code == 0) {
                         _this.$Message.success(data.msg);
-                        _this.getDepartmentTree(_this.department.pid, _this.department.pid);
+                        _this.getDepartmentTree(_this.department.parent_id, _this.department.parent_id);
                         _this.unselectedDepartment();
                     }
                 }
@@ -738,7 +772,25 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
         },
 
         // 部门节点展开事件
-        departmentOnExpand: function departmentOnExpand() {},
+        departmentOnExpand: function departmentOnExpand(e, data) {
+            if ("expand" in data) {
+                data.expand = !data.expand;
+                if (!data.expand && data.children) {
+                    this.collapse(data.children);
+                }
+            } else {
+                this.$set(data, "expand", true);
+            }
+        },
+        collapse: function collapse(list) {
+            var _this = this;
+            list.forEach(function (child) {
+                if (child.expand) {
+                    child.expand = false;
+                }
+                child.children && _this.collapse(child.children);
+            });
+        },
 
         // 部门节点点击事件
         departmentOnClick: function departmentOnClick(e, data) {
@@ -753,6 +805,8 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             this.getDepartmentUser(data);
             this.getDepartmentAction(data);
             this.getDepartmentResource(data);
+            $('.org-tree-node-label-inner').removeClass('org-tree-node-label-inner-check');
+            e.target.className += ' org-tree-node-label-inner-check';
         },
 
         // 编辑独立权限
@@ -840,6 +894,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
         this.getAllDepartmentList();
     }
 });
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__("./node_modules/jquery/dist/jquery.js")))
 
 /***/ }),
 
@@ -868,7 +923,7 @@ exports.push([module.i, ".app_main {\n  padding: 15px;\n  padding-top: 55px;\n}\
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".org-tree-container {\n  display: inline-block;\n  padding: 15px;\n  background-color: #fff;\n}\n.org-tree {\n  display: table;\n  text-align: center;\n}\n.org-tree:before,\n.org-tree:after {\n  content: \"\";\n  display: table;\n}\n.org-tree:after {\n  clear: both;\n}\n.org-tree-node,\n.org-tree-node-children {\n  position: relative;\n  margin: 0;\n  padding: 0;\n  list-style-type: none;\n}\n.org-tree-node:before,\n.org-tree-node-children:before,\n.org-tree-node:after,\n.org-tree-node-children:after {\n  transition: all 0.35s;\n}\n.org-tree-node-label {\n  position: relative;\n  display: inline-block;\n}\n.org-tree-node-label .org-tree-node-label-inner {\n  padding: 10px 15px;\n  text-align: center;\n  border-radius: 3px;\n  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);\n}\n.org-tree-node-btn {\n  position: absolute;\n  top: 100%;\n  left: 50%;\n  width: 20px;\n  height: 20px;\n  z-index: 10;\n  margin-left: -11px;\n  margin-top: 9px;\n  background-color: #fff;\n  border: 1px solid #ccc;\n  border-radius: 50%;\n  box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);\n  cursor: pointer;\n  transition: all 0.35s ease;\n}\n.org-tree-node-btn:hover {\n  background-color: #e7e8e9;\n  transform: scale(1.15);\n}\n.org-tree-node-btn:before,\n.org-tree-node-btn:after {\n  content: \"\";\n  position: absolute;\n}\n.org-tree-node-btn:before {\n  top: 50%;\n  left: 4px;\n  right: 4px;\n  height: 0;\n  border-top: 1px solid #ccc;\n}\n.org-tree-node-btn:after {\n  top: 4px;\n  left: 50%;\n  bottom: 4px;\n  width: 0;\n  border-left: 1px solid #ccc;\n}\n.org-tree-node-btn.expanded:after {\n  border: none;\n}\n.org-tree-node {\n  padding-top: 20px;\n  display: table-cell;\n  vertical-align: top;\n}\n.org-tree-node.is-leaf,\n.org-tree-node.collapsed {\n  padding-left: 10px;\n  padding-right: 10px;\n}\n.org-tree-node:before,\n.org-tree-node:after {\n  content: \"\";\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 50%;\n  height: 19px;\n}\n.org-tree-node:after {\n  left: 50%;\n  border-left: 1px solid #ddd;\n}\n.org-tree-node:not(:first-child):before,\n.org-tree-node:not(:last-child):after {\n  border-top: 1px solid #ddd;\n}\n.collapsable .org-tree-node.collapsed {\n  padding-bottom: 30px;\n}\n.collapsable .org-tree-node.collapsed .org-tree-node-label:after {\n  content: \"\";\n  position: absolute;\n  top: 100%;\n  left: 0;\n  width: 50%;\n  height: 20px;\n  border-right: 1px solid #ddd;\n}\n.org-tree > .org-tree-node {\n  padding-top: 0;\n}\n.org-tree > .org-tree-node:after {\n  border-left: 0;\n}\n.org-tree-node-children {\n  padding-top: 20px;\n  display: table;\n}\n.org-tree-node-children:before {\n  content: \"\";\n  position: absolute;\n  top: 0;\n  left: 50%;\n  width: 0;\n  height: 20px;\n  border-left: 1px solid #ddd;\n}\n.org-tree-node-children:after {\n  content: \"\";\n  display: table;\n  clear: both;\n}\n.horizontal .org-tree-node {\n  display: table-cell;\n  float: none;\n  padding-top: 0;\n  padding-left: 20px;\n}\n.horizontal .org-tree-node.is-leaf,\n.horizontal .org-tree-node.collapsed {\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n.horizontal .org-tree-node:before,\n.horizontal .org-tree-node:after {\n  width: 19px;\n  height: 50%;\n}\n.horizontal .org-tree-node:after {\n  top: 50%;\n  left: 0;\n  border-left: 0;\n}\n.horizontal .org-tree-node:only-child:before {\n  top: 1px;\n  border-bottom: 1px solid #ddd;\n}\n.horizontal .org-tree-node:not(:first-child):before,\n.horizontal .org-tree-node:not(:last-child):after {\n  border-top: 0;\n  border-left: 1px solid #ddd;\n}\n.horizontal .org-tree-node:not(:only-child):after {\n  border-top: 1px solid #ddd;\n}\n.horizontal .org-tree-node .org-tree-node-inner {\n  display: table;\n}\n.horizontal .org-tree-node-label {\n  display: table-cell;\n  vertical-align: middle;\n}\n.horizontal.collapsable .org-tree-node.collapsed {\n  padding-right: 30px;\n}\n.horizontal.collapsable .org-tree-node.collapsed .org-tree-node-label:after {\n  top: 0;\n  left: 100%;\n  width: 20px;\n  height: 50%;\n  border-right: 0;\n  border-bottom: 1px solid #ddd;\n}\n.horizontal .org-tree-node-btn {\n  top: 50%;\n  left: 100%;\n  margin-top: -11px;\n  margin-left: 9px;\n}\n.horizontal > .org-tree-node:only-child:before {\n  border-bottom: 0;\n}\n.horizontal .org-tree-node-children {\n  display: table-cell;\n  padding-top: 0;\n  padding-left: 20px;\n}\n.horizontal .org-tree-node-children:before {\n  top: 50%;\n  left: 0;\n  width: 20px;\n  height: 0;\n  border-left: 0;\n  border-top: 1px solid #ddd;\n}\n.horizontal .org-tree-node-children:after {\n  display: none;\n}\n.horizontal .org-tree-node-children > .org-tree-node {\n  display: block;\n}\n", ""]);
+exports.push([module.i, ".org-tree-container {\n  display: inline-block;\n  padding: 15px;\n  background-color: #fff;\n}\n.org-tree {\n  display: table;\n  text-align: center;\n}\n.org-tree:before,\n.org-tree:after {\n  content: \"\";\n  display: table;\n}\n.org-tree:after {\n  clear: both;\n}\n.org-tree-node,\n.org-tree-node-children {\n  position: relative;\n  margin: 0;\n  padding: 0;\n  list-style-type: none;\n}\n.org-tree-node:before,\n.org-tree-node-children:before,\n.org-tree-node:after,\n.org-tree-node-children:after {\n  transition: all 0.35s;\n}\n.org-tree-node-label {\n  position: relative;\n  display: inline-block;\n}\n.org-tree-node-label .org-tree-node-label-inner {\n  padding: 5px 6px;\n  border-radius: 3px;\n  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);\n  text-align: center;\n  min-width: 50px;\n  white-space: nowrap;\n  cursor: pointer;\n}\n.org-tree-node-label .org-tree-node-label-inner-check {\n  border: 1px solid #2db7f5;\n  color: #2db7f5;\n  box-shadow: none;\n}\n.org-tree-node-btn {\n  position: absolute;\n  top: 100%;\n  left: 50%;\n  width: 20px;\n  height: 20px;\n  z-index: 10;\n  margin-left: -11px;\n  margin-top: 9px;\n  background-color: #fff;\n  border: 1px solid #ccc;\n  border-radius: 50%;\n  box-shadow: 0 0 2px rgba(0, 0, 0, 0.15);\n  cursor: pointer;\n  transition: all 0.35s ease;\n}\n.org-tree-node-btn:hover {\n  background-color: #e7e8e9;\n  transform: scale(1.15);\n}\n.org-tree-node-btn:before,\n.org-tree-node-btn:after {\n  content: \"\";\n  position: absolute;\n}\n.org-tree-node-btn:before {\n  top: 50%;\n  left: 4px;\n  right: 4px;\n  height: 0;\n  border-top: 1px solid #ccc;\n}\n.org-tree-node-btn:after {\n  top: 4px;\n  left: 50%;\n  bottom: 4px;\n  width: 0;\n  border-left: 1px solid #ccc;\n}\n.org-tree-node-btn.expanded:after {\n  border: none;\n}\n.org-tree-node {\n  padding-top: 20px;\n  display: table-cell;\n  vertical-align: top;\n}\n.org-tree-node.is-leaf,\n.org-tree-node.collapsed {\n  padding-left: 10px;\n  padding-right: 10px;\n}\n.org-tree-node:before,\n.org-tree-node:after {\n  content: \"\";\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 50%;\n  height: 19px;\n}\n.org-tree-node:after {\n  left: 50%;\n  border-left: 1px solid #ddd;\n}\n.org-tree-node:not(:first-child):before,\n.org-tree-node:not(:last-child):after {\n  border-top: 1px solid #ddd;\n}\n.collapsable .org-tree-node.collapsed {\n  padding-bottom: 30px;\n}\n.collapsable .org-tree-node.collapsed .org-tree-node-label:after {\n  content: \"\";\n  position: absolute;\n  top: 100%;\n  left: 0;\n  width: 50%;\n  height: 20px;\n  border-right: 1px solid #ddd;\n}\n.org-tree > .org-tree-node {\n  padding-top: 0;\n}\n.org-tree > .org-tree-node:after {\n  border-left: 0;\n}\n.org-tree-node-children {\n  padding-top: 20px;\n  display: table;\n}\n.org-tree-node-children:before {\n  content: \"\";\n  position: absolute;\n  top: 0;\n  left: 50%;\n  width: 0;\n  height: 20px;\n  border-left: 1px solid #ddd;\n}\n.org-tree-node-children:after {\n  content: \"\";\n  display: table;\n  clear: both;\n}\n.horizontal .org-tree-node {\n  display: table-cell;\n  float: none;\n  padding-top: 0;\n  padding-left: 20px;\n}\n.horizontal .org-tree-node.is-leaf,\n.horizontal .org-tree-node.collapsed {\n  padding-top: 10px;\n  padding-bottom: 10px;\n}\n.horizontal .org-tree-node:before,\n.horizontal .org-tree-node:after {\n  width: 19px;\n  height: 50%;\n}\n.horizontal .org-tree-node:after {\n  top: 50%;\n  left: 0;\n  border-left: 0;\n}\n.horizontal .org-tree-node:only-child:before {\n  top: 1px;\n  border-bottom: 1px solid #ddd;\n}\n.horizontal .org-tree-node:not(:first-child):before,\n.horizontal .org-tree-node:not(:last-child):after {\n  border-top: 0;\n  border-left: 1px solid #ddd;\n}\n.horizontal .org-tree-node:not(:only-child):after {\n  border-top: 1px solid #ddd;\n}\n.horizontal .org-tree-node .org-tree-node-inner {\n  display: table;\n}\n.horizontal .org-tree-node-label {\n  display: table-cell;\n  vertical-align: middle;\n}\n.horizontal.collapsable .org-tree-node.collapsed {\n  padding-right: 30px;\n}\n.horizontal.collapsable .org-tree-node.collapsed .org-tree-node-label:after {\n  top: 0;\n  left: 100%;\n  width: 20px;\n  height: 50%;\n  border-right: 0;\n  border-bottom: 1px solid #ddd;\n}\n.horizontal .org-tree-node-btn {\n  top: 50%;\n  left: 100%;\n  margin-top: -11px;\n  margin-left: 9px;\n}\n.horizontal > .org-tree-node:only-child:before {\n  border-bottom: 0;\n}\n.horizontal .org-tree-node-children {\n  display: table-cell;\n  padding-top: 0;\n  padding-left: 20px;\n}\n.horizontal .org-tree-node-children:before {\n  top: 50%;\n  left: 0;\n  width: 20px;\n  height: 0;\n  border-left: 0;\n  border-top: 1px solid #ddd;\n}\n.horizontal .org-tree-node-children:after {\n  display: none;\n}\n.horizontal .org-tree-node-children > .org-tree-node {\n  display: block;\n}\n", ""]);
 
 
 /***/ }),
@@ -2085,10 +2140,11 @@ var render = function() {
     _c("div", { staticClass: "tree" }, [
       _c(
         "div",
-        [
-          _c("orgTree", {
+        _vm._l(_vm.departmentTree, function(tree, index) {
+          return _c("orgTree", {
+            key: index,
             attrs: {
-              data: _vm.departmentTree,
+              data: tree,
               props: _vm.departmentTreeConfig.props,
               collapsable: _vm.departmentTreeConfig.collapsable,
               horizontal: _vm.departmentTreeConfig.horizontal
@@ -2098,7 +2154,7 @@ var render = function() {
               "on-node-click": _vm.departmentOnClick
             }
           })
-        ],
+        }),
         1
       )
     ]),
@@ -5791,7 +5847,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -5955,7 +6011,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -6066,7 +6122,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -6243,7 +6299,8 @@ var renderLabel = function renderLabel(h, data, context) {
     style: { width: labelWidth },
     on: {
       click: function click(e) {
-        return clickHandler && clickHandler(e, data);
+        if (event.target !== event.currentTarget) return;
+        clickHandler && clickHandler(e, data);
       }
     }
   }, childNodes)]);
@@ -6305,7 +6362,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()

@@ -91,10 +91,19 @@ export default {
   display: inline-block;
 
   .org-tree-node-label-inner {
-    padding: 10px 15px;
+    padding: 5px 6px;
     text-align: center;
     border-radius: 3px;
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    min-width: 50px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .org-tree-node-label-inner-check {
+      border: 1px solid #2db7f5;
+      color: #2db7f5;
+      box-shadow: none;
   }
 }
 .org-tree-node-btn {
