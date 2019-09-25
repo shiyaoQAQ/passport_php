@@ -30,9 +30,9 @@
                             <span>上级部门：<span v-if="departmentParent != null">{{ departmentParent.name }}</span></span>
                         </div>
                         <div class="departmentOperateList">
-                            <Button type="info">编辑</Button>
-                            <Button type="info">添加子节点</Button>
-                            <Button type="error">删除</Button>
+                            <Button @click="editDepart" type="info">编辑</Button>
+                            <Button @click="addChildDepart" type="info">添加子节点</Button>
+                            <Button @click="delDepart" type="error">删除</Button>
                         </div>
                     </p>
                 </Card>
@@ -124,7 +124,34 @@
                 </Card>
                 <!-- <Card>{{ department }}</Card>
                 <div></div> -->
-
+                <Modal v-model="addDepartmentModal" @on-ok="saveDepartment" :loading="addDepartmentModalConfig.loading" ok-text="保存">
+                    <h3 v-if="this.addDepartmentModalConfig.operate == 'addChild'">添加子节点</h3>
+                    <h3 v-else>节点编辑</h3>
+                    <ul>
+                        <li class="modalLI">
+                            <span>名称：</span>
+                            <Input style="width:300px" v-model="departmentModalData.name"></Input>
+                        </li>
+                        <li class="modalLI">
+                            <span>标识：</span>
+                            <Input style="width:300px" v-model="departmentModalData.mark"></Input>
+                        </li>
+                        <li class="modalLI">
+                            <span>邮箱：</span>
+                            <Input style="width:300px" v-model="departmentModalData.email"></Input>
+                        </li>
+                        <li class="modalLI">
+                            <span>上级部门：</span>
+                            <i-select 
+                                style="width:300px" 
+                                v-model="departmentModalData.pid"
+                                :disabled="this.addDepartmentModalConfig.operate == 'addChild'"
+                                >
+                                <i-option v-for="itemDepart in allDepartmentList" :value="itemDepart.id" :key="itemDepart.id">{{ itemDepart.name }} </i-option>
+                            </i-select>
+                        </li>
+                    </ul>
+                </Modal>
             </div>
         </div>
     </div>
@@ -180,20 +207,6 @@ export default {
                     align: 'center',
                     render: (h, params) => {
                         return h('div', [
-                            // h('Button', {
-                            //     props: {
-                            //         type: 'primary',
-                            //         size: 'small'
-                            //     },
-                            //     style: {
-                            //         marginRight: '5px'
-                            //     },
-                            //     on: {
-                            //         click: () => {
-                            //             // this.show(params.index)
-                            //         }
-                            //     }
-                            // }, 'View'),
                             h('Button', {
                                 props: {
                                     type: 'error',
@@ -209,7 +222,19 @@ export default {
                         ]);
                     }
                 },
-            ]
+            ],
+            departmentModalData : {
+                name : '',
+                mark : '',
+                email : '',
+                pid : '',
+            },
+            addDepartmentModal : false,
+            addDepartmentModalConfig : {
+                loading : true,
+                operate : null,
+            },
+            allDepartmentList : [],
         }
     },
     components: {
@@ -217,7 +242,7 @@ export default {
     },
     methods: {
         // 获取组织架构树信息
-        getDepartmentTree() {
+        getDepartmentTree(pid = 1, checkId = null) {
             var _this = this
             this.$Request({
                 url:`/cp/departments/tree`,
@@ -225,6 +250,18 @@ export default {
                 formData : {},
                 success: (res) => {
                     _this.departmentTree= res.data[0];
+                }
+            })
+        },
+        // 获取所有部门信息 以供编辑部门的时候使用
+        getAllDepartmentList() {
+            var _this = this
+            this.$Request({
+                url:`/cp/longrentdepartment/ajaxgetalldepart`,
+                method:'GET',
+                formData : {},
+                success: (res) => {
+                    _this.allDepartmentList = res.data;
                 }
             })
         },
@@ -287,6 +324,127 @@ export default {
                 }
             })
             
+        },
+        // 编辑部门信息
+        editDepart() {
+            this.departmentModalData = {
+                name : this.department.name,
+                mark : this.department.mark,
+                email : this.department.email,
+                pid : parseInt(this.department.parent_id),
+                id : this.department.id
+            },
+            this.addDepartmentModalConfig.operate = 'edit'
+            this.addDepartmentModal = true
+        },
+        // 增加子部门
+        addChildDepart() {
+            this.departmentModalData = {
+                name : '',
+                mark : '',
+                email : '',
+                pid : this.department.id,
+            },
+            this.addDepartmentModalConfig.operate = 'addChild'
+            this.addDepartmentModal = true
+        },
+        // 保存部门信息
+        saveDepartment() {
+            if (this.addDepartmentModalConfig.operate == 'addChild') {
+                this.storeChildDepart()
+            } else if (this.addDepartmentModalConfig.operate == 'edit') {
+                this.updateDepart()
+            }
+        },
+        updateDepart() {
+            let _this = this
+            this.$Request({
+                url  : '/cp/longrentdepartment/ajaxupdatedepart',
+                data : {
+                    id: this.departmentModalData.id,
+                    name: this.departmentModalData.name,
+                    pid: this.departmentModalData.pid,
+                    mark: this.departmentModalData.mark,
+                    code: 0,
+                    email: this.departmentModalData.email,
+                },
+                method : 'POST',
+                success : function(data) {
+                    if (data.code == 0) {
+                        _this.$Message.success(data.msg)
+                        _this.getDepartmentTree(_this.departmentModalData.pid, _this.departmentModalData.id)
+                        // 更新当前节点信息 这里还是不要请求后台了 提升性能
+                        _this.department.name = _this.departmentModalData.name
+                        _this.department.mark = _this.departmentModalData.mark
+                        _this.department.email = _this.departmentModalData.email
+                        if (_this.department.parent_id != _this.departmentModalData.pid + '') {
+                            _this.department.parent_id = _this.departmentModalData.pid + ''
+                            _this.getDepartmentParent(_this.department)
+                        }
+                        _this.addDepartmentModalConfig.loading = false
+                        _this.addDepartmentModal = false
+                        _this.$nextTick(() => { _this.addDepartmentModalConfig.loading = true; })
+                    } else {
+                        _this.$nextTick(() => { _this.addDepartmentModalConfig.loading = true; })
+                    }
+                },
+            });
+        },
+        storeChildDepart() {
+            let _this = this
+            this.$Request({
+                url: '/cp/longrentdepartment/ajaxadddepart',
+                data: {
+                    name: this.departmentModalData.name,
+                    pid: this.departmentModalData.pid,
+                    mark: this.departmentModalData.mark,
+                    email: this.departmentModalData.email,
+                    code: 0,
+                },
+                method : 'POST',
+                success : function(data) {
+                    if(data.code == 0) {
+                        _this.$Message.success(data.msg);
+                        _this.getDepartmentTree(_this.departmentModalData.pid, _this.departmentModalData.pid)
+                        _this.addDepartmentModalConfig.loading = false
+                        _this.addDepartmentModal = false
+                        _this.$nextTick(() => { _this.addDepartmentModalConfig.loading = true; })
+                    } else {
+                        _this.$nextTick(() => { _this.addDepartmentModalConfig.loading = true; })
+                    }
+                },
+            }); 
+        },
+        // 删除部门
+        delDepart() {
+            if (!confirm('确认要删除这个部门么？')) {
+                return true;
+            }
+            let _this = this
+            this.$Request({
+                url: '/cp/longrentdepartment/ajaxdeletedepart',
+                data: {
+                    id:_this.department.id,
+                    // _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                method : 'POST',
+                dataType:'json',
+                success : function(data){
+                    if (data.code == 0) {
+                        _this.$Message.success(data.msg);
+                        _this.getDepartmentTree(_this.department.pid, _this.department.pid);
+                        _this.unselectedDepartment()
+                    }
+                },
+            }); 
+        },
+        // 取消节点选择
+        unselectedDepartment() {
+            this.department = null
+            this.departmentParent = null
+            this.departmentUser = []
+            this.departmentAction = {}
+            this.departmentResource = {}
         },
         // 部门节点展开事件
         departmentOnExpand() {
@@ -377,13 +535,15 @@ export default {
                     }
                 },
             });
-        }
+        },
+        
     },
     created() {
 
     },
     mounted() {
         this.getDepartmentTree()
+        this.getAllDepartmentList()
     }
 }
 

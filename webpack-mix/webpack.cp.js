@@ -13,15 +13,15 @@ let glob = require('glob')
 let globPath = glob.sync('resources/assets/cp/**/app.js');
 globPath.forEach((v) => {
     let pathText = v.match(/cp\/(\S*)\/js/)[1];
-    mix.js(`resources/assets/cp/${pathText}/js/app.js`, `public/cp/view/${pathText}/js`)
-        .less(`resources/assets/cp/${pathText}/less/app.less`, `public/cp/view/${pathText}/css`)
+    mix.js(`resources/assets/cp/${pathText}/js/app.js`, `public/build/cp/view/${pathText}/js`)
+        .less(`resources/assets/cp/${pathText}/less/app.less`, `public/build/cp/view/${pathText}/css`)
 })
 
 // mix配置
-mix.setPublicPath('public/cp/')
+mix.setPublicPath('public/build/cp/')
     .extract(['vue', 'jquery', 'iview'], 'vendor')
     .version()
-    .setResourceRoot('/cp/')
+    .setResourceRoot('/build/cp/')
     .autoload({
         jquery: ['$', 'window.jQuery']
     })
