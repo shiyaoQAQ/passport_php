@@ -86,6 +86,7 @@ Route::group(['middleware' => ['cpauth']], function () {
     Route::post('/oauth/authorization', 'OauthController@oauthAuthorization');
     
     Route::get('/layout', 'HomeController@layout');
+    Route::get('/home/testLogin', 'HomeController@testLogin');
 });
 
 Route::get('/home/login', 'HomeController@login');

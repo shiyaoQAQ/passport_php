@@ -121,6 +121,18 @@ class HomeController extends Controller
     }
 
     /**
+     * @desc 测试环境快速登录接口
+     */
+    public function testLogin(Request $request)
+    {
+        if (env('APP_ENV') == 'dev' || env('APP_ENV') == 'testing') {
+            \Session::put('user_id', 10027);
+            \Session::put('user_name', '测试-侍宏达');
+            return redirect('/cp/home/welcome');
+        }
+    }
+
+    /**
      * @desc 获取导航栏信息
      */
     public function layout(Request $request)

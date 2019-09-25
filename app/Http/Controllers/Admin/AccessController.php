@@ -291,10 +291,11 @@ class AccessController extends Controller
         $actionList = CpAccess::getActionByGroupId($gid);
         $departList = CpAccess::getDepartByGroupId($gid);
         $ret = CpAccess::getActionList($groupInfo['project']);
-        return view('admin.access.departmentActionGroupAccess')->with('action_list', $ret)->with('group_info', $groupInfo)        
-                                                     ->with('action_info_json', json_encode($actionList['data']))
-                                                     ->with('deaprt_info_json', json_encode($departList['data']))
-                                                     ->with('gid', $gid);
+        return view('admin.access.departmentActionGroupAccess')->with('action_list', $ret)
+                                                    ->with('group_info', $groupInfo)        
+                                                    ->with('action_info_json', json_encode($actionList['data']))
+                                                    ->with('deaprt_info_json', json_encode($departList['data']))
+                                                    ->with('gid', $gid);
     }
 
     /**
