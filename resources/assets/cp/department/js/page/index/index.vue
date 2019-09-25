@@ -31,7 +31,7 @@
                         </div>
                         <div class="departmentOperateList">
                             <Button type="info">编辑</Button>
-                            <Button type="info">编辑子节点</Button>
+                            <Button type="info">添加子节点</Button>
                             <Button type="error">删除</Button>
                         </div>
                     </p>
@@ -41,8 +41,8 @@
                         <Input class="userInput" type="text" v-model="userInput" placeholder="cp账号">
                             <Icon type="ios-person-outline" slot="prepend"></Icon>
                         </Input>
-                        <Button type="info">添加用户到部门</Button>
-                        <Button>新增一个管理员</Button>
+                        <Button @click="addDepartmentUser" type="info">添加用户到部门</Button>
+                        <Button @click="addAdminUser" >新增一个管理员</Button>
                     </p>
                     <p class="userListBlock">
                         <Table :columns="departmentUserColumn" :data="departmentUser"></Table>
@@ -201,7 +201,8 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        // this.remove(params.index)
+                                        // console.log(params);
+                                        this.delDepartUser(params.row.uid)
                                     }
                                 }
                             }, '删除')
@@ -219,12 +220,12 @@ export default {
         getDepartmentTree() {
             var _this = this
             this.$Request({
-                    url:`/cp/departments/tree`,
-                    method:'GET',
-                    formData : {},
-                    success: (res) => {
-                        _this.departmentTree= res.data[0];
-                    }
+                url:`/cp/departments/tree`,
+                method:'GET',
+                formData : {},
+                success: (res) => {
+                    _this.departmentTree= res.data[0];
+                }
             })
         },
         // 获取节点的父节点
@@ -242,7 +243,10 @@ export default {
             })
         },
         // 获取节点的用户
-        getDepartmentUser(data) {
+        getDepartmentUser(data = null) {
+            if (data == null) {
+                data = this.department
+            }
             var _this = this
             let did = data.id
             this.departmentUser = []
@@ -304,11 +308,79 @@ export default {
         },
         // 编辑独立权限
         editTmpAction(project) {
-            console.log(project)
+            window.open('/cp/longrentdepartment/actionaccessdetail?id=' + this.department.id + '&project=' + project)
+        },
+        // 编辑组权限
+        editGroupAction(groupid) {
+            window.open('/cp/longrentdepartment/actiongroupaccessdetail?id=' + groupid);
+        },
+        // 编辑独立资源
+        editTmpResource() {
+            window.open('/cp/longrentdepartment/depart_resource_detail?id=' + this.department.id)
+        },
+        // 编辑组资源
+        editGroupResource(groupid) {
+            window.open('/cp/longrentdepartment/resourcegroupdetail?id=' + groupid);
+        },
+        // 添加管理员
+        addAdminUser() {
+            window.open('/cp/user/add');
+        },
+        // 添加用户到部门
+        addDepartmentUser() {
+            var _this = this;
+            if (!this.department.id) {
+                this.$Message.warning({
+                    content: '请选择部门',
+                })
+            }else if (!this.userInput) {
+                this.$Message.warning({
+                    content: '请输入账号',
+                })
+            }else {
+                _this.$Request({
+                    url: '/cp/longrentdepartment/ajaxadduserbycpaccount',
+                    method:'post',
+                    data:{
+                        did : _this.department.id,
+                        cp_account : _this.userInput,
+                        // _token : $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: (res) => {
+                        if (res.code == 0) {
+                            _this.$Message.success('保存成功');
+                            _this.getDepartmentUser();
+                        }
+                    }
+                })
+            }
+        },
+        // 删除用户
+        delDepartUser(uid) {
+            var _this = this;
+            if (!confirm('您是否要删除此用户')) {
+                return
+            }
+            _this.$Request({
+                url  : '/cp/longrentdepartment/ajaxdeldepartuser',
+                data : {
+                    did: this.department.id, 
+                    uid: uid,
+                    // _token:$('meta[name="csrf-token"]').attr('content')
+                },
+                method : 'POST',
+                dataType:'json',
+                success : function(data){
+                    if (data.code == 0) {
+                        _this.$Message.success('删除成功');
+                        _this.getDepartmentUser();
+                    }
+                },
+            });
         }
     },
     created() {
-        
+
     },
     mounted() {
         this.getDepartmentTree()

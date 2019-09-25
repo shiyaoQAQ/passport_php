@@ -621,7 +621,7 @@
             // 页面跳转
             pageJump(type, data) {
                 if (type == 'addAdmin') {
-                    location.href = '/user/add';
+                    location.href = '/cp/user/add';
                 }else if (type == 'resourceGroup') {
                     window.open('/cp/longrentdepartment/resourcegroupdetail?id=' + data);
                 }else if (type == 'resourceTmp') {

@@ -16,7 +16,7 @@ export default new Router({
     routes: [
         {
             path: '/',
-            redirect: '/app'
+            redirect: '/index'
         },        
         {
             path: '/app',

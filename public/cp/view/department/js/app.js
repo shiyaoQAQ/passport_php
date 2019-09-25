@@ -409,6 +409,8 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
 /* harmony default export */ __webpack_exports__["a"] = ({
     data: function data() {
+        var _this2 = this;
+
         return {
             departmentTree: {},
             departmentTreeConfig: {
@@ -470,7 +472,8 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                         },
                         on: {
                             click: function click() {
-                                // this.remove(params.index)
+                                // console.log(params);
+                                _this2.delDepartUser(params.row.uid);
                             }
                         }
                     }, '删除')]);
@@ -512,7 +515,12 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
         },
 
         // 获取节点的用户
-        getDepartmentUser: function getDepartmentUser(data) {
+        getDepartmentUser: function getDepartmentUser() {
+            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+            if (data == null) {
+                data = this.department;
+            }
             var _this = this;
             var did = data.id;
             this.departmentUser = [];
@@ -576,7 +584,81 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
         // 编辑独立权限
         editTmpAction: function editTmpAction(project) {
-            console.log(project);
+            window.open('/cp/longrentdepartment/actionaccessdetail?id=' + this.department.id + '&project=' + project);
+        },
+
+        // 编辑组权限
+        editGroupAction: function editGroupAction(groupid) {
+            window.open('/cp/longrentdepartment/actiongroupaccessdetail?id=' + groupid);
+        },
+
+        // 编辑独立资源
+        editTmpResource: function editTmpResource() {
+            window.open('/cp/longrentdepartment/depart_resource_detail?id=' + this.department.id);
+        },
+
+        // 编辑组资源
+        editGroupResource: function editGroupResource(groupid) {
+            window.open('/cp/longrentdepartment/resourcegroupdetail?id=' + groupid);
+        },
+
+        // 添加管理员
+        addAdminUser: function addAdminUser() {
+            window.open('/cp/user/add');
+        },
+
+        // 添加用户到部门
+        addDepartmentUser: function addDepartmentUser() {
+            var _this = this;
+            if (!this.department.id) {
+                this.$Message.warning({
+                    content: '请选择部门'
+                });
+            } else if (!this.userInput) {
+                this.$Message.warning({
+                    content: '请输入账号'
+                });
+            } else {
+                _this.$Request({
+                    url: '/cp/longrentdepartment/ajaxadduserbycpaccount',
+                    method: 'post',
+                    data: {
+                        did: _this.department.id,
+                        cp_account: _this.userInput
+                        // _token : $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function success(res) {
+                        if (res.code == 0) {
+                            _this.$Message.success('保存成功');
+                            _this.getDepartmentUser();
+                        }
+                    }
+                });
+            }
+        },
+
+        // 删除用户
+        delDepartUser: function delDepartUser(uid) {
+            var _this = this;
+            if (!confirm('您是否要删除此用户')) {
+                return;
+            }
+            _this.$Request({
+                url: '/cp/longrentdepartment/ajaxdeldepartuser',
+                data: {
+                    did: this.department.id,
+                    uid: uid
+                    // _token:$('meta[name="csrf-token"]').attr('content')
+                },
+                method: 'POST',
+                dataType: 'json',
+                success: function success(data) {
+                    if (data.code == 0) {
+                        _this.$Message.success('删除成功');
+                        _this.getDepartmentUser();
+                    }
+                }
+            });
         }
     },
     created: function created() {},
@@ -1884,7 +1966,7 @@ var render = function() {
                     _c("Button", { attrs: { type: "info" } }, [_vm._v("编辑")]),
                     _vm._v(" "),
                     _c("Button", { attrs: { type: "info" } }, [
-                      _vm._v("编辑子节点")
+                      _vm._v("添加子节点")
                     ]),
                     _vm._v(" "),
                     _c("Button", { attrs: { type: "error" } }, [_vm._v("删除")])
@@ -1925,11 +2007,18 @@ var render = function() {
                       1
                     ),
                     _vm._v(" "),
-                    _c("Button", { attrs: { type: "info" } }, [
-                      _vm._v("添加用户到部门")
-                    ]),
+                    _c(
+                      "Button",
+                      {
+                        attrs: { type: "info" },
+                        on: { click: _vm.addDepartmentUser }
+                      },
+                      [_vm._v("添加用户到部门")]
+                    ),
                     _vm._v(" "),
-                    _c("Button", [_vm._v("新增一个管理员")])
+                    _c("Button", { on: { click: _vm.addAdminUser } }, [
+                      _vm._v("新增一个管理员")
+                    ])
                   ],
                   1
                 ),
@@ -5979,7 +6068,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
     // mode : 'history',
     routes: [{
         path: '/',
-        redirect: '/app'
+        redirect: '/index'
     }, {
         path: '/app',
         name: 'app',
