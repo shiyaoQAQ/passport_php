@@ -4,9 +4,15 @@
 
 @section('content')
 <style type="text/css">
-body{font:12px/1.8 "宋体";overflow-y:scroll}
+body{
+    font:12px/1.8 "宋体";
+    overflow-y:scroll
+}
 html,body{height:100%;margin:0;padding:0;}
-.btn{margin-bottom: 12px;font:12px/1.8 "宋体";}
+.btn {
+    margin-bottom: 12px;
+    /* font:12px/1.8 "宋体"; */
+}
 .clear{clear:both;}
 .btn-all {
     color: #fff;
@@ -59,7 +65,7 @@ html,body{height:100%;margin:0;padding:0;}
                             <tr>
                                 <td>
                                     @foreach ($action['action'] as $ak => $av)
-                                        <button class="btn action-node" controller="{{$av['controller']}}" title="{{$av['action']}}" choose="0" inherit="0" data-limit="0">{{$av['desc']}}<span class="action_desc"></span></button>
+                                        <button class="btn btn-sm action-node" controller="{{$av['controller']}}" title="{{$av['action']}}" choose="0" inherit="0" data-limit="0">{{$av['desc']}}<span class="action_desc"></span></button>
                                     @endforeach
                                 </td>
                             </tr>

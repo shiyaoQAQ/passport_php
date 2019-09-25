@@ -6,7 +6,10 @@
 <F3:include href="cp/common/header.html" /> 
 <F3:include href="cp/common/sidebar.html" /> 
 <style type="text/css">
-body{font:12px/1.8 "宋体";overflow-y:scroll}
+body{
+    font:12px/1.8 "宋体";
+    overflow-y:scroll
+}
 html,body{height:100%;margin:0;padding:0;}
 .strt-wrap{margin:10px;}
 .strt-part{text-align:center;float:left;position:relative;}
@@ -18,7 +21,10 @@ html,body{height:100%;margin:0;padding:0;}
 .strt-part .line-h-c{width:100%;left:0;}
 .strt-part .line-h-r{width:50%;right:0;}
 .strt-block{float:left;}
-.btn{margin-bottom: 12px;font:12px/1.8 "宋体";}
+.btn{
+    margin-bottom: 12px;
+    /* font:12px/1.8 "宋体"; */
+}
 .clear{clear:both;}
 .btn-all {
     color: #fff;
@@ -80,7 +86,8 @@ html,body{height:100%;margin:0;padding:0;}
                             <tr>
                                 <td>
                                     @foreach ($action['action'] as $ak => $av)
-                                        <button class="btn action-node" controller="{{$av['controller']}}" title="{{$av['action']}}" choose="0" inherit="0" data-limit="0">{{$av['desc']}}<span class="action_desc"></span></button>
+                                        <button class="btn btn-sm action-node" controller="{{$av['controller']}}" title="{{$av['action']}}" 
+                                        choose="0" inherit="0" data-limit="0">{{$av['desc']}}<span class="action_desc"></span></button>
                                     @endforeach
                                 </td>
                             </tr>
