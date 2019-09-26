@@ -17,6 +17,7 @@ Route::group(['middleware' => ['cpauth']], function () {
     // 新组织架构
     Route::get('/departments', 'DepartmentController@showDepartment');
     Route::get('/departments/tree', 'DepartmentController@showDepartmentTree');
+    Route::get('/departments/{did}/detail', 'DepartmentController@getDepartmentDetail');
     // Route::get('/departments/{did}/parent', 'DepartmentController@getDepartmentParent');
     Route::get('/departments/{did}/parent', 'DepartmentController@getDepartmentParent');
     // Route::get('/departments/{did}/user', 'DepartmentController@getDepartmentUser');
@@ -30,6 +31,7 @@ Route::group(['middleware' => ['cpauth']], function () {
     Route::put('/departments/{did}/tmpAction/action', 'ActionManageController@updateDepartmentTmpAction');
     Route::get('/departments/actionGroup', 'ActionManageController@ListActionGroup');
     Route::get('/departments/actionGroup/accessProject', 'ActionManageController@ListAccessProject');
+    Route::get('/departments/actionGroup/{groupId}/detail', 'ActionManageController@showActionGroupDetail');
     Route::get('/departments/actionGroup/{groupId}/tree', 'ActionManageController@showActionGroupTree');
     Route::get('/departments/actionGroup/{groupId}/action', 'ActionManageController@listActionGroupAction');
     Route::put('/departments/actionGroup/{groupId}/department', 'ActionManageController@updateActionGroupDepartment');
@@ -38,6 +40,7 @@ Route::group(['middleware' => ['cpauth']], function () {
     Route::get('/departments/{did}/tmpResource/resource', 'ResourceManageController@listDepartmentTmpResource');
     Route::put('/departments/{did}/tmpResource/resource', 'ResourceManageController@updateDepartmentTmpResource');
     Route::get('/departments/resourceGroup', 'ResourceManageController@listResourceGroup');
+    Route::get('/departments/resourceGroup/{groupId}/detail', 'ResourceManageController@showResourceGroupDetail');
     Route::get('/departments/resourceGroup/{groupId}/tree', 'ResourceManageController@showResourceGroupTree');
     Route::get('/departments/resourceGroup/{groupId}/resource', 'ResourceManageController@listResourceGroupResource');
     Route::put('/departments/resourceGroup/{groupId}/department', 'ResourceManageController@updateResourceGroupDepartment');

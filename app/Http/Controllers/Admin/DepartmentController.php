@@ -35,6 +35,18 @@ class DepartmentController extends Controller
     }
 
     /**
+     * @desc 获取部门详情
+     *
+     * @param [type] $did
+     * @return void
+     */
+    public function getDepartmentDetail($did)
+    {
+        $departmentInfo = CpAccess::getDepartInfo($did);
+        return $this->json($departmentInfo['code'], $departmentInfo['msg'], $departmentInfo['data']);
+    }
+
+    /**
      * @desc 获取父节点信息
      */
     public function getDepartmentParent($did)

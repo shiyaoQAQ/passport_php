@@ -318,6 +318,8 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -325,6 +327,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
         return {
             // 当前权限组id
             groupId: 0,
+            groupDetail: null,
             departmentTree: [],
             departmentTreeConfig: {
                 props: {
@@ -360,15 +363,28 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             });
         },
 
+        // 获取组信息
+        getActionGroupDetail: function getActionGroupDetail() {
+            var _this3 = this;
+
+            $.ajax({
+                url: '/cp/departments/actionGroup/' + this.groupId + '/detail',
+                type: 'GET',
+                success: function success(res) {
+                    _this3.groupDetail = res.data;
+                }
+            });
+        },
+
         // 获取操作列表
         getGroupActionList: function getGroupActionList() {
-            var _this3 = this;
+            var _this4 = this;
 
             $.ajax({
                 url: '/cp/departments/actionGroup/' + this.groupId + '/action',
                 type: 'GET',
                 success: function success(res) {
-                    _this3.actionList = res.data.action_list;
+                    _this4.actionList = res.data.action_list;
                 }
             });
         },
@@ -436,12 +452,12 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
         // 树递归方法
         operateTree: function operateTree(treeNodeList, callbackFunc) {
-            var _this4 = this;
+            var _this5 = this;
 
             treeNodeList.forEach(function (v, i) {
                 callbackFunc(v);
                 if (v.child) {
-                    _this4.operateTree(v.child, callbackFunc);
+                    _this5.operateTree(v.child, callbackFunc);
                 }
             });
         },
@@ -518,6 +534,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
     mounted: function mounted() {
         this.groupId = this.$route.params.groupId;
         this.getDepartmentTree();
+        this.getActionGroupDetail();
         this.getGroupActionList();
     }
 });
@@ -924,6 +941,10 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -934,6 +955,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             project: '',
             saveActionLoading: false,
 
+            departmentDetail: null,
             actionList: []
         };
     },
@@ -954,6 +976,19 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 type: 'GET',
                 success: function success(res) {
                     _this2.actionList = res.data.action_list;
+                }
+            });
+        },
+
+        // 获取部门信息
+        getDepartmentDetail: function getDepartmentDetail() {
+            var _this3 = this;
+
+            $.ajax({
+                url: '/cp/departments/' + this.did + '/detail',
+                type: 'GET',
+                success: function success(res) {
+                    _this3.departmentDetail = res.data;
                 }
             });
         },
@@ -1032,6 +1067,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
         this.did = this.$route.params.did;
         this.project = this.$route.query.project;
         // this.getDepartmentTree()
+        this.getDepartmentDetail();
         this.getActionList();
     }
 });
@@ -1071,6 +1107,10 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 //
 //
 //
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -1081,6 +1121,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             project: '',
             saveResourceLoading: false,
 
+            departmentDetail: null,
             resourceList: []
         };
     },
@@ -1101,6 +1142,19 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 type: 'GET',
                 success: function success(res) {
                     _this2.resourceList = res.data.resource_list;
+                }
+            });
+        },
+
+        // 获取部门信息
+        getDepartmentDetail: function getDepartmentDetail() {
+            var _this3 = this;
+
+            $.ajax({
+                url: '/cp/departments/' + this.did + '/detail',
+                type: 'GET',
+                success: function success(res) {
+                    _this3.departmentDetail = res.data;
                 }
             });
         },
@@ -1179,6 +1233,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
         this.did = this.$route.params.did;
         this.project = this.$route.query.project;
         // this.getDepartmentTree()
+        this.getDepartmentDetail();
         this.getResourceList();
     }
 });
@@ -1879,6 +1934,8 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -1886,6 +1943,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
         return {
             // 当前资源组id
             groupId: 0,
+            groupDetail: null,
             departmentTree: [],
             departmentTreeConfig: {
                 props: {
@@ -1921,15 +1979,28 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             });
         },
 
+        // 获取组信息
+        getResourceGroupDetail: function getResourceGroupDetail() {
+            var _this3 = this;
+
+            $.ajax({
+                url: '/cp/departments/resourceGroup/' + this.groupId + '/detail',
+                type: 'GET',
+                success: function success(res) {
+                    _this3.groupDetail = res.data;
+                }
+            });
+        },
+
         // 获取操作列表
         getGroupResourceList: function getGroupResourceList() {
-            var _this3 = this;
+            var _this4 = this;
 
             $.ajax({
                 url: '/cp/departments/resourceGroup/' + this.groupId + '/resource',
                 type: 'GET',
                 success: function success(res) {
-                    _this3.resourceList = res.data.resource_list;
+                    _this4.resourceList = res.data.resource_list;
                 }
             });
         },
@@ -1997,12 +2068,12 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
         // 树递归方法
         operateTree: function operateTree(treeNodeList, callbackFunc) {
-            var _this4 = this;
+            var _this5 = this;
 
             treeNodeList.forEach(function (v, i) {
                 callbackFunc(v);
                 if (v.child) {
-                    _this4.operateTree(v.child, callbackFunc);
+                    _this5.operateTree(v.child, callbackFunc);
                 }
             });
         },
@@ -2079,6 +2150,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
     mounted: function mounted() {
         this.groupId = this.$route.params.groupId;
         this.getDepartmentTree();
+        this.getResourceGroupDetail();
         this.getGroupResourceList();
     }
 });
@@ -3934,7 +4006,16 @@ var render = function() {
           { staticClass: "detailElement" },
           [
             _c("p", { attrs: { slot: "title" }, slot: "title" }, [
-              _vm._v("权限详情")
+              _vm.groupDetail != null
+                ? _c("span", [
+                    _vm._v(
+                      _vm._s(_vm.groupDetail.name) +
+                        "（" +
+                        _vm._s(_vm.groupDetail.desc) +
+                        "）"
+                    )
+                  ])
+                : _vm._e()
             ]),
             _vm._v(" "),
             _c("p"),
@@ -4222,7 +4303,15 @@ var render = function() {
           { staticClass: "detailElement" },
           [
             _c("p", { attrs: { slot: "title" }, slot: "title" }, [
-              _vm._v("权限详情")
+              _vm.departmentDetail != null
+                ? _c("span", [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(_vm.departmentDetail.name) +
+                        "\n                "
+                    )
+                  ])
+                : _vm._e()
             ]),
             _vm._v(" "),
             _c("p"),
@@ -4360,7 +4449,15 @@ var render = function() {
           { staticClass: "detailElement" },
           [
             _c("p", { attrs: { slot: "title" }, slot: "title" }, [
-              _vm._v("资源详情")
+              _vm.departmentDetail != null
+                ? _c("span", [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(_vm.departmentDetail.name) +
+                        "\n                "
+                    )
+                  ])
+                : _vm._e()
             ]),
             _vm._v(" "),
             _c("p"),
@@ -5250,7 +5347,16 @@ var render = function() {
           { staticClass: "detailElement" },
           [
             _c("p", { attrs: { slot: "title" }, slot: "title" }, [
-              _vm._v("资源详情")
+              _vm.groupDetail != null
+                ? _c("span", [
+                    _vm._v(
+                      _vm._s(_vm.groupDetail.name) +
+                        "（" +
+                        _vm._s(_vm.groupDetail.desc) +
+                        "）"
+                    )
+                  ])
+                : _vm._e()
             ]),
             _vm._v(" "),
             _c("p"),

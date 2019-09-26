@@ -27,6 +27,15 @@ use App\Modules\Admin\Access\Models\Sales\DmSellerOriginationChart;
  */
 class ResourceModule
 {
+    public static function getResourceGroupDetail($gid)
+    {
+        $group = CpResourceGroup::find($gid);
+        if (empty($group)) {
+            throwWorkError(AccessErrorCode::INVAILD_RESOURCE_GROUP_4);
+        }
+        return $group;
+    }
+
     public static function getResourceGroupDepartmentTree($gid)
     {
         // 取部门信息
@@ -78,7 +87,7 @@ class ResourceModule
     {
         $groupInfo  = CpAccess::getResourceGroupInfo($gid);
         if ($groupInfo['code'] != 0 || empty($groupInfo['data'])) {
-            throwWorkError(AccessErrorCode::INVAILD_ACTION_GROUP_3);
+            throwWorkError(AccessErrorCode::INVAILD_RESOURCE_GROUP_3);
         }
         $groupInfo = $groupInfo['data'];
         // 获取所有resource

@@ -49,6 +49,19 @@ class ActionManageController extends Controller
     }
 
     /**
+     * @desc 获取权限组的详情
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function showActionGroupDetail($groupId, Request $request)
+    {
+        $gid = intval($groupId);
+        $detail = ActionModule::getActionGroupDetail($gid);
+        return $this->json(0, 'ok', $detail);
+    }
+
+    /**
      * @desc 获取权限组的部门树
      *
      * @param Request $request

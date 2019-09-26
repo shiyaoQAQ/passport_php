@@ -2,7 +2,11 @@
     <div class="page">
         <div class="pageCenter">
             <Card class='detailElement'>
-                <p slot="title">资源详情</p>
+                <p slot="title">
+                    <span v-if="departmentDetail!=null">
+                        {{ departmentDetail.name }}
+                    </span>
+                </p>
                 <p>
                     <div><Button @click="saveResource" :loading="saveResourceLoading" class="saveResource" type="primary">保存资源</Button></div>
                     <Collapse>
@@ -35,6 +39,7 @@ export default {
             project : '',
             saveResourceLoading : false,
 
+            departmentDetail : null,
             resourceList : [],
         }
     },
@@ -52,6 +57,16 @@ export default {
                 type:'GET',
                 success: (res) => {
                     this.resourceList = res.data.resource_list;
+                }
+            })
+        },
+        // 获取部门信息
+        getDepartmentDetail() {
+            $.ajax({
+                url:`/cp/departments/` + this.did + `/detail`,
+                type:'GET',
+                success: (res) => {
+                    this.departmentDetail = res.data;
                 }
             })
         },
@@ -132,6 +147,7 @@ export default {
         this.did = this.$route.params.did
         this.project = this.$route.query.project
         // this.getDepartmentTree()
+        this.getDepartmentDetail()
         this.getResourceList()
     }
 }

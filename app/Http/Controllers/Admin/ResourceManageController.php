@@ -33,6 +33,18 @@ class ResourceManageController extends Controller
         return $this->json(0, 'ok', $result);
     }
 
+    /**
+     * @desc 获取资源组的详情
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function showResourceGroupDetail($groupId, Request $request)
+    {
+        $gid = intval($groupId);
+        $detail = ResourceModule::getResourceGroupDetail($gid);
+        return $this->json(0, 'ok', $detail);
+    }
 
       /**
      * @desc 获取资源组的部门树
@@ -75,11 +87,11 @@ class ResourceManageController extends Controller
     {
         $gid = intval($groupId);
         if (empty ($gid)) {
-            throwWorkError(AccessErrorCode::INVAILD_ACTION_GROUP);
+            throwWorkError(AccessErrorCode::INVAILD_RESOURCE_GROUP);
         }
         $groupInfo  = CpAccess::getResourceGroupInfo($gid);
         if ($groupInfo['code'] != 0 || empty($groupInfo['data'])) {
-            throwWorkError(AccessErrorCode::INVAILD_ACTION_GROUP);
+            throwWorkError(AccessErrorCode::INVAILD_RESOURCE_GROUP);
         }
         // 获取更新资源
         $departmentIncrease = $request->input('departmentIncrease');
@@ -106,11 +118,11 @@ class ResourceManageController extends Controller
     {
         $gid = intval($groupId);
         if (empty ($gid)) {
-            throwWorkError(AccessErrorCode::INVAILD_ACTION_GROUP_2);
+            throwWorkError(AccessErrorCode::INVAILD_RESOURCE_GROUP_2);
         }
         $groupInfo  = CpAccess::getResourceGroupInfo($gid);
         if ($groupInfo['code'] != 0 || empty($groupInfo['data'])) {
-            throwWorkError(AccessErrorCode::INVAILD_ACTION_GROUP_2);
+            throwWorkError(AccessErrorCode::INVAILD_RESOURCE_GROUP_2);
         }
 
         // 获取更新资源

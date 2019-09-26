@@ -19,16 +19,16 @@ class AccessErrorCode
     const INVAILD_DEPART = 1020006;
     /** @message 无效的部门 */
     const INVAILD_DEPART_2 = 1020007;
-    /** @message 错误码1020008 */
-    const ERROR_1020008 = 1020008;
-    /** @message 错误码1020009 */
-    const ERROR_1020009 = 1020009;
-    /** @message 错误码1020010 */
-    const ERROR_1020010 = 1020010;
-    /** @message 错误码1020011 */
-    const ERROR_1020011 = 1020011;
-    /** @message 错误码1020012 */
-    const ERROR_1020012 = 1020012;
+    /** @message 无效的权限组 */
+    const INVAILD_ACTION_GROUP_4 = 1020008;
+    /** @message 无效的资源组 */
+    const INVAILD_RESOURCE_GROUP = 1020009;
+    /** @message 无效的资源组 */
+    const INVAILD_RESOURCE_GROUP_2 = 1020010;
+    /** @message 无效的资源组 */
+    const INVAILD_RESOURCE_GROUP_3 = 1020011;
+    /** @message 无效的资源组 */
+    const INVAILD_RESOURCE_GROUP_4 = 1020012;
     /** @message 错误码1020013 */
     const ERROR_1020013 = 1020013;
     /** @message 错误码1020014 */

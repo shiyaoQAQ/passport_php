@@ -20,7 +20,9 @@
         <div class="detail">
             
             <Card class='detailElement'>
-                <p slot="title">资源详情</p>
+                <p slot="title">
+                    <span v-if="groupDetail!=null">{{ groupDetail.name }}（{{ groupDetail.desc }}）</span>
+                </p>
                 <p>
                     <div><Button @click="saveResource" :loading="saveResourceLoading" class="saveResource" type="primary">保存资源</Button></div>
                     <Collapse>
@@ -50,6 +52,7 @@ export default {
         return {
             // 当前资源组id
             groupId : 0,
+            groupDetail : null,
             departmentTree: [],
             departmentTreeConfig : {
                 props : {
@@ -78,6 +81,16 @@ export default {
                 type:'GET',
                 success: (res) => {
                     this.departmentTree = res.data;
+                }
+            })
+        },
+        // 获取组信息
+        getResourceGroupDetail() {
+            $.ajax({
+                url:`/cp/departments/resourceGroup/` + this.groupId + `/detail`,
+                type:'GET',
+                success: (res) => {
+                    this.groupDetail = res.data;
                 }
             })
         },
@@ -236,6 +249,7 @@ export default {
     mounted() {
         this.groupId = this.$route.params.groupId
         this.getDepartmentTree()
+        this.getResourceGroupDetail()
         this.getGroupResourceList()
     }
 }

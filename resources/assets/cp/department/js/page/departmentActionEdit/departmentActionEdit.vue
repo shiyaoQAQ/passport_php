@@ -2,7 +2,11 @@
     <div class="page">
         <div class="pageCenter">
             <Card class='detailElement'>
-                <p slot="title">权限详情</p>
+                <p slot="title">
+                    <span v-if="departmentDetail!=null">
+                        {{ departmentDetail.name }}
+                    </span>
+                </p>
                 <p>
                     <div><Button @click="saveAction" :loading="saveActionLoading" class="saveAction" type="primary">保存权限</Button></div>
                     <Collapse>
@@ -35,6 +39,7 @@ export default {
             project : '',
             saveActionLoading : false,
 
+            departmentDetail : null,
             actionList : [],
         }
     },
@@ -52,6 +57,16 @@ export default {
                 type:'GET',
                 success: (res) => {
                     this.actionList = res.data.action_list;
+                }
+            })
+        },
+        // 获取部门信息
+        getDepartmentDetail() {
+            $.ajax({
+                url:`/cp/departments/` + this.did + `/detail`,
+                type:'GET',
+                success: (res) => {
+                    this.departmentDetail = res.data;
                 }
             })
         },
@@ -132,6 +147,7 @@ export default {
         this.did = this.$route.params.did
         this.project = this.$route.query.project
         // this.getDepartmentTree()
+        this.getDepartmentDetail()
         this.getActionList()
     }
 }

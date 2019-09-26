@@ -27,6 +27,15 @@ use App\Modules\Admin\Access\Models\Sales\DmSellerOriginationChart;
  */
 class ActionModule
 {
+    public static function getActionGroupDetail($gid)
+    {
+        $group = CpActionGroup::find($gid);
+        if (empty($group)) {
+            throwWorkError(AccessErrorCode::INVAILD_ACTION_GROUP_4);
+        }
+        return $group;
+    }
+
     public static function getActionGroupDepartmentTree($gid)
     {
         // 取部门信息
