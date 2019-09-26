@@ -8646,11 +8646,15 @@ component.options.__file = "resources/assets/cp/department/js/page/resourceGroup
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__page_actionGroupEdit_actionGroupEdit_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/actionGroupEdit/actionGroupEdit.vue");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__page_departmentActionEdit_departmentActionEdit_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__page_resourceGroupList_resourceGroupList_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/resourceGroupList/resourceGroupList.vue");
+throw new Error("Cannot find module \"../page/resourceGroupEdit/resourceGroupEdit.vue\"");
+throw new Error("Cannot find module \"../page/departmentResourceEdit/departmentResourceEdit.vue\"");
 /*
  * @Author: GXY 
  * @Date: 2019-08-23 14:21:04 
  * @Describe: router
  */
+
+
 
 
 
@@ -8702,6 +8706,18 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             path: '/resourceGroup',
             name: 'resourceGroupList',
             component: __WEBPACK_IMPORTED_MODULE_7__page_resourceGroupList_resourceGroupList_vue__["a" /* default */]
+        },
+        // 权限组编辑
+        {
+            path: '/resourceGroup/:groupId/edit',
+            name: 'resourceGroupEdit',
+            component: __WEBPACK_IMPORTED_MODULE_8__page_resourceGroupEdit_resourceGroupEdit_vue___default.a
+        },
+        // 部门独立权限编辑
+        {
+            path: '/department/:did/resource/edit',
+            name: 'departmentResourceEdit',
+            component: __WEBPACK_IMPORTED_MODULE_9__page_departmentResourceEdit_departmentResourceEdit_vue___default.a
         }]
         // redirect: ''
     }, {
