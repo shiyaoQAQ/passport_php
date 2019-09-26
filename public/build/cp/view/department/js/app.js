@@ -1202,7 +1202,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
 /* harmony default export */ __webpack_exports__["a"] = ({
     data: function data() {
-        var _this2 = this;
+        var _this = this;
 
         return {
             departmentTree: [],
@@ -1251,7 +1251,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                         },
                         on: {
                             click: function click() {
-                                _this2.delDepartUser(params.row.uid);
+                                _this.delDepartUser(params.row.uid);
                             }
                         }
                     }, '删除')]);
@@ -1278,7 +1278,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
     methods: {
         // 获取组织架构树信息
         getDepartmentTree: function getDepartmentTree() {
-            var _this3 = this;
+            var _this2 = this;
 
             var pid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
             var checkId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
@@ -1287,111 +1287,111 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 url: '/cp/departments/tree',
                 type: 'GET',
                 success: function success(res) {
-                    _this3.departmentTree = res.data;
-                    _this3.dataFormatExpand(_this3.departmentTree, pid, checkId);
+                    _this2.departmentTree = res.data;
+                    _this2.dataFormatExpand(_this2.departmentTree, pid, checkId);
                 }
             });
         },
 
         // 获取所有部门信息 以供编辑部门的时候使用
         getAllDepartmentList: function getAllDepartmentList() {
-            var _this4 = this;
+            var _this3 = this;
 
-            var _this = this;
-            $.ajax({
+            this.$Request({
                 url: '/cp/longrentdepartment/ajaxgetalldepart',
                 type: 'GET',
                 success: function success(res) {
-                    _this4.allDepartmentList = res.data;
+                    _this3.allDepartmentList = res.data;
                 }
             });
         },
 
         // 获取节点的父节点
-        getDepartmentParent: function getDepartmentParent(did) {
-            var _this5 = this;
+        getDepartmentParent: function getDepartmentParent(data) {
+            var _this4 = this;
 
             this.departmentParent = null;
-            $.ajax({
-                url: '/cp/departments/' + did + '/parent',
-                type: 'GET',
+            this.$Request({
+                url: '/cp/departments/' + data.id + '/parent',
+                method: 'GET',
                 success: function success(res) {
-                    _this5.departmentParent = res.data;
+                    _this4.departmentParent = res.data;
                 }
             });
         },
 
         // 获取节点的用户
         getDepartmentUser: function getDepartmentUser() {
-            var _this6 = this;
+            var _this5 = this;
 
-            var did = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-            // if (data == null) {
-            //     data = this.department
-            // }
+            if (data == null) {
+                data = this.department;
+            }
             this.departmentUser = [];
-            $.ajax({
-                url: '/cp/departments/' + did + '/user',
-                type: 'GET',
+            this.$Request({
+                url: '/cp/departments/' + data.id + '/user',
+                method: 'GET',
                 success: function success(res) {
-                    _this6.departmentUser = res.data;
+                    _this5.departmentUser = res.data;
                 }
             });
         },
 
         // 获取节点的操作
-        getDepartmentAction: function getDepartmentAction(did) {
-            var _this7 = this;
+        getDepartmentAction: function getDepartmentAction(data) {
+            var _this6 = this;
 
             this.departmentAction = {};
-            $.ajax({
-                url: '/cp/departments/' + did + '/action',
-                type: 'GET',
+            this.$Request({
+                url: '/cp/departments/' + data.id + '/action',
+                method: 'GET',
                 success: function success(res) {
-                    _this7.departmentAction = res.data;
+                    _this6.departmentAction = res.data;
                 }
             });
         },
 
         // 获取节点的资源
-        getDepartmentResource: function getDepartmentResource(did) {
-            var _this8 = this;
+        getDepartmentResource: function getDepartmentResource(data) {
+            var _this7 = this;
 
             this.departmentResource = {};
-            $.ajax({
-                url: '/cp/departments/' + did + '/resource',
-                type: 'GET',
+            this.$Request({
+                url: '/cp/departments/' + data.id + '/resource',
+                method: 'GET',
                 success: function success(res) {
-                    _this8.departmentResource = res.data;
+                    _this7.departmentResource = res.data;
                 }
             });
         },
 
         // 获取部门相关信息
-        getDepartHandle: function getDepartHandle(did) {
-            this.getDepartmentParent(did);
-            this.getDepartmentUser(did);
-            this.getDepartmentAction(did);
-            this.getDepartmentResource(did);
+        getDepartHandle: function getDepartHandle(data) {
+            this.getDepartmentParent(data);
+            this.getDepartmentUser(data);
+            this.getDepartmentAction(data);
+            this.getDepartmentResource(data);
         },
+
+        // 数据格式处理 ---- 
         dataFormatExpand: function dataFormatExpand(data, pid, checkId) {
-            var _this9 = this;
+            var _this8 = this;
 
             data.forEach(function (v, i) {
-                // v.isChecked = 0;
                 if (v.id == checkId) {
                     v.isChecked = 1;
                 }
                 if (v.id == pid) {
-                    _this9.$set(v, 'isExpand', 1);
-                    _this9.dataFormatExpand(_this9.departmentTree, v.parent_id, checkId);
+                    _this8.$set(v, 'isExpand', 1);
+                    _this8.dataFormatExpand(_this8.departmentTree, v.parent_id, checkId);
                     new Error("StopForeach");
                 }
                 if (!v.child) {
                     return false;
                 } else {
-                    _this9.dataFormatExpand(v.child, pid, checkId);
+                    _this8.dataFormatExpand(v.child, pid, checkId);
                 }
             });
         },
@@ -1429,8 +1429,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             }
         },
         updateDepart: function updateDepart() {
-            var _this = this;
-            $.ajax({
+            var _this9 = this;
+
+            this.$Request({
                 url: '/cp/longrentdepartment/ajaxupdatedepart',
                 data: {
                     id: this.departmentModalData.id,
@@ -1440,35 +1441,36 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                     code: 0,
                     email: this.departmentModalData.email
                 },
-                type: 'POST',
+                method: 'POST',
                 success: function success(data) {
                     if (data.code == 0) {
-                        _this.$Message.success(data.msg);
-                        _this.getDepartmentTree(_this.departmentModalData.pid, _this.departmentModalData.id);
+                        _this9.$Message.success(data.msg);
+                        _this9.getDepartmentTree(_this9.departmentModalData.pid, _this9.departmentModalData.id);
                         // 更新当前节点信息 这里还是不要请求后台了 提升性能
-                        _this.department.name = _this.departmentModalData.name;
-                        _this.department.mark = _this.departmentModalData.mark;
-                        _this.department.email = _this.departmentModalData.email;
-                        if (_this.department.parent_id != _this.departmentModalData.pid + '') {
-                            _this.department.parent_id = _this.departmentModalData.pid + '';
-                            _this.getDepartmentParent(_this.department);
+                        _this9.department.name = _this9.departmentModalData.name;
+                        _this9.department.mark = _this9.departmentModalData.mark;
+                        _this9.department.email = _this9.departmentModalData.email;
+                        if (_this9.department.parent_id != _this9.departmentModalData.pid + '') {
+                            _this9.department.parent_id = _this9.departmentModalData.pid + '';
+                            _this9.getDepartmentParent(_this9.department);
                         }
-                        _this.addDepartmentModalConfig.loading = false;
-                        _this.addDepartmentModal = false;
-                        _this.$nextTick(function () {
-                            _this.addDepartmentModalConfig.loading = true;
+                        _this9.addDepartmentModalConfig.loading = false;
+                        _this9.addDepartmentModal = false;
+                        _this9.$nextTick(function () {
+                            _this9.addDepartmentModalConfig.loading = true;
                         });
                     } else {
-                        _this.$nextTick(function () {
-                            _this.addDepartmentModalConfig.loading = true;
+                        _this9.$nextTick(function () {
+                            _this9.addDepartmentModalConfig.loading = true;
                         });
                     }
                 }
             });
         },
         storeChildDepart: function storeChildDepart() {
-            var _this = this;
-            $.ajax({
+            var _this10 = this;
+
+            this.$Request({
                 url: '/cp/longrentdepartment/ajaxadddepart',
                 data: {
                     name: this.departmentModalData.name,
@@ -1477,20 +1479,20 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                     email: this.departmentModalData.email,
                     code: 0
                 },
-                type: 'POST',
+                method: 'POST',
                 success: function success(data) {
                     if (data.code == 0) {
-                        _this.$Message.success(data.msg);
-                        _this.getDepartmentTree(_this.departmentModalData.pid, _this.departmentModalData.pid);
-                        _this.getAllDepartmentList();
-                        _this.addDepartmentModalConfig.loading = false;
-                        _this.addDepartmentModal = false;
-                        _this.$nextTick(function () {
-                            _this.addDepartmentModalConfig.loading = true;
+                        _this10.$Message.success(data.msg);
+                        _this10.getDepartmentTree(_this10.departmentModalData.pid, _this10.departmentModalData.pid);
+                        _this10.getAllDepartmentList();
+                        _this10.addDepartmentModalConfig.loading = false;
+                        _this10.addDepartmentModal = false;
+                        _this10.$nextTick(function () {
+                            _this10.addDepartmentModalConfig.loading = true;
                         });
                     } else {
-                        _this.$nextTick(function () {
-                            _this.addDepartmentModalConfig.loading = true;
+                        _this10.$nextTick(function () {
+                            _this10.addDepartmentModalConfig.loading = true;
                         });
                     }
                 }
@@ -1499,35 +1501,27 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
         // 删除部门
         delDepart: function delDepart() {
+            var _this11 = this;
+
             if (!confirm('确认要删除这个部门么？')) {
                 return true;
             }
-            var _this = this;
-            $.ajax({
+            this.$Request({
                 url: '/cp/longrentdepartment/ajaxdeletedepart',
                 data: {
-                    id: _this.department.id
-                    // _token: $('meta[name="csrf-token"]').attr('content')
+                    id: this.department.id
                 },
-                type: 'POST',
+                method: 'POST',
                 dataType: 'json',
                 success: function success(data) {
                     if (data.code == 0) {
-                        _this.$Message.success(data.msg);
-                        _this.getDepartmentTree(_this.department.parent_id, _this.department.parent_id);
-                        _this.unselectedDepartment();
+                        _this11.$Message.success(data.msg);
+                        _this11.getDepartmentTree(_this11.department.parent_id, _this11.department.parent_id);
+                        _this11.department = _this11.departmentParent;
+                        _this11.getDepartHandle(_this11.departmentParent);
                     }
                 }
             });
-        },
-
-        // 取消节点选择
-        unselectedDepartment: function unselectedDepartment() {
-            this.department = null;
-            this.departmentParent = null;
-            this.departmentUser = [];
-            this.departmentAction = {};
-            this.departmentResource = {};
         },
 
         // 编辑独立权限
@@ -1566,7 +1560,8 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
         // 添加用户到部门
         addDepartmentUser: function addDepartmentUser() {
-            var _this = this;
+            var _this12 = this;
+
             if (!this.department.id) {
                 this.$Message.warning({
                     content: '请选择部门'
@@ -1576,23 +1571,20 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                     content: '请输入账号'
                 });
             } else {
-                $.ajax({
+                this.$Request({
                     url: '/cp/longrentdepartment/ajaxadduserbycpaccount',
                     type: 'post',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     data: {
-                        did: _this.department.id,
-                        cp_account: _this.userInput
-                        // _token : $('meta[name="csrf-token"]').attr('content')
+                        did: this.department.id,
+                        cp_account: this.userInput
                     },
                     success: function success(res) {
                         if (res.code == 0) {
-                            _this.$Message.success('保存成功');
-                            _this.getDepartmentUser();
-                        } else {
-                            _this.$Message.error('保存失败');
+                            _this12.$Message.success('保存成功');
+                            _this12.getDepartmentUser();
                         }
                     }
                 });
@@ -1601,11 +1593,12 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
         // 删除用户
         delDepartUser: function delDepartUser(uid) {
-            var _this = this;
+            var _this13 = this;
+
             if (!confirm('您是否要删除此用户')) {
                 return;
             }
-            $.ajax({
+            this.$Request({
                 url: '/cp/longrentdepartment/ajaxdeldepartuser',
                 data: {
                     did: this.department.id,
@@ -1618,10 +1611,8 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 dataType: 'json',
                 success: function success(data) {
                     if (data.code == 0) {
-                        _this.$Message.success('删除成功');
-                        _this.getDepartmentUser();
-                    } else {
-                        _this.$Message.success('删除失败');
+                        _this13.$Message.success('删除成功');
+                        _this13.getDepartmentUser();
                     }
                 }
             });
@@ -1640,12 +1631,13 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             }
         },
         collapse: function collapse(list) {
-            var _this = this;
+            var _this14 = this;
+
             list.forEach(function (child) {
                 if (child.isExpand) {
                     child.isExpand = 0;
                 }
-                child.children && _this.collapse(child.children);
+                child.children && _this14.collapse(child.children);
             });
         },
 
@@ -1655,15 +1647,15 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             if (this.department == data) {
                 return;
             }
+            // this.department.name
+            // $('.org-tree-node-label-inner').removeClass('org-tree-node-label-inner-check')
+            // // if (this.department) {
+            // //     this.$set(this.department, 'isChecked', 0)
+            // // }
             this.department = data;
             // 获取部门相关信息
-            this.getDepartHandle(data.id);
-            // this.getDepartmentParent(data)
-            // this.getDepartmentUser(data)
-            // this.getDepartmentAction(data)
-            // this.getDepartmentResource(data)
-            $('.org-tree-node-label-inner').removeClass('org-tree-node-label-inner-check');
-            e.target.className += ' org-tree-node-label-inner-check';
+            this.$set(this.department, 'isChecked', 1);
+            this.getDepartHandle(data);
         }
     },
     created: function created() {},
@@ -4449,7 +4441,7 @@ var render = function() {
                   }
                 },
                 [
-                  this.addDepartmentModalConfig.operate == "addChild"
+                  _vm.addDepartmentModalConfig.operate == "addChild"
                     ? _c("h3", [_vm._v("添加子节点")])
                     : _c("h3", [_vm._v("节点编辑")]),
                   _vm._v(" "),
