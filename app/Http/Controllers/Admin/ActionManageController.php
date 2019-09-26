@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\Admin\Access\ActionModule;
 use App\Modules\Admin\Access\Constants\AccessConst;
+use App\Modules\Admin\Access\Constants\AccessErrorCode;
 use App\Modules\Admin\Access\CpAccess;
 use App\Modules\Admin\Access\CpUserModule;
 use App\Modules\Admin\Access\Models\CpDepartment;
@@ -78,6 +79,48 @@ class ActionManageController extends Controller
         //                                             ->with('gid', $gid);
 
     }
+
+    /**
+     * @desc 更新权限组对应部门
+     *
+     * @param [type] $groupId
+     * @param Request $requset
+     * @return void
+     */
+    public function updateActionGroupDepartment($groupId, Request $requset)
+    {
+        $gid = intval($groupId);
+        if (empty ($gid)) {
+            throwWorkError(AccessErrorCode::INVAILD_ACTION_GROUP);
+        }
+        $groupInfo  = CpAccess::getActionGroupInfo($gid);
+        if ($groupInfo['code'] != 0 || empty($groupInfo['data'])) {
+            throwWorkError(AccessErrorCode::INVAILD_ACTION_GROUP);
+        }
+        // 获取更新资源
+
+        return $this->json(10, '更新成功');
+    }
+
+    /**
+     * @desc 更新权限组对应权限
+     *
+     * @param [type] $groupId
+     * @param Request $requset
+     * @return void
+     */
+    public function updateActionGroupAction($groupId, Request $requset)
+    {
+        $gid = intval($groupId);
+        if (empty ($gid)) {
+            throwWorkError(AccessErrorCode::INVAILD_ACTION_GROUP_2);
+        }
+        $groupInfo  = CpAccess::getActionGroupInfo($gid);
+        if ($groupInfo['code'] != 0 || empty($groupInfo['data'])) {
+            throwWorkError(AccessErrorCode::INVAILD_ACTION_GROUP_2);
+        }
+    }
+
 
 
 }

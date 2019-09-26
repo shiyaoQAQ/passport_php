@@ -272,7 +272,11 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_org_tree_index_js__ = __webpack_require__("./resources/assets/cp/department/js/components/org-tree/index.js");
+/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_org_tree_index_js__ = __webpack_require__("./resources/assets/cp/department/js/components/org-tree/index.js");
+//
+//
+//
+//
 //
 //
 //
@@ -415,9 +419,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 collapsable: false,
                 horizontal: true
             },
-            // 部门树变更
-            departmentIncrease: [],
-            departmentReduce: [],
+
+            saveDepartmentLoading: false,
+
             // 权限变更
             actionIncrease: [],
             actionReduce: []
@@ -430,13 +434,13 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
     methods: {
         // 获取组织架构树信息
         getDepartmentTree: function getDepartmentTree() {
-            var _this = this;
+            var _this2 = this;
 
-            this.$Request({
+            $.ajax({
                 url: '/cp/departments/actionGroup/' + this.groupId + '/tree',
-                method: 'GET',
+                type: 'GET',
                 success: function success(res) {
-                    _this.departmentTree = res.data;
+                    _this2.departmentTree = res.data;
                 }
             });
         },
@@ -465,7 +469,68 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
         departmentOnClick: function departmentOnClick(e, data) {
             // 进行选择或反选
             data.isChecked = 1 - data.isChecked;
-            console.log(data);
+        },
+        saveDepartment: function saveDepartment() {
+            // 递归计算变更
+            // 部门树变更
+            this.saveDepartmentLoading = true;
+            var departmentIncrease = [];
+            var departmentReduce = [];
+            var _this = this;
+            this.operateTree(this.departmentTree, function (node) {
+                if (node.isChecked != node.originIsChecked) {
+                    if (node.isChecked == 1) {
+                        departmentIncrease.push(node.id);
+                    } else {
+                        departmentReduce.push(node.id);
+                    }
+                }
+            });
+            // console.log(departmentIncrease);
+            // console.log(departmentReduce);
+            if (departmentIncrease.length == 0 && departmentReduce.length == 0) {
+                _this.$Message.error('您没有任何变更啊');
+                _this.saveDepartmentLoading = false;
+                return;
+            }
+
+            // 调用更新接口
+            $.ajax({
+                url: '/cp/departments/actionGroup/' + _this.groupId + '/department',
+                data: {
+                    departmentIncrease: departmentIncrease,
+                    departmentReduce: departmentReduce
+                },
+                type: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function success(data) {
+                    _this.$Message.success({
+                        title: '',
+                        content: data.msg
+                    });
+                    _this.getDepartmentTree();
+                    _this.saveDepartmentLoading = false;
+                },
+                error: function error(data) {
+                    _this.saveDepartmentLoading = false;
+                    _this.$Message.error({
+                        title: '',
+                        content: '保存失败！错误信息：' + data.msg + data.code
+                    });
+                }
+            });
+        },
+        operateTree: function operateTree(treeNodeList, callbackFunc) {
+            var _this3 = this;
+
+            treeNodeList.forEach(function (v, i) {
+                callbackFunc(v);
+                if (v.child) {
+                    _this3.operateTree(v.child, callbackFunc);
+                }
+            });
         }
     },
     created: function created() {},
@@ -474,6 +539,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
         this.getDepartmentTree();
     }
 });
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__("./node_modules/jquery/dist/jquery.js")))
 
 /***/ }),
 
@@ -1088,9 +1154,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             var pid = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
             var checkId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
-            this.$Request({
+            $.ajax({
                 url: '/cp/departments/tree',
-                method: 'GET',
+                type: 'GET',
                 success: function success(res) {
                     _this3.departmentTree = res.data;
                     _this3.dataFormatExpand(_this3.departmentTree, pid, checkId);
@@ -1103,9 +1169,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             var _this4 = this;
 
             var _this = this;
-            this.$Request({
+            $.ajax({
                 url: '/cp/longrentdepartment/ajaxgetalldepart',
-                method: 'GET',
+                type: 'GET',
                 success: function success(res) {
                     _this4.allDepartmentList = res.data;
                 }
@@ -1117,9 +1183,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             var _this5 = this;
 
             this.departmentParent = null;
-            this.$Request({
+            $.ajax({
                 url: '/cp/departments/' + did + '/parent',
-                method: 'GET',
+                type: 'GET',
                 success: function success(res) {
                     _this5.departmentParent = res.data;
                 }
@@ -1136,9 +1202,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 data = this.department;
             }
             this.departmentUser = [];
-            this.$Request({
+            $.ajax({
                 url: '/cp/departments/' + did + '/user',
-                method: 'GET',
+                type: 'GET',
                 success: function success(res) {
                     _this6.departmentUser = res.data;
                 }
@@ -1150,9 +1216,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             var _this7 = this;
 
             this.departmentAction = {};
-            this.$Request({
+            $.ajax({
                 url: '/cp/departments/' + did + '/action',
-                method: 'GET',
+                type: 'GET',
                 success: function success(res) {
                     _this7.departmentAction = res.data;
                 }
@@ -1164,9 +1230,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             var _this8 = this;
 
             this.departmentResource = {};
-            this.$Request({
+            $.ajax({
                 url: '/cp/departments/' + did + '/resource',
-                method: 'GET',
+                type: 'GET',
                 success: function success(res) {
                     _this8.departmentResource = res.data;
                 }
@@ -1235,7 +1301,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
         },
         updateDepart: function updateDepart() {
             var _this = this;
-            this.$Request({
+            $.ajax({
                 url: '/cp/longrentdepartment/ajaxupdatedepart',
                 data: {
                     id: this.departmentModalData.id,
@@ -1245,7 +1311,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                     code: 0,
                     email: this.departmentModalData.email
                 },
-                method: 'POST',
+                type: 'POST',
                 success: function success(data) {
                     if (data.code == 0) {
                         _this.$Message.success(data.msg);
@@ -1273,7 +1339,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
         },
         storeChildDepart: function storeChildDepart() {
             var _this = this;
-            this.$Request({
+            $.ajax({
                 url: '/cp/longrentdepartment/ajaxadddepart',
                 data: {
                     name: this.departmentModalData.name,
@@ -1282,7 +1348,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                     email: this.departmentModalData.email,
                     code: 0
                 },
-                method: 'POST',
+                type: 'POST',
                 success: function success(data) {
                     if (data.code == 0) {
                         _this.$Message.success(data.msg);
@@ -1308,13 +1374,13 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 return true;
             }
             var _this = this;
-            this.$Request({
+            $.ajax({
                 url: '/cp/longrentdepartment/ajaxdeletedepart',
                 data: {
                     id: _this.department.id
                     // _token: $('meta[name="csrf-token"]').attr('content')
                 },
-                method: 'POST',
+                type: 'POST',
                 dataType: 'json',
                 success: function success(data) {
                     if (data.code == 0) {
@@ -1372,9 +1438,12 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                     content: '请输入账号'
                 });
             } else {
-                _this.$Request({
+                $.ajax({
                     url: '/cp/longrentdepartment/ajaxadduserbycpaccount',
-                    method: 'post',
+                    type: 'post',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     data: {
                         did: _this.department.id,
                         cp_account: _this.userInput
@@ -1384,6 +1453,8 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                         if (res.code == 0) {
                             _this.$Message.success('保存成功');
                             _this.getDepartmentUser();
+                        } else {
+                            _this.$Message.error('保存失败');
                         }
                     }
                 });
@@ -1396,18 +1467,23 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             if (!confirm('您是否要删除此用户')) {
                 return;
             }
-            _this.$Request({
+            $.ajax({
                 url: '/cp/longrentdepartment/ajaxdeldepartuser',
                 data: {
                     did: this.department.id,
                     uid: uid
                 },
-                method: 'POST',
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 dataType: 'json',
                 success: function success(data) {
                     if (data.code == 0) {
                         _this.$Message.success('删除成功');
                         _this.getDepartmentUser();
+                    } else {
+                        _this.$Message.success('删除失败');
                     }
                 }
             });
@@ -1467,6 +1543,8 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 //
 //
@@ -1752,43 +1830,44 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
         // 删除资源组
         deleteItem: function deleteItem(item) {
+            var _$$ajax;
+
             if (!confirm('真的要执行删除操作吗？')) {
                 return false;
             }
             var _this = this;
             //后台交互
-            $.ajax({
+            $.ajax((_$$ajax = {
                 url: '/cp/longrentdepartment/ajaxdelresourcegroup',
                 type: "POST",
-                data: {
-                    id: item.id
-                },
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                dataType: "json",
-                success: function success(response) {
-                    if (response.code == 0) {
-                        //保存完后更新一次列表
-                        _this.$Message.success({
-                            title: '',
-                            content: response.msg
-                        });
-                        _this.getDataList();
-                    } else {
-                        _this.$Message.error({
-                            title: '',
-                            content: '删除失败！错误信息：' + response.msg + response.code
-                        });
-                    }
-                },
-                error: function error() {
+                data: {
+                    id: item.id
+                }
+            }, _defineProperty(_$$ajax, 'headers', {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }), _defineProperty(_$$ajax, 'dataType', "json"), _defineProperty(_$$ajax, 'success', function success(response) {
+                if (response.code == 0) {
+                    //保存完后更新一次列表
+                    _this.$Message.success({
+                        title: '',
+                        content: response.msg
+                    });
+                    _this.getDataList();
+                } else {
                     _this.$Message.error({
                         title: '',
-                        content: '网络错误，保存失败'
+                        content: '删除失败！错误信息：' + response.msg + response.code
                     });
                 }
-            });
+            }), _defineProperty(_$$ajax, 'error', function error() {
+                _this.$Message.error({
+                    title: '',
+                    content: '网络错误，保存失败'
+                });
+            }), _$$ajax));
         },
 
         //复制对象
@@ -3159,6 +3238,22 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "page" }, [
     _c("div", { staticClass: "tree" }, [
+      _c(
+        "div",
+        [
+          _c(
+            "Button",
+            {
+              staticClass: "saveDepartment",
+              attrs: { loading: _vm.saveDepartmentLoading, type: "primary" },
+              on: { click: _vm.saveDepartment }
+            },
+            [_vm._v("保存部门")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
       _c(
         "div",
         _vm._l(_vm.departmentTree, function(tree, index) {
@@ -7246,13 +7341,15 @@ component.options.__file = "resources/assets/cp/base/js/compontents/menu/index.v
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function($) {function request(formData) {
+    var _this = this;
+
     var url = formData.url,
         method = formData.method,
         _success = formData.success,
         _formData$data = formData.data,
         data = _formData$data === undefined ? null : _formData$data,
-        _formData$fail = formData.fail,
-        _fail = _formData$fail === undefined ? function () {} : _formData$fail,
+        _formData$error = formData.error,
+        error = _formData$error === undefined ? null : _formData$error,
         _formData$complete = formData.complete,
         _complete = _formData$complete === undefined ? function () {} : _formData$complete;
 
@@ -7268,13 +7365,28 @@ component.options.__file = "resources/assets/cp/base/js/compontents/menu/index.v
                 if (res.code == 0) {
                     _success(res);
                 } else {
-                    alert(res.msg);
+                    // 判断是否有错误回调
+                    if (error == null) {
+                        _this.$Modal.error({
+                            title: '操作失败',
+                            content: res.msg + ' ' + res.code
+                        });
+                    } else {
+                        error(res);
+                    }
                 }
             }
         },
         fail: function fail(res) {
-            alert('请求失败！');
-            _fail(res);
+            // 判断是否有错误回调
+            if (error == null) {
+                _this.$Modal.error({
+                    title: '请求失败',
+                    content: '请求失败！'
+                });
+            } else {
+                error(res);
+            }
         },
         complete: function complete(res) {
             _complete(res.responseJSON);

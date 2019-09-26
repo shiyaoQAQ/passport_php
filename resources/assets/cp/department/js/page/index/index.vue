@@ -233,14 +233,14 @@ export default {
         }
     },
     components: {
-        OrgTree
+        OrgTree 
     },
     methods: {
         // 获取组织架构树信息
         getDepartmentTree(pid = 1, checkId = null) {
-            this.$Request({
+            $.ajax({
                 url:`/cp/departments/tree`,
-                method:'GET',
+                type:'GET',
                 success: (res) => {
                     this.departmentTree = res.data;
                     this.dataFormatExpand(this.departmentTree, pid, checkId);
@@ -250,9 +250,9 @@ export default {
         // 获取所有部门信息 以供编辑部门的时候使用
         getAllDepartmentList() {
             var _this = this
-            this.$Request({
+            $.ajax({
                 url:`/cp/longrentdepartment/ajaxgetalldepart`,
-                method:'GET',
+                type:'GET',
                 success: (res) => {
                     this.allDepartmentList = res.data;
                 }
@@ -261,9 +261,9 @@ export default {
         // 获取节点的父节点
         getDepartmentParent(did) {
             this.departmentParent = null
-            this.$Request({
+            $.ajax({
                 url : `/cp/departments/${did}/parent`,
-                method:'GET',
+                type:'GET',
                 success: (res) => {
                     this.departmentParent= res.data;
                 }
@@ -275,9 +275,9 @@ export default {
                 data = this.department
             }
             this.departmentUser = []
-            this.$Request({
+            $.ajax({
                 url : `/cp/departments/` + did + `/user`,
-                method:'GET',
+                type:'GET',
                 success: (res) => {
                     this.departmentUser= res.data;
                 }
@@ -286,9 +286,9 @@ export default {
         // 获取节点的操作
         getDepartmentAction(did) {
             this.departmentAction = {}
-            this.$Request({
+            $.ajax({
                 url : `/cp/departments/${did}/action`,
-                method:'GET',
+                type:'GET',
                 success: (res) => {
                     this.departmentAction= res.data;
                 }
@@ -297,9 +297,9 @@ export default {
         // 获取节点的资源
         getDepartmentResource(data) {
             this.departmentResource = {}
-            this.$Request({
+            $.ajax({
                 url : `/cp/departments/${did}/resource`,
-                method:'GET',
+                type:'GET',
                 success: (res) => {
                     this.departmentResource= res.data;
                 }
@@ -364,7 +364,7 @@ export default {
         },
         updateDepart() {
             let _this = this
-            this.$Request({
+            $.ajax({
                 url  : '/cp/longrentdepartment/ajaxupdatedepart',
                 data : {
                     id: this.departmentModalData.id,
@@ -374,7 +374,7 @@ export default {
                     code: 0,
                     email: this.departmentModalData.email,
                 },
-                method : 'POST',
+                type : 'POST',
                 success : function(data) {
                     if (data.code == 0) {
                         _this.$Message.success(data.msg)
@@ -398,7 +398,7 @@ export default {
         },
         storeChildDepart() {
             let _this = this
-            this.$Request({
+            $.ajax({
                 url: '/cp/longrentdepartment/ajaxadddepart',
                 data: {
                     name: this.departmentModalData.name,
@@ -407,7 +407,7 @@ export default {
                     email: this.departmentModalData.email,
                     code: 0,
                 },
-                method : 'POST',
+                type : 'POST',
                 success : function(data) {
                     if(data.code == 0) {
                         _this.$Message.success(data.msg);
@@ -428,13 +428,13 @@ export default {
                 return true;
             }
             let _this = this
-            this.$Request({
+            $.ajax({
                 url: '/cp/longrentdepartment/ajaxdeletedepart',
                 data: {
                     id:_this.department.id,
                     // _token: $('meta[name="csrf-token"]').attr('content')
                 },
-                method : 'POST',
+                type : 'POST',
                 dataType:'json',
                 success : function(data){
                     if (data.code == 0) {
@@ -485,9 +485,12 @@ export default {
                     content: '请输入账号',
                 })
             }else {
-                _this.$Request({
+                $.ajax({
                     url: '/cp/longrentdepartment/ajaxadduserbycpaccount',
-                    method:'post',
+                    type:'post',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     data:{
                         did : _this.department.id,
                         cp_account : _this.userInput,
@@ -497,6 +500,9 @@ export default {
                         if (res.code == 0) {
                             _this.$Message.success('保存成功');
                             _this.getDepartmentUser();
+                        } else {
+                            _this.$Message.error('保存失败');
+
                         }
                     }
                 })
@@ -508,18 +514,23 @@ export default {
             if (!confirm('您是否要删除此用户')) {
                 return
             }
-            _this.$Request({
+            $.ajax({
                 url  : '/cp/longrentdepartment/ajaxdeldepartuser',
                 data : {
                     did: this.department.id, 
                     uid: uid,
                 },
-                method : 'POST',
+                type : 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 dataType:'json',
                 success : function(data){
                     if (data.code == 0) {
                         _this.$Message.success('删除成功');
                         _this.getDepartmentUser();
+                    } else {
+                        _this.$Message.success('删除失败');
                     }
                 },
             });

@@ -286,6 +286,9 @@ export default {
             $.ajax({
                 url:'/cp/longrentdepartment/ajaxdelresourcegroup',
                 type:"POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 data: {
                     id: item.id,
                 },

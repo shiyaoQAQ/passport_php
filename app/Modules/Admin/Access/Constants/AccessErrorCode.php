@@ -9,10 +9,10 @@ class AccessErrorCode
     const INVAILD_USER = 1020001;
     /** @message 无效的cp用户 */
     const INVAILD_USER_2 = 1020002;
-    /** @message 错误码1020003 */
-    const ERROR_1020003 = 1020003;
-    /** @message 错误码1020004 */
-    const ERROR_1020004 = 1020004;
+    /** @message 无效的权限组 */
+    const INVAILD_ACTION_GROUP = 1020003;
+    /** @message 无效的权限组 */
+    const INVAILD_ACTION_GROUP_2 = 1020004;
     /** @message 错误码1020005 */
     const ERROR_1020005 = 1020005;
     /** @message 错误码1020006 */

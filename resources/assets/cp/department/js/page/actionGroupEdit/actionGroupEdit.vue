@@ -2,6 +2,9 @@
     <div class="page">
         <div class="tree">
             <div>
+                <Button @click="saveDepartment" :loading="saveDepartmentLoading" class="saveDepartment" type="primary">保存部门</Button>
+            </div>
+            <div>
                 <orgTree 
                     v-for="tree,index in departmentTree"
                     :key="index"
@@ -12,6 +15,7 @@
                     @on-node-click="departmentOnClick"
                 ></orgTree>
             </div>
+            
         </div>
         <div class="detail">
             <!-- <div v-if="department != null">
@@ -140,9 +144,9 @@ export default {
                 collapsable : false,
                 horizontal : true,
             },
-            // 部门树变更
-            departmentIncrease : [],
-            departmentReduce : [],
+            
+            saveDepartmentLoading : false,
+
             // 权限变更
             actionIncrease : [],
             actionReduce : [],
@@ -154,9 +158,9 @@ export default {
     methods: {
         // 获取组织架构树信息
         getDepartmentTree() {
-            this.$Request({
+            $.ajax({
                 url:`/cp/departments/actionGroup/` + this.groupId + `/tree`,
-                method:'GET',
+                type:'GET',
                 success: (res) => {
                     this.departmentTree = res.data;
                 }
@@ -185,10 +189,69 @@ export default {
         // },
         departmentOnClick (e, data) {
             // 进行选择或反选
-            data.isChecked = 1 - data.isChecked
-            console.log(data);
-            
+            data.isChecked = 1 - data.isChecked            
         },
+        saveDepartment () {
+            // 递归计算变更
+            // 部门树变更
+            this.saveDepartmentLoading = true
+            let departmentIncrease = []
+            let departmentReduce = []
+            let _this = this
+            this.operateTree(this.departmentTree, function (node) {
+                if (node.isChecked != node.originIsChecked) {
+                    if (node.isChecked == 1) {
+                        departmentIncrease.push(node.id)
+                    } else {
+                        departmentReduce.push(node.id)
+                    }
+                }
+            })
+            // console.log(departmentIncrease);
+            // console.log(departmentReduce);
+            if (departmentIncrease.length == 0 && departmentReduce.length == 0) {
+                _this.$Message.error('您没有任何变更啊')
+                _this.saveDepartmentLoading = false
+                return
+            }
+
+            // 调用更新接口
+            $.ajax({
+                url  : '/cp/departments/actionGroup/' + _this.groupId + '/department',
+                data : {
+                    departmentIncrease : departmentIncrease,
+                    departmentReduce : departmentReduce,
+                },
+                type : 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success : function(data) {
+                    _this.$Message.success({
+                        title: '',
+                        content: data.msg,
+                    });
+                    _this.getDepartmentTree()
+                    _this.saveDepartmentLoading = false
+                },
+                error : function(data) {
+                    _this.saveDepartmentLoading = false
+                    _this.$Message.error({
+                        title: '',
+                        content: '保存失败！错误信息：' + data.msg + data.code,
+                    });
+                }
+            });
+        },
+        operateTree(treeNodeList, callbackFunc) {
+            treeNodeList.forEach((v, i) => {
+                callbackFunc(v)
+                if (v.child) {
+                    this.operateTree(v.child, callbackFunc)
+                }
+            })
+        },
+
         
     },
     created() {
@@ -212,6 +275,10 @@ export default {
         background-color: #fff;
         overflow: scroll;
         height: 100%;
+        // position:relative;
+        // .saveDepartment {
+        //     position: absolute;
+        // }
     }
     .detail {
         float:right;
