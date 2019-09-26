@@ -55,13 +55,13 @@
                     <p>
                         <h4>独立权限</h4>
                         <Collapse v-if="departmentAction.tmp != null">
-                            <Panel :name="index + ''" v-for="(projectInfo, project, index) in departmentAction.tmp">
+                            <Panel :name="index + ''" :key="index" v-for="(projectInfo, project, index) in departmentAction.tmp">
                                 {{ projectInfo.projectName }} 
                                 <Button type='info' size="small" @click="editTmpAction(project)">编辑{{ projectInfo.projectName}}权限</Button>
                                 <p slot="content">
-                                    <span class="actionGroup" v-for="(controllerInfo, controller) in  projectInfo.controllerList" >
+                                    <span class="actionGroup" :key="index" v-for="(controllerInfo, controller, index) in  projectInfo.controllerList" >
                                         <span class="actionGroupTitle">{{ controllerInfo.name }}（{{ controller }}）</span>
-                                        <span v-for="(actionInfo) in controllerInfo.actions">
+                                        <span :key="index" v-for="(actionInfo, index) in controllerInfo.actions">
                                             <Tag color="cyan" v-if="actionInfo.desc">{{ actionInfo.desc }}</Tag>
                                         </span>
                                     </span>
@@ -72,13 +72,13 @@
                     <p style="margin-top:10px;">
                         <h4>权限包</h4>
                         <Collapse v-if="departmentAction.groups != null">
-                            <Panel :name="index + ''" v-for="(group, index) in departmentAction.groups">
+                            <Panel :name="index + ''" :key="index" v-for="(group, index) in departmentAction.groups">
                                 {{ group.name }} （{{ group.project }}:{{ group.desc }}） 
                                 <Button type='info' size="small" @click="editGroupAction(group.id)">编辑{{ group.name }}</Button>
                                 <p slot="content">
-                                    <span class="actionGroup" v-for="(controllerInfo, controller) in  group.actions" >
+                                    <span class="actionGroup" :key="index" v-for="(controllerInfo, controller, index) in  group.actions" >
                                         <span class="actionGroupTitle">{{ controllerInfo.name }}（{{ controller }}）</span>
-                                        <span v-for="(actionInfo) in controllerInfo.actions">
+                                        <span :key="index" v-for="(actionInfo, index) in controllerInfo.actions">
                                             <Tag color="cyan" v-if="actionInfo.desc">{{ actionInfo.desc }}</Tag>
                                         </span>
                                     </span>
@@ -96,9 +96,9 @@
                                 独立资源
                                 <Button type='info' size="small" @click="editTmpResource()">编辑独立资源</Button>
                                 <p slot="content">
-                                    <span class="actionGroup" v-for="(controllerInfo, controller) in  departmentResource.tmp" >
+                                    <span class="actionGroup" :key="index" v-for="(controllerInfo, controller, index) in  departmentResource.tmp" >
                                         <span class="actionGroupTitle">{{ controllerInfo.name }}（{{ controller }}）</span>
-                                        <span v-for="(resourceInfo) in controllerInfo.resource">
+                                        <span :key="index" v-for="(resourceInfo, index) in controllerInfo.resource">
                                             <Tag color="cyan" v-if="resourceInfo.desc">{{ resourceInfo.desc }}</Tag>
                                         </span>
                                     </span>
@@ -109,13 +109,13 @@
                     <p style="margin-top:10px;">
                         <h4>资源包</h4>
                         <Collapse v-if="departmentResource.groups != null">
-                            <Panel :name="index + ''" v-for="(group, index) in departmentResource.groups">
+                            <Panel :name="index + ''" :key="index" v-for="(group, index) in departmentResource.groups">
                                 {{ group.name }} （{{ group.desc }}） 
                                 <Button type='info' size="small" @click="editGroupResource(group.id)">编辑{{ group.name }}</Button>
                                 <p slot="content">
-                                    <span class="actionGroup" v-for="(controllerInfo, controller) in  group.resources" >
+                                    <span class="actionGroup" :key="index" v-for="(controllerInfo, controller, index) in  group.resources" >
                                         <span class="actionGroupTitle">{{ controllerInfo.name }}（{{ controller }}）</span>
-                                        <span v-for="(resourceInfo) in controllerInfo.resource">
+                                        <span :key="index" v-for="(resourceInfo, index) in controllerInfo.resource">
                                             <Tag color="cyan" v-if="resourceInfo.desc">{{ resourceInfo.desc }}</Tag>
                                         </span>
                                     </span>
@@ -433,6 +433,7 @@ export default {
                     if(data.code == 0) {
                         _this.$Message.success(data.msg);
                         _this.getDepartmentTree(_this.departmentModalData.pid, _this.departmentModalData.pid)
+                        _this.getAllDepartmentList()
                         _this.addDepartmentModalConfig.loading = false
                         _this.addDepartmentModal = false
                         _this.$nextTick(() => { _this.addDepartmentModalConfig.loading = true; })
@@ -599,17 +600,20 @@ export default {
 
 <style lang="less" scoped>
 .page {
-    min-height: 100rem;
+    height: calc(100vh - 70px);
     .tree {
         float:left;
-        width: 40%;
+        width: 50%;
         background-color: #fff;
+        overflow: scroll;
+        height: 100%;
     }
     .detail {
         float:right;
-        width: 60%;
+        width: 50%;
         padding-left: 15px;
-
+        overflow: scroll;
+        height: 100%;
         .departmentInfo {
             span {
                 display: inline-block;

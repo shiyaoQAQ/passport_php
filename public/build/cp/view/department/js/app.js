@@ -809,7 +809,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                     children: 'child',
                     expand: 'expand'
                 },
-                collapsable: true,
+                collapsable: false,
                 horizontal: true
             },
             // 当前选定的节点信息
@@ -1081,6 +1081,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                     if (data.code == 0) {
                         _this.$Message.success(data.msg);
                         _this.getDepartmentTree(_this.departmentModalData.pid, _this.departmentModalData.pid);
+                        _this.getAllDepartmentList();
                         _this.addDepartmentModalConfig.loading = false;
                         _this.addDepartmentModal = false;
                         _this.$nextTick(function () {
@@ -1660,7 +1661,7 @@ exports.push([module.i, ".page .pageCenter[data-v-85925bfe] {\n  width: 1200px;\
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page[data-v-e9683ca8] {\n  min-height: 100rem;\n}\n.page .tree[data-v-e9683ca8] {\n  float: left;\n  width: 40%;\n  background-color: #fff;\n}\n.page .detail[data-v-e9683ca8] {\n  float: right;\n  width: 60%;\n  padding-left: 15px;\n}\n.page .detail .departmentInfo span[data-v-e9683ca8] {\n  display: inline-block;\n  min-width: 120px;\n  margin-right: 10px;\n}\n.page .detail .departmentOperateList[data-v-e9683ca8] {\n  margin-top: 10px;\n}\n.page .detail .departmentOperateList Button[data-v-e9683ca8] {\n  margin: 5px;\n}\n.page .detail .detailElement[data-v-e9683ca8] {\n  margin-bottom: 15px;\n}\n.page .detail .userInputBlock[data-v-e9683ca8] {\n  overflow: hidden;\n  margin-bottom: 20px;\n}\n.page .detail .userInputBlock .userInput[data-v-e9683ca8] {\n  float: left;\n  width: 30%;\n}\n.page .detail .userInputBlock Button[data-v-e9683ca8] {\n  float: left;\n  margin-left: 10px;\n}\n.page .detail .actionGroup[data-v-e9683ca8] {\n  padding: 5px;\n  display: block;\n}\n.page .detail .actionGroup .actionGroupTitle[data-v-e9683ca8] {\n  display: block;\n  font-size: 12px;\n}\n", ""]);
+exports.push([module.i, ".page[data-v-e9683ca8] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-e9683ca8] {\n  float: left;\n  width: 50%;\n  background-color: #fff;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail[data-v-e9683ca8] {\n  float: right;\n  width: 50%;\n  padding-left: 15px;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail .departmentInfo span[data-v-e9683ca8] {\n  display: inline-block;\n  min-width: 120px;\n  margin-right: 10px;\n}\n.page .detail .departmentOperateList[data-v-e9683ca8] {\n  margin-top: 10px;\n}\n.page .detail .departmentOperateList Button[data-v-e9683ca8] {\n  margin: 5px;\n}\n.page .detail .detailElement[data-v-e9683ca8] {\n  margin-bottom: 15px;\n}\n.page .detail .userInputBlock[data-v-e9683ca8] {\n  overflow: hidden;\n  margin-bottom: 20px;\n}\n.page .detail .userInputBlock .userInput[data-v-e9683ca8] {\n  float: left;\n  width: 30%;\n}\n.page .detail .userInputBlock Button[data-v-e9683ca8] {\n  float: left;\n  margin-left: 10px;\n}\n.page .detail .actionGroup[data-v-e9683ca8] {\n  padding: 5px;\n  display: block;\n}\n.page .detail .actionGroup .actionGroupTitle[data-v-e9683ca8] {\n  display: block;\n  font-size: 12px;\n}\n", ""]);
 
 
 /***/ }),
@@ -3241,7 +3242,7 @@ var render = function() {
                         ) {
                           return _c(
                             "Panel",
-                            { attrs: { name: index + "" } },
+                            { key: index, attrs: { name: index + "" } },
                             [
                               _vm._v(
                                 "\n                            " +
@@ -3272,11 +3273,12 @@ var render = function() {
                                 { attrs: { slot: "content" }, slot: "content" },
                                 _vm._l(projectInfo.controllerList, function(
                                   controllerInfo,
-                                  controller
+                                  controller,
+                                  index
                                 ) {
                                   return _c(
                                     "span",
-                                    { staticClass: "actionGroup" },
+                                    { key: index, staticClass: "actionGroup" },
                                     [
                                       _c(
                                         "span",
@@ -3292,10 +3294,12 @@ var render = function() {
                                       ),
                                       _vm._v(" "),
                                       _vm._l(controllerInfo.actions, function(
-                                        actionInfo
+                                        actionInfo,
+                                        index
                                       ) {
                                         return _c(
                                           "span",
+                                          { key: index },
                                           [
                                             actionInfo.desc
                                               ? _c(
@@ -3340,7 +3344,7 @@ var render = function() {
                         ) {
                           return _c(
                             "Panel",
-                            { attrs: { name: index + "" } },
+                            { key: index, attrs: { name: index + "" } },
                             [
                               _vm._v(
                                 "\n                            " +
@@ -3369,11 +3373,12 @@ var render = function() {
                                 { attrs: { slot: "content" }, slot: "content" },
                                 _vm._l(group.actions, function(
                                   controllerInfo,
-                                  controller
+                                  controller,
+                                  index
                                 ) {
                                   return _c(
                                     "span",
-                                    { staticClass: "actionGroup" },
+                                    { key: index, staticClass: "actionGroup" },
                                     [
                                       _c(
                                         "span",
@@ -3389,10 +3394,12 @@ var render = function() {
                                       ),
                                       _vm._v(" "),
                                       _vm._l(controllerInfo.actions, function(
-                                        actionInfo
+                                        actionInfo,
+                                        index
                                       ) {
                                         return _c(
                                           "span",
+                                          { key: index },
                                           [
                                             actionInfo.desc
                                               ? _c(
@@ -3467,11 +3474,12 @@ var render = function() {
                                 { attrs: { slot: "content" }, slot: "content" },
                                 _vm._l(_vm.departmentResource.tmp, function(
                                   controllerInfo,
-                                  controller
+                                  controller,
+                                  index
                                 ) {
                                   return _c(
                                     "span",
-                                    { staticClass: "actionGroup" },
+                                    { key: index, staticClass: "actionGroup" },
                                     [
                                       _c(
                                         "span",
@@ -3487,10 +3495,12 @@ var render = function() {
                                       ),
                                       _vm._v(" "),
                                       _vm._l(controllerInfo.resource, function(
-                                        resourceInfo
+                                        resourceInfo,
+                                        index
                                       ) {
                                         return _c(
                                           "span",
+                                          { key: index },
                                           [
                                             resourceInfo.desc
                                               ? _c(
@@ -3535,7 +3545,7 @@ var render = function() {
                         ) {
                           return _c(
                             "Panel",
-                            { attrs: { name: index + "" } },
+                            { key: index, attrs: { name: index + "" } },
                             [
                               _vm._v(
                                 "\n                            " +
@@ -3562,11 +3572,12 @@ var render = function() {
                                 { attrs: { slot: "content" }, slot: "content" },
                                 _vm._l(group.resources, function(
                                   controllerInfo,
-                                  controller
+                                  controller,
+                                  index
                                 ) {
                                   return _c(
                                     "span",
-                                    { staticClass: "actionGroup" },
+                                    { key: index, staticClass: "actionGroup" },
                                     [
                                       _c(
                                         "span",
@@ -3582,10 +3593,12 @@ var render = function() {
                                       ),
                                       _vm._v(" "),
                                       _vm._l(controllerInfo.resource, function(
-                                        resourceInfo
+                                        resourceInfo,
+                                        index
                                       ) {
                                         return _c(
                                           "span",
+                                          { key: index },
                                           [
                                             resourceInfo.desc
                                               ? _c(
