@@ -1540,7 +1540,13 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
         // 编辑组权限
         editGroupAction: function editGroupAction(groupid) {
-            window.open('/cp/longrentdepartment/actiongroupaccessdetail?id=' + groupid);
+            // window.open('/cp/longrentdepartment/actiongroupaccessdetail?id=' + groupid);
+            this.$router.push({
+                name: "actionGroupEdit",
+                params: {
+                    groupId: groupid
+                }
+            });
         },
 
         // 编辑独立资源
