@@ -332,7 +332,13 @@ export default {
         // 页面跳转
         jumpPage(pa, v) {
             if (pa == 'actiongroupaccessdetail') {
-                window.location = '/cp/longrentdepartment/actiongroupaccessdetail?id=' + v.id
+                // window.location = '/cp/longrentdepartment/actiongroupaccessdetail?id=' + v.id
+                this.$router.push({
+                    name : "actionGroupEdit",
+                    params : {
+                        groupId : v.id,
+                    },
+                })
             }
         }
     },
