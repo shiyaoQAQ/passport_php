@@ -1085,6 +1085,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                     if (data.code == 0) {
                         _this.$Message.success(data.msg);
                         _this.getDepartmentTree(_this.departmentModalData.pid, _this.departmentModalData.pid);
+                        _this.getAllDepartmentList();
                         _this.addDepartmentModalConfig.loading = false;
                         _this.addDepartmentModal = false;
                         _this.$nextTick(function () {

@@ -437,6 +437,7 @@ export default {
                     if(data.code == 0) {
                         _this.$Message.success(data.msg);
                         _this.getDepartmentTree(_this.departmentModalData.pid, _this.departmentModalData.pid)
+                        _this.getAllDepartmentList()
                         _this.addDepartmentModalConfig.loading = false
                         _this.addDepartmentModal = false
                         _this.$nextTick(() => { _this.addDepartmentModalConfig.loading = true; })
