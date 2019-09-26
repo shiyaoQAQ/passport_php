@@ -249,7 +249,6 @@ export default {
             this.$Request({
                 url:`/cp/departments/tree`,
                 method:'GET',
-                formData : {},
                 success: (res) => {
                     this.addAttr(res.data);
                     this.departmentTree = res.data;
@@ -270,6 +269,8 @@ export default {
             data.forEach(function(v, i) {
                 v.clickSelect = false;
                 if (v.id == checkId) {
+                    console.log(v.id, checkId);
+                    
                     v.clickSelect = true;
                 }
                 if (v.id == pid) {
@@ -290,7 +291,6 @@ export default {
             this.$Request({
                 url:`/cp/longrentdepartment/ajaxgetalldepart`,
                 method:'GET',
-                formData : {},
                 success: (res) => {
                     _this.allDepartmentList = res.data;
                 }
@@ -304,7 +304,6 @@ export default {
             this.$Request({
                 url : `/cp/departments/` + did + `/parent`,
                 method:'GET',
-                formData : {},
                 success: (res) => {
                     _this.departmentParent= res.data;
                 }
@@ -321,7 +320,6 @@ export default {
             this.$Request({
                 url : `/cp/departments/` + did + `/user`,
                 method:'GET',
-                formData : {},
                 success: (res) => {
                     _this.departmentUser= res.data;
                 }
@@ -335,7 +333,6 @@ export default {
             this.$Request({
                 url : `/cp/departments/` + did + `/action`,
                 method:'GET',
-                formData : {},
                 success: (res) => {
                     _this.departmentAction= res.data;
                 }
@@ -349,7 +346,6 @@ export default {
             this.$Request({
                 url : `/cp/departments/` + did + `/resource`,
                 method:'GET',
-                formData : {},
                 success: (res) => {
                     _this.departmentResource= res.data;
                 }
@@ -463,6 +459,8 @@ export default {
                 success : function(data){
                     if (data.code == 0) {
                         _this.$Message.success(data.msg);
+                        console.log(_this.department.parent_id, _this.department.parent_id);
+                        
                         _this.getDepartmentTree(_this.department.parent_id, _this.department.parent_id);
                         _this.unselectedDepartment()
                     }

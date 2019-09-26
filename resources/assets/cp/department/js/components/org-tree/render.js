@@ -87,6 +87,10 @@ export const renderLabel = (h, data, context) => {
     selectedClassName = selectedClassName(data)
   }
 
+  if (data.clickSelect) {
+      cls.push('org-tree-node-label-inner-check')
+  }
+
   selectedClassName && selectedKey && data[selectedKey] && cls.push(selectedClassName)
 
   return h('div', {

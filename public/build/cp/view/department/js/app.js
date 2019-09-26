@@ -884,7 +884,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             this.$Request({
                 url: '/cp/departments/tree',
                 method: 'GET',
-                formData: {},
                 success: function success(res) {
                     _this3.addAttr(res.data);
                     _this3.departmentTree = res.data;
@@ -907,6 +906,8 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             data.forEach(function (v, i) {
                 v.clickSelect = false;
                 if (v.id == checkId) {
+                    console.log(v.id, checkId);
+
                     v.clickSelect = true;
                 }
                 if (v.id == pid) {
@@ -928,7 +929,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             this.$Request({
                 url: '/cp/longrentdepartment/ajaxgetalldepart',
                 method: 'GET',
-                formData: {},
                 success: function success(res) {
                     _this.allDepartmentList = res.data;
                 }
@@ -943,7 +943,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             this.$Request({
                 url: '/cp/departments/' + did + '/parent',
                 method: 'GET',
-                formData: {},
                 success: function success(res) {
                     _this.departmentParent = res.data;
                 }
@@ -963,7 +962,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             this.$Request({
                 url: '/cp/departments/' + did + '/user',
                 method: 'GET',
-                formData: {},
                 success: function success(res) {
                     _this.departmentUser = res.data;
                 }
@@ -978,7 +976,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             this.$Request({
                 url: '/cp/departments/' + did + '/action',
                 method: 'GET',
-                formData: {},
                 success: function success(res) {
                     _this.departmentAction = res.data;
                 }
@@ -993,7 +990,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             this.$Request({
                 url: '/cp/departments/' + did + '/resource',
                 method: 'GET',
-                formData: {},
                 success: function success(res) {
                     _this.departmentResource = res.data;
                 }
@@ -1116,6 +1112,8 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 success: function success(data) {
                     if (data.code == 0) {
                         _this.$Message.success(data.msg);
+                        console.log(_this.department.parent_id, _this.department.parent_id);
+
                         _this.getDepartmentTree(_this.department.parent_id, _this.department.parent_id);
                         _this.unselectedDepartment();
                     }
@@ -7337,6 +7335,10 @@ var renderLabel = function renderLabel(h, data, context) {
   // add selected class and key from props
   if (typeof selectedClassName === 'function') {
     selectedClassName = selectedClassName(data);
+  }
+
+  if (data.clickSelect) {
+    cls.push('org-tree-node-label-inner-check');
   }
 
   selectedClassName && selectedKey && data[selectedKey] && cls.push(selectedClassName);
