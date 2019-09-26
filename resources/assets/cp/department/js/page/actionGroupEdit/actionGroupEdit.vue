@@ -150,7 +150,7 @@ export default {
         // 获取组织架构树信息
         getDepartmentTree() {
             this.$Request({
-                url:`/cp/departments/tree`,
+                url:`/cp/departments/actionGroup/` + this.groupId + `/department`,
                 method:'GET',
                 success: (res) => {
                     this.departmentTree = res.data;

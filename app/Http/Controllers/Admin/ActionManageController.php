@@ -46,5 +46,16 @@ class ActionManageController extends Controller
         return $this->json(0, 'ok', $result);
     }
 
+    /**
+     * @desc 获取权限组的部门树
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function showActionGroupTree(Request $request)
+    {
+
+    }
+
 
 }

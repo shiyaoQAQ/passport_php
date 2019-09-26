@@ -428,7 +428,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             var _this = this;
 
             this.$Request({
-                url: '/cp/departments/tree',
+                url: '/cp/departments/actionGroup/' + this.groupId + '/department',
                 method: 'GET',
                 success: function success(res) {
                     _this.departmentTree = res.data;
