@@ -271,9 +271,9 @@ export default {
         },
         // 获取节点的用户
         getDepartmentUser(did = null) {
-            if (data == null) {
-                data = this.department
-            }
+            // if (data == null) {
+            //     data = this.department
+            // }
             this.departmentUser = []
             $.ajax({
                 url : `/cp/departments/` + did + `/user`,
@@ -295,7 +295,7 @@ export default {
             })
         },
         // 获取节点的资源
-        getDepartmentResource(data) {
+        getDepartmentResource(did) {
             this.departmentResource = {}
             $.ajax({
                 url : `/cp/departments/${did}/resource`,
@@ -460,6 +460,8 @@ export default {
                 name : "departmentActionEdit",
                 params : {
                     did : this.department.id,
+                },
+                query : {
                     project : project,
                 },
             })

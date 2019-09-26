@@ -174,5 +174,55 @@ class ActionManageController extends Controller
             'action_list' => $actionList
         ]);
     }
+
+      /**
+     * @desc 更新部门的独立权限
+     *
+     * @param [type] $groupId
+     * @param Request $requset
+     * @return void
+     */
+    public function updateDepartmentTmpAction($did, Request $request)
+    {
+        $did = intval($did);
+        $project = $request->input('project');
+        if (empty ($did)) {
+            throwWorkError(AccessErrorCode::INVAILD_DEPART_2);
+        }
+        $depart = CpAccess::getDepartInfo($did);
+        if ($depart['code'] != 0 || empty($depart['data'])) {
+            throwWorkError(AccessErrorCode::INVAILD_DEPART_2);
+        }
+
+        // 获取更新资源
+        $actionIncrease = $request->input('actionIncrease');
+        $actionReduce = $request->input('actionReduce');
+        if (!empty($actionIncrease)) {
+            foreach ($actionIncrease as &$item) {
+                list($controller, $action) = explode('-', $item);
+                $item = [
+                    'controller' => $controller,
+                    'action'     => $action,
+                    'inherit'    => 0,
+                    'limit'      => 0,
+                ];
+            }
+            $addRet = CpAccess::addDepartAction($actionIncrease, $did, $project);
+        }
+        if (!empty($actionReduce)) {
+            foreach ($actionReduce as &$item) {
+                list($controller, $action) = explode('-', $item);
+                $item = [
+                    'controller' => $controller,
+                    'action'     => $action,
+                    'inherit'    => 0,
+                    'limit'      => 0,
+                ];
+            }
+            $reRet  = CpAccess::removeDepartAction($actionReduce, $did, $project);
+        }
+
+        return $this->json(0, '更新成功');
+    }
     
 }

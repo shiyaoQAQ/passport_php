@@ -27,6 +27,7 @@ Route::group(['middleware' => ['cpauth']], function () {
     Route::get('/departments/{did}/resource', 'DepartmentController@getDepartmentResource');
 
     Route::get('/departments/{did}/tmpAction/action', 'ActionManageController@listDepartmentTmpAction');
+    Route::put('/departments/{did}/tmpAction/action', 'ActionManageController@updateDepartmentTmpAction');
     Route::get('/departments/actionGroup', 'ActionManageController@ListActionGroup');
     Route::get('/departments/actionGroup/accessProject', 'ActionManageController@ListAccessProject');
     Route::get('/departments/actionGroup/{groupId}/tree', 'ActionManageController@showActionGroupTree');

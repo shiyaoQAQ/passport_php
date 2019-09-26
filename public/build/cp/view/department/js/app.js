@@ -947,7 +947,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             var _this2 = this;
 
             $.ajax({
-                url: '/cp/departments/actionGroup/' + this.did + '/action',
+                url: '/cp/departments/' + this.did + '/tmpAction/action',
                 data: {
                     project: this.project
                 },
@@ -992,10 +992,11 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
             // 调用更新接口
             $.ajax({
-                url: '/cp/departments/actionGroup/' + _this.groupId + '/action',
+                url: '/cp/departments/' + this.did + '/tmpAction/action',
                 data: {
                     actionIncrease: actionIncrease,
-                    actionReduce: actionReduce
+                    actionReduce: actionReduce,
+                    project: this.project
                 },
                 type: 'PUT',
                 headers: {
@@ -1007,7 +1008,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                             title: '',
                             content: res.msg
                         });
-                        _this.getGroupActionList();
+                        _this.getActionList();
                     } else {
                         _this.$Message.error({
                             title: '',
@@ -1029,9 +1030,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
     created: function created() {},
     mounted: function mounted() {
         this.did = this.$route.params.did;
-        this.project = this.$route.params.project;
+        this.project = this.$route.query.project;
         // this.getDepartmentTree()
-        this.getGroupActionList();
+        this.getActionList();
     }
 });
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__("./node_modules/jquery/dist/jquery.js")))
@@ -1326,9 +1327,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
             var did = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
-            if (data == null) {
-                data = this.department;
-            }
+            // if (data == null) {
+            //     data = this.department
+            // }
             this.departmentUser = [];
             $.ajax({
                 url: '/cp/departments/' + did + '/user',
@@ -1354,7 +1355,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
         },
 
         // 获取节点的资源
-        getDepartmentResource: function getDepartmentResource(data) {
+        getDepartmentResource: function getDepartmentResource(did) {
             var _this8 = this;
 
             this.departmentResource = {};
@@ -1535,7 +1536,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             this.$router.push({
                 name: "departmentActionEdit",
                 params: {
-                    did: this.department.id,
+                    did: this.department.id
+                },
+                query: {
                     project: project
                 }
             });
@@ -8687,14 +8690,14 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
         // 权限组编辑
         {
             path: '/actionGroup/:groupId/edit',
-            name: 'departmentActionEdit',
-            component: __WEBPACK_IMPORTED_MODULE_6__page_departmentActionEdit_departmentActionEdit_vue__["a" /* default */]
+            name: 'actionGroupEdit',
+            component: __WEBPACK_IMPORTED_MODULE_5__page_actionGroupEdit_actionGroupEdit_vue__["a" /* default */]
         },
         // 部门独立权限编辑
         {
             path: '/department/:did/action/edit',
-            name: 'actionGroupEdit',
-            component: __WEBPACK_IMPORTED_MODULE_5__page_actionGroupEdit_actionGroupEdit_vue__["a" /* default */]
+            name: 'departmentActionEdit',
+            component: __WEBPACK_IMPORTED_MODULE_6__page_departmentActionEdit_departmentActionEdit_vue__["a" /* default */]
         },
         // 资源组列表
         {

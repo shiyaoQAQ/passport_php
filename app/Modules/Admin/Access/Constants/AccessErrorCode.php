@@ -17,8 +17,8 @@ class AccessErrorCode
     const INVAILD_ACTION_GROUP_3 = 1020005;
     /** @message 无效的部门 */
     const INVAILD_DEPART = 1020006;
-    /** @message 错误码1020007 */
-    const ERROR_1020007 = 1020007;
+    /** @message 无效的部门 */
+    const INVAILD_DEPART_2 = 1020007;
     /** @message 错误码1020008 */
     const ERROR_1020008 = 1020008;
     /** @message 错误码1020009 */
