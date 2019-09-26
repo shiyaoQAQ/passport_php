@@ -61,6 +61,13 @@ class ActionManageController extends Controller
         return $this->json(0, 'ok', $treeInfo);
     }
 
+    /**
+     * @desc 获取权限组的权限列表
+     *
+     * @param [type] $groupId
+     * @param Request $request
+     * @return void
+     */
     public function listActionGroupAction($groupId, Request $request)
     {
         $gid = intval($groupId);
@@ -69,15 +76,6 @@ class ActionManageController extends Controller
         return $this->json(0, 'ok', [
             'action_list' => $actionList
         ]);
-
-
-        
-        return view('admin.access.departmentActionGroupAccess')->with('action_list', $ret)
-                                                    ->with('group_info', $groupInfo)        
-                                                    ->with('action_info_json', json_encode($actionList['data']))
-                                                    ->with('deaprt_info_json', json_encode($departList['data']))
-                                                    ->with('gid', $gid);
-
     }
 
     /**
@@ -118,7 +116,7 @@ class ActionManageController extends Controller
      * @param Request $requset
      * @return void
      */
-    public function updateActionGroupAction($groupId, Request $requset)
+    public function updateActionGroupAction($groupId, Request $request)
     {
         $gid = intval($groupId);
         if (empty ($gid)) {
@@ -128,8 +126,53 @@ class ActionManageController extends Controller
         if ($groupInfo['code'] != 0 || empty($groupInfo['data'])) {
             throwWorkError(AccessErrorCode::INVAILD_ACTION_GROUP_2);
         }
+
+        // 获取更新资源
+        $actionIncrease = $request->input('actionIncrease');
+        $actionReduce = $request->input('actionReduce');
+        if (!empty($actionIncrease)) {
+            foreach ($actionIncrease as &$item) {
+                list($controller, $action) = explode('-', $item);
+                $item = [
+                    'controller' => $controller,
+                    'action'     => $action,
+                    'inherit'    => 0,
+                    'limit'      => 0,
+                ];
+            }
+            $addRet = CpAccess::addActionGroupAccess($actionIncrease, $gid);
+        }
+        if (!empty($actionReduce)) {
+            foreach ($actionReduce as &$item) {
+                list($controller, $action) = explode('-', $item);
+                $item = [
+                    'controller' => $controller,
+                    'action'     => $action,
+                    'inherit'    => 0,
+                    'limit'      => 0,
+                ];
+            }
+            $reRet  = CpAccess::removeActionGroupAccess($actionReduce, $gid);
+        }
+
+        return $this->json(0, '更新成功');
     }
 
-
-
+    /**
+     * @desc 获取部门的独立权限
+     *
+     * @param [type] $groupId
+     * @param Request $request
+     * @return void
+     */
+    public function listDepartmentTmpAction($did, Request $request)
+    {
+        $did = intval($did);
+        $project = $request->input('project');
+        $actionList = ActionModule::getDepartmentTmpActionList($did, $project);
+        return $this->json(0, 'ok', [
+            'action_list' => $actionList
+        ]);
+    }
+    
 }

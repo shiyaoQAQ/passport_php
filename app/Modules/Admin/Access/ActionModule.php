@@ -17,6 +17,7 @@ use \YC_Util;
 // use App\Modules\Ka\KaModule;
 use App\Exceptions\WorkException;
 use App\Modules\Admin\Access\Constants\AccessConst;
+use App\Modules\Admin\Access\Constants\AccessErrorCode;
 use App\Modules\Base\Store\StoreModule;
 use App\Modules\Base\City\CityModule;
 use App\Modules\Admin\Access\Models\Sales\DmSellerOriginationChart;
@@ -86,21 +87,67 @@ class ActionModule
         $groupActionList = $groupActionList['data'];
         $groupActionConList = array_column($groupActionList, 'con_action');
 
-        foreach ($projectActionList as &$controller) {
+        foreach ($projectActionList as $controllerPath => &$controller) {
+            $controller['controller'] = $controllerPath;
+            $controller['orderby'] = 0;
             if ($controller['action']) {
                 foreach ($controller['action'] as &$action) {
                     $conAction = $action['controller'] . '-' . $action['action'];
                     if (in_array($conAction, $groupActionConList)) {
                         $action['isChecked'] = 1;
                         $action['originIsChecked'] = 1;
+                        $controller['orderby'] = 1;
                     } else {
                         $action['isChecked'] = 0;
                         $action['originIsChecked'] = 0;
                     }
                 }
+                $controller['action'] = array_values($controller['action']);
             }
         }
+        $projectActionList = array_values($projectActionList);
+        usort($projectActionList, function ($a, $b) {
+            return $a['orderby'] < $b['orderby'];
+        });
+        return $projectActionList;
+    }
 
+    public static function getDepartmentTmpActionList($did, $project)
+    {
+        $depart = CpAccess::getDepartInfo($did);
+        if ($depart['code'] != 0 || empty($depart['data'])) {
+            throwWorkError(AccessErrorCode::INVAILD_DEPART);
+        }
+        $depart = $depart['data'];
+        // 获取所有action
+        $projectActionList = CpAccess::getActionList($project);
+        $groupActionList = CpAccess::getDeaprtActionList($did, $project);
+        $groupActionList = array_get($groupActionList, 'data');
+        $groupActionConList = array_column($groupActionList, 'con_action');
+
+        // 计算显示
+        foreach ($projectActionList as $controllerPath => &$controller) {
+            $controller['controller'] = $controllerPath;
+            $controller['orderby'] = 0;
+            if ($controller['action']) {
+                foreach ($controller['action'] as &$action) {
+                    $conAction = $action['controller'] . '-' . $action['action'];
+                    if (in_array($conAction, $groupActionConList)) {
+                        $action['isChecked'] = 1;
+                        $action['originIsChecked'] = 1;
+                        $controller['orderby'] = 1;
+                    } else {
+                        $action['isChecked'] = 0;
+                        $action['originIsChecked'] = 0;
+                    }
+                }
+                $controller['action'] = array_values($controller['action']);
+            }
+        }
+        $projectActionList = array_values($projectActionList);
+        usort($projectActionList, function ($a, $b) {
+            return $a['orderby'] < $b['orderby'];
+        });
         return $projectActionList;
     }
 }

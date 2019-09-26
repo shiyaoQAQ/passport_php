@@ -337,12 +337,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             },
 
             saveDepartmentLoading: false,
+            saveActionLoading: false,
 
-            actionList: [],
-
-            // 权限变更
-            actionIncrease: [],
-            actionReduce: []
+            actionList: []
         };
     },
 
@@ -375,28 +372,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 }
             });
         },
-
-        // expandParent(data, pid, checkId) {
-        //     var _this = this;
-        //     data.forEach(function(v, i) {
-        //         v.clickSelect = false;
-        //         if (v.id == checkId) {
-        //             console.log(v.id, checkId);
-
-        //             v.clickSelect = true;
-        //         }
-        //         if (v.id == pid) {
-        //             _this.$set(v, 'expand', true);
-        //             _this.expandParent(_this.departmentTree, v.parent_id, checkId);
-        //             new Error("StopForeach");
-        //         }
-        //         if (!v.child) {
-        //             return false;
-        //         }else {
-        //             _this.expandParent(v.child, pid, checkId)
-        //         }
-        //     })
-        // },
         departmentOnClick: function departmentOnClick(e, data) {
             // 进行选择或反选
             data.isChecked = 1 - data.isChecked;
@@ -417,8 +392,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                     }
                 }
             });
-            // console.log(departmentIncrease);
-            // console.log(departmentReduce);
             if (departmentIncrease.length == 0 && departmentReduce.length == 0) {
                 _this.$Message.error('您没有任何变更啊');
                 _this.saveDepartmentLoading = false;
@@ -460,6 +433,8 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 }
             });
         },
+
+        // 树递归方法
         operateTree: function operateTree(treeNodeList, callbackFunc) {
             var _this4 = this;
 
@@ -467,6 +442,74 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 callbackFunc(v);
                 if (v.child) {
                     _this4.operateTree(v.child, callbackFunc);
+                }
+            });
+        },
+
+        // 切换权限
+        changeAction: function changeAction(actionInfo) {
+            actionInfo.isChecked = 1 - actionInfo.isChecked;
+        },
+
+        // 保存权限
+        saveAction: function saveAction() {
+            // 递归计算变更
+            // 部门树变更
+            this.saveActionLoading = true;
+            var actionIncrease = [];
+            var actionReduce = [];
+            var _this = this;
+            this.actionList.forEach(function (controller, i) {
+                if (controller.action) {
+                    controller.action.forEach(function (action, ai) {
+                        if (action.isChecked != action.originIsChecked) {
+                            if (action.isChecked == 1) {
+                                actionIncrease.push(action.controller + '-' + action.action);
+                            } else {
+                                actionReduce.push(action.controller + '-' + action.action);
+                            }
+                        }
+                    });
+                }
+            });
+            if (actionIncrease.length == 0 && actionReduce.length == 0) {
+                _this.$Message.error('您没有任何变更啊');
+                _this.saveActionLoading = false;
+                return;
+            }
+
+            // 调用更新接口
+            $.ajax({
+                url: '/cp/departments/actionGroup/' + _this.groupId + '/action',
+                data: {
+                    actionIncrease: actionIncrease,
+                    actionReduce: actionReduce
+                },
+                type: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function success(res) {
+                    if (res.code == 0) {
+                        _this.$Message.success({
+                            title: '',
+                            content: res.msg
+                        });
+                        _this.getGroupActionList();
+                    } else {
+                        _this.$Message.error({
+                            title: '',
+                            content: '保存失败！错误信息：' + res.msg + res.code
+                        });
+                    }
+                    _this.saveActionLoading = false;
+                },
+                error: function error(res) {
+                    _this.saveActionLoading = false;
+                    _this.$Message.error({
+                        title: '',
+                        content: '网络错误'
+                    });
                 }
             });
         }
@@ -843,6 +886,152 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
     mounted: function mounted() {
         this.getDataList();
         this.getInitData();
+    }
+});
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__("./node_modules/jquery/dist/jquery.js")))
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??ref--0-0!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue?vue&type=script&lang=js&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_org_tree_index_js__ = __webpack_require__("./resources/assets/cp/department/js/components/org-tree/index.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    data: function data() {
+        return {
+            // 当前权限组id
+            did: 0,
+            project: '',
+            saveActionLoading: false,
+
+            actionList: []
+        };
+    },
+
+    components: {
+        OrgTree: __WEBPACK_IMPORTED_MODULE_0__components_org_tree_index_js__["a" /* default */]
+    },
+    methods: {
+        // 获取操作列表
+        getActionList: function getActionList() {
+            var _this2 = this;
+
+            $.ajax({
+                url: '/cp/departments/actionGroup/' + this.did + '/action',
+                data: {
+                    project: this.project
+                },
+                type: 'GET',
+                success: function success(res) {
+                    _this2.actionList = res.data.action_list;
+                }
+            });
+        },
+
+        // 切换权限
+        changeAction: function changeAction(actionInfo) {
+            actionInfo.isChecked = 1 - actionInfo.isChecked;
+        },
+
+        // 保存权限
+        saveAction: function saveAction() {
+            // 递归计算变更
+            // 部门树变更
+            this.saveActionLoading = true;
+            var actionIncrease = [];
+            var actionReduce = [];
+            var _this = this;
+            this.actionList.forEach(function (controller, i) {
+                if (controller.action) {
+                    controller.action.forEach(function (action, ai) {
+                        if (action.isChecked != action.originIsChecked) {
+                            if (action.isChecked == 1) {
+                                actionIncrease.push(action.controller + '-' + action.action);
+                            } else {
+                                actionReduce.push(action.controller + '-' + action.action);
+                            }
+                        }
+                    });
+                }
+            });
+            if (actionIncrease.length == 0 && actionReduce.length == 0) {
+                _this.$Message.error('您没有任何变更啊');
+                _this.saveActionLoading = false;
+                return;
+            }
+
+            // 调用更新接口
+            $.ajax({
+                url: '/cp/departments/actionGroup/' + _this.groupId + '/action',
+                data: {
+                    actionIncrease: actionIncrease,
+                    actionReduce: actionReduce
+                },
+                type: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function success(res) {
+                    if (res.code == 0) {
+                        _this.$Message.success({
+                            title: '',
+                            content: res.msg
+                        });
+                        _this.getGroupActionList();
+                    } else {
+                        _this.$Message.error({
+                            title: '',
+                            content: '保存失败！错误信息：' + res.msg + res.code
+                        });
+                    }
+                    _this.saveActionLoading = false;
+                },
+                error: function error(res) {
+                    _this.saveActionLoading = false;
+                    _this.$Message.error({
+                        title: '',
+                        content: '网络错误'
+                    });
+                }
+            });
+        }
+    },
+    created: function created() {},
+    mounted: function mounted() {
+        this.did = this.$route.params.did;
+        this.project = this.$route.params.project;
+        // this.getDepartmentTree()
+        this.getGroupActionList();
     }
 });
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__("./node_modules/jquery/dist/jquery.js")))
@@ -1342,7 +1531,14 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
         // 编辑独立权限
         editTmpAction: function editTmpAction(project) {
-            window.open('/cp/longrentdepartment/actionaccessdetail?id=' + this.department.id + '&project=' + project);
+            // window.open('/cp/longrentdepartment/actionaccessdetail?id=' + this.department.id + '&project=' + project)
+            this.$router.push({
+                name: "departmentActionEdit",
+                params: {
+                    did: this.department.id,
+                    project: project
+                }
+            });
         },
 
         // 编辑组权限
@@ -1873,7 +2069,7 @@ exports.push([module.i, ".org-tree-container {\n  display: inline-block;\n  padd
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page[data-v-c0c4c224] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-c0c4c224] {\n  float: left;\n  width: 50%;\n  background-color: #fff;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail[data-v-c0c4c224] {\n  float: right;\n  width: 50%;\n  padding-left: 15px;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail .detailElement[data-v-c0c4c224] {\n  margin-bottom: 15px;\n}\n.page .detail .actionGroup[data-v-c0c4c224] {\n  padding: 5px;\n  display: block;\n}\n.page .detail .actionGroup .actionGroupTitle[data-v-c0c4c224] {\n  display: block;\n  font-size: 12px;\n}\n", ""]);
+exports.push([module.i, ".page[data-v-c0c4c224] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-c0c4c224] {\n  float: left;\n  width: 50%;\n  background-color: #fff;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail[data-v-c0c4c224] {\n  float: right;\n  width: 50%;\n  padding-left: 15px;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail .detailElement[data-v-c0c4c224] {\n  margin-bottom: 15px;\n}\n.page .detail .actionButton[data-v-c0c4c224] {\n  margin: 3px;\n}\n", ""]);
 
 
 /***/ }),
@@ -1884,6 +2080,16 @@ exports.push([module.i, ".page[data-v-c0c4c224] {\n  height: calc(100vh - 70px);
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
 exports.push([module.i, ".page .pageCenter[data-v-2891a816] {\n  width: 1200px;\n  background-color: #fff;\n  margin: 0 auto;\n  padding: 15px;\n}\n.page .createOperate Button[data-v-2891a816] {\n  margin: 10px;\n}\n.page .actionGroupList[data-v-2891a816] {\n  margin-bottom: 50px;\n}\n.ivu-modal-body .modalLI[data-v-2891a816] {\n  margin-top: 20px;\n}\n.ivu-modal-body .modalLI span[data-v-2891a816]:first-child {\n  display: inline-block;\n  width: 100px;\n  text-align: right;\n}\n", ""]);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue?vue&type=style&index=0&id=138195f4&lang=less&scoped=true&":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
+// Module
+exports.push([module.i, ".page .pageCenter[data-v-138195f4] {\n  width: 1200px;\n  background-color: #fff;\n  margin: 0 auto;\n  padding: 15px;\n}\n.page .pageCenter .detailElement[data-v-138195f4] {\n  margin-bottom: 15px;\n}\n.page .pageCenter .actionButton[data-v-138195f4] {\n  margin: 3px;\n}\n", ""]);
 
 
 /***/ }),
@@ -2345,6 +2551,29 @@ if (content.locals) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var content = __webpack_require__("./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/actionGroupList/actionGroupList.vue?vue&type=style&index=0&id=2891a816&lang=less&scoped=true&");
+
+if (typeof content === 'string') {
+  content = [[module.i, content, '']];
+}
+
+var options = {}
+
+options.insert = "head";
+options.singleton = false;
+
+var update = __webpack_require__("./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js")(content, options);
+
+if (content.locals) {
+  module.exports = content.locals;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue?vue&type=style&index=0&id=138195f4&lang=less&scoped=true&":
+/***/ (function(module, exports, __webpack_require__) {
+
+var content = __webpack_require__("./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue?vue&type=style&index=0&id=138195f4&lang=less&scoped=true&");
 
 if (typeof content === 'string') {
   content = [[module.i, content, '']];
@@ -3224,83 +3453,99 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("p"),
-            _c("h4", [_vm._v("独立权限")]),
+            _c(
+              "div",
+              [
+                _c(
+                  "Button",
+                  {
+                    staticClass: "saveAction",
+                    attrs: { loading: _vm.saveActionLoading, type: "primary" },
+                    on: { click: _vm.saveAction }
+                  },
+                  [_vm._v("保存权限")]
+                )
+              ],
+              1
+            ),
             _vm._v(" "),
             _c(
               "Collapse",
-              _vm._l(_vm.actionList, function(projectInfo, project, index) {
+              _vm._l(_vm.actionList, function(controllerInfo, index) {
                 return _c(
                   "Panel",
                   { key: index, attrs: { name: index + "" } },
                   [
-                    _vm._v(
-                      "\n                        " +
-                        _vm._s(projectInfo.projectName) +
-                        " \n                        "
-                    ),
-                    _c(
-                      "Button",
-                      {
-                        attrs: { type: "info", size: "small" },
-                        on: {
-                          click: function($event) {
-                            return _vm.editTmpAction(project)
-                          }
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "编辑" + _vm._s(projectInfo.projectName) + "权限"
-                        )
-                      ]
-                    ),
+                    _c("span", { staticClass: "actionGroupTitle" }, [
+                      _vm._v(
+                        _vm._s(controllerInfo.desc) +
+                          "（" +
+                          _vm._s(controllerInfo.controller) +
+                          "）"
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _vm._l(controllerInfo.action, function(actionInfo, index) {
+                      return _c(
+                        "span",
+                        { key: index },
+                        [
+                          actionInfo.originIsChecked == 1
+                            ? _c("Tag", { attrs: { color: "cyan" } }, [
+                                _vm._v(_vm._s(actionInfo.desc))
+                              ])
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    }),
                     _vm._v(" "),
                     _c(
                       "p",
                       { attrs: { slot: "content" }, slot: "content" },
-                      _vm._l(projectInfo.controllerList, function(
-                        controllerInfo,
-                        controller,
+                      _vm._l(controllerInfo.action, function(
+                        actionInfo,
                         index
                       ) {
                         return _c(
                           "span",
-                          { key: index, staticClass: "actionGroup" },
+                          { key: index },
                           [
-                            _c("span", { staticClass: "actionGroupTitle" }, [
-                              _vm._v(
-                                _vm._s(controllerInfo.name) +
-                                  "（" +
-                                  _vm._s(controller) +
-                                  "）"
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _vm._l(controllerInfo.actions, function(
-                              actionInfo,
-                              index
-                            ) {
-                              return _c(
-                                "span",
-                                { key: index },
-                                [
-                                  actionInfo.desc
-                                    ? _c("Tag", { attrs: { color: "cyan" } }, [
-                                        _vm._v(_vm._s(actionInfo.desc))
-                                      ])
-                                    : _vm._e()
-                                ],
-                                1
-                              )
-                            })
+                            actionInfo.isChecked == 1
+                              ? _c(
+                                  "Button",
+                                  {
+                                    staticClass: "actionButton",
+                                    attrs: { size: "small", type: "info" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.changeAction(actionInfo)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v(_vm._s(actionInfo.desc))]
+                                )
+                              : _c(
+                                  "Button",
+                                  {
+                                    staticClass: "actionButton",
+                                    attrs: { size: "small" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.changeAction(actionInfo)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v(_vm._s(actionInfo.desc))]
+                                )
                           ],
-                          2
+                          1
                         )
                       }),
                       0
                     )
                   ],
-                  1
+                  2
                 )
               }),
               1
@@ -3459,6 +3704,144 @@ var render = function() {
               )
             ])
           ]
+        )
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue?vue&type=template&id=138195f4&scoped=true&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "page" }, [
+    _c(
+      "div",
+      { staticClass: "pageCenter" },
+      [
+        _c(
+          "Card",
+          { staticClass: "detailElement" },
+          [
+            _c("p", { attrs: { slot: "title" }, slot: "title" }, [
+              _vm._v("权限详情")
+            ]),
+            _vm._v(" "),
+            _c("p"),
+            _c(
+              "div",
+              [
+                _c(
+                  "Button",
+                  {
+                    staticClass: "saveAction",
+                    attrs: { loading: _vm.saveActionLoading, type: "primary" },
+                    on: { click: _vm.saveAction }
+                  },
+                  [_vm._v("保存权限")]
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "Collapse",
+              _vm._l(_vm.actionList, function(controllerInfo, index) {
+                return _c(
+                  "Panel",
+                  { key: index, attrs: { name: index + "" } },
+                  [
+                    _c("span", { staticClass: "actionGroupTitle" }, [
+                      _vm._v(
+                        _vm._s(controllerInfo.desc) +
+                          "（" +
+                          _vm._s(controllerInfo.controller) +
+                          "）"
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _vm._l(controllerInfo.action, function(actionInfo, index) {
+                      return _c(
+                        "span",
+                        { key: index },
+                        [
+                          actionInfo.originIsChecked == 1
+                            ? _c("Tag", { attrs: { color: "cyan" } }, [
+                                _vm._v(_vm._s(actionInfo.desc))
+                              ])
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "p",
+                      { attrs: { slot: "content" }, slot: "content" },
+                      _vm._l(controllerInfo.action, function(
+                        actionInfo,
+                        index
+                      ) {
+                        return _c(
+                          "span",
+                          { key: index },
+                          [
+                            actionInfo.isChecked == 1
+                              ? _c(
+                                  "Button",
+                                  {
+                                    staticClass: "actionButton",
+                                    attrs: { size: "small", type: "info" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.changeAction(actionInfo)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v(_vm._s(actionInfo.desc))]
+                                )
+                              : _c(
+                                  "Button",
+                                  {
+                                    staticClass: "actionButton",
+                                    attrs: { size: "small" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.changeAction(actionInfo)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v(_vm._s(actionInfo.desc))]
+                                )
+                          ],
+                          1
+                        )
+                      }),
+                      0
+                    )
+                  ],
+                  2
+                )
+              }),
+              1
+            ),
+            _vm._v(" "),
+            _c("p")
+          ],
+          1
         )
       ],
       1
@@ -7997,6 +8380,90 @@ component.options.__file = "resources/assets/cp/department/js/page/actionGroupLi
 
 /***/ }),
 
+/***/ "./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__departmentActionEdit_vue_vue_type_template_id_138195f4_scoped_true___ = __webpack_require__("./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue?vue&type=template&id=138195f4&scoped=true&");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__departmentActionEdit_vue_vue_type_script_lang_js___ = __webpack_require__("./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue?vue&type=script&lang=js&");
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__departmentActionEdit_vue_vue_type_style_index_0_id_138195f4_lang_less_scoped_true___ = __webpack_require__("./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue?vue&type=style&index=0&id=138195f4&lang=less&scoped=true&");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_runtime_componentNormalizer_js__ = __webpack_require__("./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_runtime_componentNormalizer_js__["a" /* default */])(
+  __WEBPACK_IMPORTED_MODULE_1__departmentActionEdit_vue_vue_type_script_lang_js___["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_0__departmentActionEdit_vue_vue_type_template_id_138195f4_scoped_true___["a" /* render */],
+  __WEBPACK_IMPORTED_MODULE_0__departmentActionEdit_vue_vue_type_template_id_138195f4_scoped_true___["b" /* staticRenderFns */],
+  false,
+  null,
+  "138195f4",
+  null
+  
+)
+
+/* hot reload */
+if (false) {
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  api.install(require('vue'))
+  if (api.compatible) {
+    module.hot.accept()
+    if (!api.isRecorded('138195f4')) {
+      api.createRecord('138195f4', component.options)
+    } else {
+      api.reload('138195f4', component.options)
+    }
+    module.hot.accept("./departmentActionEdit.vue?vue&type=template&id=138195f4&scoped=true&", function () {
+      api.rerender('138195f4', {
+        render: render,
+        staticRenderFns: staticRenderFns
+      })
+    })
+  }
+}
+component.options.__file = "resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue"
+/* harmony default export */ __webpack_exports__["a"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue?vue&type=script&lang=js&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_babel_loader_lib_index_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentActionEdit_vue_vue_type_script_lang_js___ = __webpack_require__("./node_modules/babel-loader/lib/index.js??ref--0-0!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue?vue&type=script&lang=js&");
+/* unused harmony namespace reexport */
+ /* harmony default export */ __webpack_exports__["a"] = (__WEBPACK_IMPORTED_MODULE_0__node_modules_babel_loader_lib_index_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentActionEdit_vue_vue_type_script_lang_js___["a" /* default */]); 
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue?vue&type=style&index=0&id=138195f4&lang=less&scoped=true&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentActionEdit_vue_vue_type_style_index_0_id_138195f4_lang_less_scoped_true___ = __webpack_require__("./node_modules/style-loader/dist/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue?vue&type=style&index=0&id=138195f4&lang=less&scoped=true&");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentActionEdit_vue_vue_type_style_index_0_id_138195f4_lang_less_scoped_true____default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentActionEdit_vue_vue_type_style_index_0_id_138195f4_lang_less_scoped_true___);
+/* unused harmony reexport namespace */
+ /* unused harmony default export */ var _unused_webpack_default_export = (__WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentActionEdit_vue_vue_type_style_index_0_id_138195f4_lang_less_scoped_true____default.a); 
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue?vue&type=template&id=138195f4&scoped=true&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentActionEdit_vue_vue_type_template_id_138195f4_scoped_true___ = __webpack_require__("./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue?vue&type=template&id=138195f4&scoped=true&");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentActionEdit_vue_vue_type_template_id_138195f4_scoped_true___["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentActionEdit_vue_vue_type_template_id_138195f4_scoped_true___["b"]; });
+
+
+/***/ }),
+
 /***/ "./resources/assets/cp/department/js/page/index/index.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -8176,12 +8643,14 @@ component.options.__file = "resources/assets/cp/department/js/page/resourceGroup
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__page_index_index_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/index/index.vue");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__page_actionGroupList_actionGroupList_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/actionGroupList/actionGroupList.vue");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__page_actionGroupEdit_actionGroupEdit_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/actionGroupEdit/actionGroupEdit.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__page_resourceGroupList_resourceGroupList_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/resourceGroupList/resourceGroupList.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__page_departmentActionEdit_departmentActionEdit_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__page_resourceGroupList_resourceGroupList_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/resourceGroupList/resourceGroupList.vue");
 /*
  * @Author: GXY 
  * @Date: 2019-08-23 14:21:04 
  * @Describe: router
  */
+
 
 
 
@@ -8218,6 +8687,12 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
         // 权限组编辑
         {
             path: '/actionGroup/:groupId/edit',
+            name: 'departmentActionEdit',
+            component: __WEBPACK_IMPORTED_MODULE_6__page_departmentActionEdit_departmentActionEdit_vue__["a" /* default */]
+        },
+        // 部门独立权限编辑
+        {
+            path: '/department/:did/action/edit',
             name: 'actionGroupEdit',
             component: __WEBPACK_IMPORTED_MODULE_5__page_actionGroupEdit_actionGroupEdit_vue__["a" /* default */]
         },
@@ -8225,7 +8700,7 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
         {
             path: '/resourceGroup',
             name: 'resourceGroupList',
-            component: __WEBPACK_IMPORTED_MODULE_6__page_resourceGroupList_resourceGroupList_vue__["a" /* default */]
+            component: __WEBPACK_IMPORTED_MODULE_7__page_resourceGroupList_resourceGroupList_vue__["a" /* default */]
         }]
         // redirect: ''
     }, {

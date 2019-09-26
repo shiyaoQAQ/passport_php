@@ -18,26 +18,26 @@
             
         </div>
         <div class="detail">
+            
             <Card class='detailElement'>
                 <p slot="title">权限详情</p>
                 <p>
-                    <h4>独立权限</h4>
+                    <div><Button @click="saveAction" :loading="saveActionLoading" class="saveAction" type="primary">保存权限</Button></div>
                     <Collapse>
-                        <Panel :name="index + ''" :key="index" v-for="(projectInfo, project, index) in actionList">
-                            {{ projectInfo.projectName }} 
-                            <Button type='info' size="small" @click="editTmpAction(project)">编辑{{ projectInfo.projectName}}权限</Button>
+                        <Panel :name="index + ''" :key="index" v-for="(controllerInfo, index) in actionList">
+                            <span class="actionGroupTitle">{{ controllerInfo.desc }}（{{ controllerInfo.controller }}）</span>
+                            <span :key="index" v-for="(actionInfo, index) in controllerInfo.action">
+                                <Tag color="cyan" v-if="actionInfo.originIsChecked == 1">{{ actionInfo.desc }}</Tag>
+                            </span>
                             <p slot="content">
-                                <span class="actionGroup" :key="index" v-for="(controllerInfo, controller, index) in  projectInfo.controllerList" >
-                                    <span class="actionGroupTitle">{{ controllerInfo.name }}（{{ controller }}）</span>
-                                    <span :key="index" v-for="(actionInfo, index) in controllerInfo.actions">
-                                        <Tag color="cyan" v-if="actionInfo.desc">{{ actionInfo.desc }}</Tag>
-                                    </span>
+                                <span :key="index" v-for="(actionInfo, index) in controllerInfo.action">
+                                    <Button class="actionButton" @click="changeAction(actionInfo)" size="small" type="info" v-if="actionInfo.isChecked == 1">{{ actionInfo.desc }}</Button>
+                                    <Button class="actionButton" @click="changeAction(actionInfo)" size="small" v-else>{{ actionInfo.desc }}</Button>
                                 </span>
                             </p>
                         </Panel>
                     </Collapse>
                 </p>
-
             </Card>
         </div>
     </div>
@@ -62,12 +62,9 @@ export default {
             },
             
             saveDepartmentLoading : false,
+            saveActionLoading : false,
 
             actionList : [],
-
-            // 权限变更
-            actionIncrease : [],
-            actionReduce : [],
         }
     },
     components: {
@@ -93,29 +90,7 @@ export default {
                     this.actionList = res.data.action_list;
                 }
             })
-
         },
-        // expandParent(data, pid, checkId) {
-        //     var _this = this;
-        //     data.forEach(function(v, i) {
-        //         v.clickSelect = false;
-        //         if (v.id == checkId) {
-        //             console.log(v.id, checkId);
-                    
-        //             v.clickSelect = true;
-        //         }
-        //         if (v.id == pid) {
-        //             _this.$set(v, 'expand', true);
-        //             _this.expandParent(_this.departmentTree, v.parent_id, checkId);
-        //             new Error("StopForeach");
-        //         }
-        //         if (!v.child) {
-        //             return false;
-        //         }else {
-        //             _this.expandParent(v.child, pid, checkId)
-        //         }
-        //     })
-        // },
         departmentOnClick (e, data) {
             // 进行选择或反选
             data.isChecked = 1 - data.isChecked            
@@ -136,8 +111,6 @@ export default {
                     }
                 }
             })
-            // console.log(departmentIncrease);
-            // console.log(departmentReduce);
             if (departmentIncrease.length == 0 && departmentReduce.length == 0) {
                 _this.$Message.error('您没有任何变更啊')
                 _this.saveDepartmentLoading = false
@@ -179,6 +152,7 @@ export default {
                 }
             });
         },
+        // 树递归方法
         operateTree(treeNodeList, callbackFunc) {
             treeNodeList.forEach((v, i) => {
                 callbackFunc(v)
@@ -187,6 +161,72 @@ export default {
                 }
             })
         },
+        // 切换权限
+        changeAction(actionInfo) {
+            actionInfo.isChecked = 1 - actionInfo.isChecked
+        },
+        // 保存权限
+        saveAction() {
+            // 递归计算变更
+            // 部门树变更
+            this.saveActionLoading = true
+            let actionIncrease = []
+            let actionReduce = []
+            let _this = this
+            this.actionList.forEach((controller, i) => {
+                if (controller.action) {
+                    controller.action.forEach((action, ai) => {
+                        if (action.isChecked != action.originIsChecked) {
+                            if (action.isChecked == 1) {
+                                actionIncrease.push(action.controller + '-' +  action.action)
+                            } else {
+                                actionReduce.push(action.controller + '-' +  action.action)
+                            }
+                        }
+                    })
+                }
+            })
+            if (actionIncrease.length == 0 && actionReduce.length == 0) {
+                _this.$Message.error('您没有任何变更啊')
+                _this.saveActionLoading = false
+                return
+            }
+
+            // 调用更新接口
+            $.ajax({
+                url  : '/cp/departments/actionGroup/' + _this.groupId + '/action',
+                data : {
+                    actionIncrease : actionIncrease,
+                    actionReduce : actionReduce,
+                },
+                type : 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success : function(res) {
+                    if (res.code == 0) {
+                        _this.$Message.success({
+                            title: '',
+                            content: res.msg,
+                        });
+                        _this.getGroupActionList()
+                    } else {
+                        _this.$Message.error({
+                            title: '',
+                            content: '保存失败！错误信息：' + res.msg + res.code,
+                        });
+                    }
+                    _this.saveActionLoading = false
+                },
+                error : function(res) {
+                    _this.saveActionLoading = false
+                    _this.$Message.error({
+                        title: '',
+                        content: '网络错误',
+                    });
+                }
+            });
+        }
 
         
     },
@@ -254,16 +294,18 @@ export default {
         //     margin-bottom: 20px;
         // }
 
-        .actionGroup {
-            padding: 5px;
-            display: block;
-            .actionGroupTitle {
-                display: block;
-                font-size: 12px;
-            }
-        }
+        // .actionGroup {
+        //     padding: 5px;
+        //     display: block;
+        //     .actionGroupTitle {
+        //         display: block;
+        //         font-size: 12px;
+        //     }
+        // }
 
-        
+        .actionButton {
+            margin:3px;
+        }
         
     }
 }

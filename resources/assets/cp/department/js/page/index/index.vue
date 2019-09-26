@@ -455,7 +455,14 @@ export default {
         },
         // 编辑独立权限
         editTmpAction(project) {
-            window.open('/cp/longrentdepartment/actionaccessdetail?id=' + this.department.id + '&project=' + project)
+            // window.open('/cp/longrentdepartment/actionaccessdetail?id=' + this.department.id + '&project=' + project)
+            this.$router.push({
+                name : "departmentActionEdit",
+                params : {
+                    did : this.department.id,
+                    project : project,
+                },
+            })
         },
         // 编辑组权限
         editGroupAction(groupid) {
