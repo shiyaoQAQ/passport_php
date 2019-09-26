@@ -8461,6 +8461,33 @@ component.options.__file = "resources/assets/cp/department/js/page/departmentAct
 
 /***/ }),
 
+/***/ "./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_runtime_componentNormalizer_js__ = __webpack_require__("./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+var render, staticRenderFns
+var script = {}
+
+
+/* normalize component */
+
+var component = Object(__WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_runtime_componentNormalizer_js__["a" /* default */])(
+  script,
+  render,
+  staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+component.options.__file = "resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue"
+/* harmony default export */ __webpack_exports__["a"] = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/assets/cp/department/js/page/index/index.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -8542,6 +8569,33 @@ component.options.__file = "resources/assets/cp/department/js/page/index/index.v
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_template_id_e9683ca8_scoped_true___["a"]; });
 /* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_template_id_e9683ca8_scoped_true___["b"]; });
 
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_runtime_componentNormalizer_js__ = __webpack_require__("./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+var render, staticRenderFns
+var script = {}
+
+
+/* normalize component */
+
+var component = Object(__WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_runtime_componentNormalizer_js__["a" /* default */])(
+  script,
+  render,
+  staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+component.options.__file = "resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue"
+/* harmony default export */ __webpack_exports__["a"] = (component.exports);
 
 /***/ }),
 
@@ -8642,11 +8696,15 @@ component.options.__file = "resources/assets/cp/department/js/page/resourceGroup
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__page_actionGroupEdit_actionGroupEdit_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/actionGroupEdit/actionGroupEdit.vue");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__page_departmentActionEdit_departmentActionEdit_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/departmentActionEdit/departmentActionEdit.vue");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__page_resourceGroupList_resourceGroupList_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/resourceGroupList/resourceGroupList.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__page_resourceGroupEdit_resourceGroupEdit_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__page_departmentResourceEdit_departmentResourceEdit_vue__ = __webpack_require__("./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue");
 /*
  * @Author: GXY 
  * @Date: 2019-08-23 14:21:04 
  * @Describe: router
  */
+
+
 
 
 
@@ -8698,6 +8756,18 @@ __WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_
             path: '/resourceGroup',
             name: 'resourceGroupList',
             component: __WEBPACK_IMPORTED_MODULE_7__page_resourceGroupList_resourceGroupList_vue__["a" /* default */]
+        },
+        // 权限组编辑
+        {
+            path: '/resourceGroup/:groupId/edit',
+            name: 'resourceGroupEdit',
+            component: __WEBPACK_IMPORTED_MODULE_8__page_resourceGroupEdit_resourceGroupEdit_vue__["a" /* default */]
+        },
+        // 部门独立权限编辑
+        {
+            path: '/department/:did/resource/edit',
+            name: 'departmentResourceEdit',
+            component: __WEBPACK_IMPORTED_MODULE_9__page_departmentResourceEdit_departmentResourceEdit_vue__["a" /* default */]
         }]
         // redirect: ''
     }, {

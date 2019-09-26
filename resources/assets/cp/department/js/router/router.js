@@ -12,6 +12,8 @@ import actionGroupList from '../page/actionGroupList/actionGroupList.vue';
 import actionGroupEdit from '../page/actionGroupEdit/actionGroupEdit.vue';
 import departmentActionEdit from '../page/departmentActionEdit/departmentActionEdit.vue';
 import resourceGroupList from '../page/resourceGroupList/resourceGroupList.vue';
+import resourceGroupEdit from '../page/resourceGroupEdit/resourceGroupEdit.vue';
+import departmentResourceEdit from '../page/departmentResourceEdit/departmentResourceEdit.vue';
 
 Vue.use(Router);
 
@@ -56,6 +58,18 @@ export default new Router({
                     path : '/resourceGroup',
                     name : 'resourceGroupList',
                     component : resourceGroupList,
+                },
+                // 权限组编辑
+                {
+                    path : '/resourceGroup/:groupId/edit',
+                    name : 'resourceGroupEdit',
+                    component : resourceGroupEdit,
+                },
+                // 部门独立权限编辑
+                {
+                    path : '/department/:did/resource/edit',
+                    name : 'departmentResourceEdit',
+                    component : departmentResourceEdit,
                 },
             ],
             // redirect: ''
