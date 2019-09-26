@@ -45,7 +45,7 @@ export default {
         // 获取操作列表
         getActionList() {
             $.ajax({
-                url:`/cp/departments/actionGroup/` + this.did + `/action`,
+                url:`/cp/departments/` + this.did + `/tmpAction/action`,
                 data : {
                     project : this.project,
                 },
@@ -88,10 +88,11 @@ export default {
 
             // 调用更新接口
             $.ajax({
-                url  : '/cp/departments/actionGroup/' + _this.groupId + '/action',
+                url  : '/cp/departments/' + this.did + '/tmpAction/action',
                 data : {
                     actionIncrease : actionIncrease,
                     actionReduce : actionReduce,
+                    project : this.project,
                 },
                 type : 'PUT',
                 headers: {
@@ -103,7 +104,7 @@ export default {
                             title: '',
                             content: res.msg,
                         });
-                        _this.getGroupActionList()
+                        _this.getActionList()
                     } else {
                         _this.$Message.error({
                             title: '',
@@ -129,9 +130,9 @@ export default {
     },
     mounted() {
         this.did = this.$route.params.did
-        this.project = this.$route.params.project
+        this.project = this.$route.query.project
         // this.getDepartmentTree()
-        this.getGroupActionList()
+        this.getActionList()
     }
 }
 

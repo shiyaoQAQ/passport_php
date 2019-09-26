@@ -42,14 +42,14 @@ export default new Router({
                 // 权限组编辑
                 {
                     path : '/actionGroup/:groupId/edit',
-                    name : 'departmentActionEdit',
-                    component : departmentActionEdit,
+                    name : 'actionGroupEdit',
+                    component : actionGroupEdit,
                 },
                 // 部门独立权限编辑
                 {
                     path : '/department/:did/action/edit',
-                    name : 'actionGroupEdit',
-                    component : actionGroupEdit,
+                    name : 'departmentActionEdit',
+                    component : departmentActionEdit,
                 },
                 // 资源组列表
                 {
