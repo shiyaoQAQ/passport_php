@@ -28,7 +28,7 @@ class AccessController extends Controller
         $data = [
             'accessProjectList' => AccessConst::$accessProjectList,
         ];
-    	return view('admin.access.department', $data); ;
+    	return view('admin.access.department', $data);
     }
     
     /**

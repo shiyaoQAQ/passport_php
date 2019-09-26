@@ -9,13 +9,12 @@
                     :props="departmentTreeConfig.props"
                     :collapsable="departmentTreeConfig.collapsable"
                     :horizontal="departmentTreeConfig.horizontal"
-                    @on-expand="departmentOnExpand"
                     @on-node-click="departmentOnClick"
                 ></orgTree>
             </div>
         </div>
         <div class="detail">
-            <div v-if="department != null">
+            <!-- <div v-if="department != null">
                 <Card class='detailElement'>
                     <p slot="title" style="font-size:20px;">{{ department.name }}</p>
                     <p>
@@ -118,7 +117,7 @@
                     </p>
                 </Card>
 
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -141,6 +140,12 @@ export default {
                 collapsable : false,
                 horizontal : true,
             },
+            // 部门树变更
+            departmentIncrease : [],
+            departmentReduce : [],
+            // 权限变更
+            actionIncrease : [],
+            actionReduce : [],
         }
     },
     components: {
@@ -150,7 +155,7 @@ export default {
         // 获取组织架构树信息
         getDepartmentTree() {
             this.$Request({
-                url:`/cp/departments/actionGroup/` + this.groupId + `/department`,
+                url:`/cp/departments/actionGroup/` + this.groupId + `/tree`,
                 method:'GET',
                 success: (res) => {
                     this.departmentTree = res.data;
@@ -178,7 +183,12 @@ export default {
         //         }
         //     })
         // },
-        
+        departmentOnClick (e, data) {
+            // 进行选择或反选
+            data.isChecked = 1 - data.isChecked
+            console.log(data);
+            
+        },
         
     },
     created() {

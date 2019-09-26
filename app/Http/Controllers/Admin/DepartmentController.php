@@ -29,6 +29,8 @@ class DepartmentController extends Controller
     {
         $objDepart = new CpDepartment();
         $treeInfo  = $objDepart->getDepartmentTree(0);
+        // 第一个节点默认展开
+        $treeInfo[0]['isExpand'] = 1;
         return $this->json(0, 'ok', $treeInfo);
     }
 

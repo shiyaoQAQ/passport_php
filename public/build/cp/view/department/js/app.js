@@ -397,7 +397,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -415,7 +414,13 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 },
                 collapsable: false,
                 horizontal: true
-            }
+            },
+            // 部门树变更
+            departmentIncrease: [],
+            departmentReduce: [],
+            // 权限变更
+            actionIncrease: [],
+            actionReduce: []
         };
     },
 
@@ -428,12 +433,39 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             var _this = this;
 
             this.$Request({
-                url: '/cp/departments/actionGroup/' + this.groupId + '/department',
+                url: '/cp/departments/actionGroup/' + this.groupId + '/tree',
                 method: 'GET',
                 success: function success(res) {
                     _this.departmentTree = res.data;
                 }
             });
+        },
+
+        // expandParent(data, pid, checkId) {
+        //     var _this = this;
+        //     data.forEach(function(v, i) {
+        //         v.clickSelect = false;
+        //         if (v.id == checkId) {
+        //             console.log(v.id, checkId);
+
+        //             v.clickSelect = true;
+        //         }
+        //         if (v.id == pid) {
+        //             _this.$set(v, 'expand', true);
+        //             _this.expandParent(_this.departmentTree, v.parent_id, checkId);
+        //             new Error("StopForeach");
+        //         }
+        //         if (!v.child) {
+        //             return false;
+        //         }else {
+        //             _this.expandParent(v.child, pid, checkId)
+        //         }
+        //     })
+        // },
+        departmentOnClick: function departmentOnClick(e, data) {
+            // 进行选择或反选
+            data.isChecked = 1 - data.isChecked;
+            console.log(data);
         }
     },
     created: function created() {},
@@ -971,13 +1003,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -990,7 +1015,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 props: {
                     label: 'name',
                     children: 'child',
-                    expand: 'expand'
+                    expand: 'isExpand'
                 },
                 collapsable: true,
                 horizontal: true
@@ -1031,7 +1056,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                         },
                         on: {
                             click: function click() {
-                                // console.log(params);
                                 _this2.delDepartUser(params.row.uid);
                             }
                         }
@@ -1068,117 +1092,116 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 url: '/cp/departments/tree',
                 method: 'GET',
                 success: function success(res) {
-                    _this3.addAttr(res.data);
                     _this3.departmentTree = res.data;
-                    _this3.expandParent(_this3.departmentTree, pid, checkId);
-                }
-            });
-        },
-        addAttr: function addAttr(data) {
-            var _this4 = this;
-
-            data.forEach(function (v, i) {
-                v.expand = false;
-                if (v.child) {
-                    _this4.addAttr(v.child);
-                }
-            });
-        },
-        expandParent: function expandParent(data, pid, checkId) {
-            var _this = this;
-            data.forEach(function (v, i) {
-                v.clickSelect = false;
-                if (v.id == checkId) {
-                    console.log(v.id, checkId);
-
-                    v.clickSelect = true;
-                }
-                if (v.id == pid) {
-                    _this.$set(v, 'expand', true);
-                    _this.expandParent(_this.departmentTree, v.parent_id, checkId);
-                    new Error("StopForeach");
-                }
-                if (!v.child) {
-                    return false;
-                } else {
-                    _this.expandParent(v.child, pid, checkId);
+                    _this3.dataFormatExpand(_this3.departmentTree, pid, checkId);
                 }
             });
         },
 
         // 获取所有部门信息 以供编辑部门的时候使用
         getAllDepartmentList: function getAllDepartmentList() {
+            var _this4 = this;
+
             var _this = this;
             this.$Request({
                 url: '/cp/longrentdepartment/ajaxgetalldepart',
                 method: 'GET',
                 success: function success(res) {
-                    _this.allDepartmentList = res.data;
+                    _this4.allDepartmentList = res.data;
                 }
             });
         },
 
         // 获取节点的父节点
-        getDepartmentParent: function getDepartmentParent(data) {
-            var _this = this;
-            var did = data.id;
+        getDepartmentParent: function getDepartmentParent(did) {
+            var _this5 = this;
+
             this.departmentParent = null;
             this.$Request({
                 url: '/cp/departments/' + did + '/parent',
                 method: 'GET',
                 success: function success(res) {
-                    _this.departmentParent = res.data;
+                    _this5.departmentParent = res.data;
                 }
             });
         },
 
         // 获取节点的用户
         getDepartmentUser: function getDepartmentUser() {
-            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+            var _this6 = this;
+
+            var did = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
             if (data == null) {
                 data = this.department;
             }
-            var _this = this;
-            var did = data.id;
             this.departmentUser = [];
             this.$Request({
                 url: '/cp/departments/' + did + '/user',
                 method: 'GET',
                 success: function success(res) {
-                    _this.departmentUser = res.data;
+                    _this6.departmentUser = res.data;
                 }
             });
         },
 
         // 获取节点的操作
-        getDepartmentAction: function getDepartmentAction(data) {
-            var _this = this;
-            var did = data.id;
+        getDepartmentAction: function getDepartmentAction(did) {
+            var _this7 = this;
+
             this.departmentAction = {};
             this.$Request({
                 url: '/cp/departments/' + did + '/action',
                 method: 'GET',
                 success: function success(res) {
-                    _this.departmentAction = res.data;
+                    _this7.departmentAction = res.data;
                 }
             });
         },
 
         // 获取节点的资源
         getDepartmentResource: function getDepartmentResource(data) {
-            var _this = this;
-            var did = data.id;
+            var _this8 = this;
+
             this.departmentResource = {};
             this.$Request({
                 url: '/cp/departments/' + did + '/resource',
                 method: 'GET',
                 success: function success(res) {
-                    _this.departmentResource = res.data;
+                    _this8.departmentResource = res.data;
                 }
             });
         },
 
+        // 获取部门相关信息
+        getDepartHandle: function getDepartHandle(did) {
+            this.getDepartmentParent(did);
+            this.getDepartmentUser(did);
+            this.getDepartmentAction(did);
+            this.getDepartmentResource(did);
+        },
+        dataFormatExpand: function dataFormatExpand(data, pid, checkId) {
+            var _this9 = this;
+
+            data.forEach(function (v, i) {
+                // v.isChecked = 0;
+                if (v.id == checkId) {
+                    v.isChecked = 1;
+                }
+                if (v.id == pid) {
+                    _this9.$set(v, 'isExpand', 1);
+                    _this9.dataFormatExpand(_this9.departmentTree, v.parent_id, checkId);
+                    new Error("StopForeach");
+                }
+                if (!v.child) {
+                    return false;
+                } else {
+                    _this9.dataFormatExpand(v.child, pid, checkId);
+                }
+            });
+        },
+
+        // 数据格式处理 ---- end
         // 编辑部门信息
         editDepart: function editDepart() {
             this.departmentModalData = {
@@ -1296,8 +1319,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 success: function success(data) {
                     if (data.code == 0) {
                         _this.$Message.success(data.msg);
-                        console.log(_this.department.parent_id, _this.department.parent_id);
-
                         _this.getDepartmentTree(_this.department.parent_id, _this.department.parent_id);
                         _this.unselectedDepartment();
                     }
@@ -1312,44 +1333,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             this.departmentUser = [];
             this.departmentAction = {};
             this.departmentResource = {};
-        },
-
-        // 部门节点展开事件
-        departmentOnExpand: function departmentOnExpand(e, data) {
-            if ("expand" in data) {
-                data.expand = !data.expand;
-                if (!data.expand && data.children) {
-                    this.collapse(data.children);
-                }
-            } else {
-                this.$set(data, "expand", true);
-            }
-        },
-        collapse: function collapse(list) {
-            var _this = this;
-            list.forEach(function (child) {
-                if (child.expand) {
-                    child.expand = false;
-                }
-                child.children && _this.collapse(child.children);
-            });
-        },
-
-        // 部门节点点击事件
-        departmentOnClick: function departmentOnClick(e, data) {
-            // console.log(data);
-            // 幂等性处理
-            if (this.department == data) {
-                return;
-            }
-            this.department = data;
-            // 获取部门相关信息
-            this.getDepartmentParent(data);
-            this.getDepartmentUser(data);
-            this.getDepartmentAction(data);
-            this.getDepartmentResource(data);
-            $('.org-tree-node-label-inner').removeClass('org-tree-node-label-inner-check');
-            e.target.className += ' org-tree-node-label-inner-check';
         },
 
         // 编辑独立权限
@@ -1418,7 +1401,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 data: {
                     did: this.department.id,
                     uid: uid
-                    // _token:$('meta[name="csrf-token"]').attr('content')
                 },
                 method: 'POST',
                 dataType: 'json',
@@ -1429,6 +1411,45 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                     }
                 }
             });
+        },
+
+        // tree-handle ----
+        // 部门节点展开事件
+        departmentOnExpand: function departmentOnExpand(e, data) {
+            if ("isExpand" in data) {
+                data.isExpand = data.isExpand ? 0 : 1;
+                if (!data.isExpand && data.children) {
+                    this.collapse(data.children);
+                }
+            } else {
+                this.$set(data, "isExpand", 1);
+            }
+        },
+        collapse: function collapse(list) {
+            var _this = this;
+            list.forEach(function (child) {
+                if (child.isExpand) {
+                    child.isExpand = 0;
+                }
+                child.children && _this.collapse(child.children);
+            });
+        },
+
+        // 部门节点点击事件
+        departmentOnClick: function departmentOnClick(e, data) {
+            // 幂等性处理
+            if (this.department == data) {
+                return;
+            }
+            this.department = data;
+            // 获取部门相关信息
+            this.getDepartHandle(data.id);
+            // this.getDepartmentParent(data)
+            // this.getDepartmentUser(data)
+            // this.getDepartmentAction(data)
+            // this.getDepartmentResource(data)
+            $('.org-tree-node-label-inner').removeClass('org-tree-node-label-inner-check');
+            e.target.className += ' org-tree-node-label-inner-check';
         }
     },
     created: function created() {},
@@ -3149,561 +3170,14 @@ var render = function() {
               collapsable: _vm.departmentTreeConfig.collapsable,
               horizontal: _vm.departmentTreeConfig.horizontal
             },
-            on: {
-              "on-expand": _vm.departmentOnExpand,
-              "on-node-click": _vm.departmentOnClick
-            }
+            on: { "on-node-click": _vm.departmentOnClick }
           })
         }),
         1
       )
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "detail" }, [
-      _vm.department != null
-        ? _c(
-            "div",
-            [
-              _c("Card", { staticClass: "detailElement" }, [
-                _c(
-                  "p",
-                  {
-                    staticStyle: { "font-size": "20px" },
-                    attrs: { slot: "title" },
-                    slot: "title"
-                  },
-                  [_vm._v(_vm._s(_vm.department.name))]
-                ),
-                _vm._v(" "),
-                _c("p"),
-                _c("div", { staticClass: "departmentInfo" }, [
-                  _c("span", [_vm._v("标识：" + _vm._s(_vm.department.mark))]),
-                  _vm._v(" "),
-                  _c("span", [_vm._v("邮箱：" + _vm._s(_vm.department.email))]),
-                  _vm._v(" "),
-                  _c("span", [
-                    _vm._v("上级部门："),
-                    _vm.departmentParent != null
-                      ? _c("span", [_vm._v(_vm._s(_vm.departmentParent.name))])
-                      : _vm._e()
-                  ])
-                ]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "departmentOperateList" },
-                  [
-                    _c(
-                      "Button",
-                      {
-                        attrs: { type: "info" },
-                        on: { click: _vm.editDepart }
-                      },
-                      [_vm._v("编辑")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "Button",
-                      {
-                        attrs: { type: "info" },
-                        on: { click: _vm.addChildDepart }
-                      },
-                      [_vm._v("添加子节点")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "Button",
-                      {
-                        attrs: { type: "error" },
-                        on: { click: _vm.delDepart }
-                      },
-                      [_vm._v("删除")]
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c("p")
-              ]),
-              _vm._v(" "),
-              _c("Card", { staticClass: "detailElement" }, [
-                _c(
-                  "p",
-                  { staticClass: "userInputBlock" },
-                  [
-                    _c(
-                      "Input",
-                      {
-                        staticClass: "userInput",
-                        attrs: { type: "text", placeholder: "cp账号" },
-                        model: {
-                          value: _vm.userInput,
-                          callback: function($$v) {
-                            _vm.userInput = $$v
-                          },
-                          expression: "userInput"
-                        }
-                      },
-                      [
-                        _c("Icon", {
-                          attrs: {
-                            slot: "prepend",
-                            type: "ios-person-outline"
-                          },
-                          slot: "prepend"
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "Button",
-                      {
-                        attrs: { type: "info" },
-                        on: { click: _vm.addDepartmentUser }
-                      },
-                      [_vm._v("添加用户到部门")]
-                    ),
-                    _vm._v(" "),
-                    _c("Button", { on: { click: _vm.addAdminUser } }, [
-                      _vm._v("新增一个管理员")
-                    ])
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "p",
-                  { staticClass: "userListBlock" },
-                  [
-                    _c("Table", {
-                      attrs: {
-                        columns: _vm.departmentUserColumn,
-                        data: _vm.departmentUser
-                      }
-                    })
-                  ],
-                  1
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "Card",
-                { staticClass: "detailElement" },
-                [
-                  _c("p", { attrs: { slot: "title" }, slot: "title" }, [
-                    _vm._v("权限详情")
-                  ]),
-                  _vm._v(" "),
-                  _c("p"),
-                  _c("h4", [_vm._v("独立权限")]),
-                  _vm._v(" "),
-                  _vm.departmentAction.tmp != null
-                    ? _c(
-                        "Collapse",
-                        _vm._l(_vm.departmentAction.tmp, function(
-                          projectInfo,
-                          project,
-                          index
-                        ) {
-                          return _c(
-                            "Panel",
-                            { key: index, attrs: { name: index + "" } },
-                            [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(projectInfo.projectName) +
-                                  " \n                            "
-                              ),
-                              _c(
-                                "Button",
-                                {
-                                  attrs: { type: "info", size: "small" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.editTmpAction(project)
-                                    }
-                                  }
-                                },
-                                [
-                                  _vm._v(
-                                    "编辑" +
-                                      _vm._s(projectInfo.projectName) +
-                                      "权限"
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "p",
-                                { attrs: { slot: "content" }, slot: "content" },
-                                _vm._l(projectInfo.controllerList, function(
-                                  controllerInfo,
-                                  controller,
-                                  index
-                                ) {
-                                  return _c(
-                                    "span",
-                                    { key: index, staticClass: "actionGroup" },
-                                    [
-                                      _c(
-                                        "span",
-                                        { staticClass: "actionGroupTitle" },
-                                        [
-                                          _vm._v(
-                                            _vm._s(controllerInfo.name) +
-                                              "（" +
-                                              _vm._s(controller) +
-                                              "）"
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _vm._l(controllerInfo.actions, function(
-                                        actionInfo,
-                                        index
-                                      ) {
-                                        return _c(
-                                          "span",
-                                          { key: index },
-                                          [
-                                            actionInfo.desc
-                                              ? _c(
-                                                  "Tag",
-                                                  { attrs: { color: "cyan" } },
-                                                  [
-                                                    _vm._v(
-                                                      _vm._s(actionInfo.desc)
-                                                    )
-                                                  ]
-                                                )
-                                              : _vm._e()
-                                          ],
-                                          1
-                                        )
-                                      })
-                                    ],
-                                    2
-                                  )
-                                }),
-                                0
-                              )
-                            ],
-                            1
-                          )
-                        }),
-                        1
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p"),
-                  _vm._v(" "),
-                  _c("p", { staticStyle: { "margin-top": "10px" } }),
-                  _c("h4", [_vm._v("权限包")]),
-                  _vm._v(" "),
-                  _vm.departmentAction.groups != null
-                    ? _c(
-                        "Collapse",
-                        _vm._l(_vm.departmentAction.groups, function(
-                          group,
-                          index
-                        ) {
-                          return _c(
-                            "Panel",
-                            { key: index, attrs: { name: index + "" } },
-                            [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(group.name) +
-                                  " （" +
-                                  _vm._s(group.project) +
-                                  ":" +
-                                  _vm._s(group.desc) +
-                                  "） \n                            "
-                              ),
-                              _c(
-                                "Button",
-                                {
-                                  attrs: { type: "info", size: "small" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.editGroupAction(group.id)
-                                    }
-                                  }
-                                },
-                                [_vm._v("编辑" + _vm._s(group.name))]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "p",
-                                { attrs: { slot: "content" }, slot: "content" },
-                                _vm._l(group.actions, function(
-                                  controllerInfo,
-                                  controller,
-                                  index
-                                ) {
-                                  return _c(
-                                    "span",
-                                    { key: index, staticClass: "actionGroup" },
-                                    [
-                                      _c(
-                                        "span",
-                                        { staticClass: "actionGroupTitle" },
-                                        [
-                                          _vm._v(
-                                            _vm._s(controllerInfo.name) +
-                                              "（" +
-                                              _vm._s(controller) +
-                                              "）"
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _vm._l(controllerInfo.actions, function(
-                                        actionInfo,
-                                        index
-                                      ) {
-                                        return _c(
-                                          "span",
-                                          { key: index },
-                                          [
-                                            actionInfo.desc
-                                              ? _c(
-                                                  "Tag",
-                                                  { attrs: { color: "cyan" } },
-                                                  [
-                                                    _vm._v(
-                                                      _vm._s(actionInfo.desc)
-                                                    )
-                                                  ]
-                                                )
-                                              : _vm._e()
-                                          ],
-                                          1
-                                        )
-                                      })
-                                    ],
-                                    2
-                                  )
-                                }),
-                                0
-                              )
-                            ],
-                            1
-                          )
-                        }),
-                        1
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p")
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "Card",
-                [
-                  _c("p", { attrs: { slot: "title" }, slot: "title" }, [
-                    _vm._v("资源详情")
-                  ]),
-                  _vm._v(" "),
-                  _c("p"),
-                  _c("h4", [_vm._v("独立资源")]),
-                  _vm._v(" "),
-                  _vm.departmentResource.tmp != null
-                    ? _c(
-                        "Collapse",
-                        [
-                          _c(
-                            "Panel",
-                            { attrs: { name: "1" } },
-                            [
-                              _vm._v(
-                                "\n                            独立资源\n                            "
-                              ),
-                              _c(
-                                "Button",
-                                {
-                                  attrs: { type: "info", size: "small" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.editTmpResource()
-                                    }
-                                  }
-                                },
-                                [_vm._v("编辑独立资源")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "p",
-                                { attrs: { slot: "content" }, slot: "content" },
-                                _vm._l(_vm.departmentResource.tmp, function(
-                                  controllerInfo,
-                                  controller,
-                                  index
-                                ) {
-                                  return _c(
-                                    "span",
-                                    { key: index, staticClass: "actionGroup" },
-                                    [
-                                      _c(
-                                        "span",
-                                        { staticClass: "actionGroupTitle" },
-                                        [
-                                          _vm._v(
-                                            _vm._s(controllerInfo.name) +
-                                              "（" +
-                                              _vm._s(controller) +
-                                              "）"
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _vm._l(controllerInfo.resource, function(
-                                        resourceInfo,
-                                        index
-                                      ) {
-                                        return _c(
-                                          "span",
-                                          { key: index },
-                                          [
-                                            resourceInfo.desc
-                                              ? _c(
-                                                  "Tag",
-                                                  { attrs: { color: "cyan" } },
-                                                  [
-                                                    _vm._v(
-                                                      _vm._s(resourceInfo.desc)
-                                                    )
-                                                  ]
-                                                )
-                                              : _vm._e()
-                                          ],
-                                          1
-                                        )
-                                      })
-                                    ],
-                                    2
-                                  )
-                                }),
-                                0
-                              )
-                            ],
-                            1
-                          )
-                        ],
-                        1
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p"),
-                  _vm._v(" "),
-                  _c("p", { staticStyle: { "margin-top": "10px" } }),
-                  _c("h4", [_vm._v("资源包")]),
-                  _vm._v(" "),
-                  _vm.departmentResource.groups != null
-                    ? _c(
-                        "Collapse",
-                        _vm._l(_vm.departmentResource.groups, function(
-                          group,
-                          index
-                        ) {
-                          return _c(
-                            "Panel",
-                            { key: index, attrs: { name: index + "" } },
-                            [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(group.name) +
-                                  " （" +
-                                  _vm._s(group.desc) +
-                                  "） \n                            "
-                              ),
-                              _c(
-                                "Button",
-                                {
-                                  attrs: { type: "info", size: "small" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.editGroupResource(group.id)
-                                    }
-                                  }
-                                },
-                                [_vm._v("编辑" + _vm._s(group.name))]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "p",
-                                { attrs: { slot: "content" }, slot: "content" },
-                                _vm._l(group.resources, function(
-                                  controllerInfo,
-                                  controller,
-                                  index
-                                ) {
-                                  return _c(
-                                    "span",
-                                    { key: index, staticClass: "actionGroup" },
-                                    [
-                                      _c(
-                                        "span",
-                                        { staticClass: "actionGroupTitle" },
-                                        [
-                                          _vm._v(
-                                            _vm._s(controllerInfo.name) +
-                                              "（" +
-                                              _vm._s(controller) +
-                                              "）"
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _vm._l(controllerInfo.resource, function(
-                                        resourceInfo,
-                                        index
-                                      ) {
-                                        return _c(
-                                          "span",
-                                          { key: index },
-                                          [
-                                            resourceInfo.desc
-                                              ? _c(
-                                                  "Tag",
-                                                  { attrs: { color: "cyan" } },
-                                                  [
-                                                    _vm._v(
-                                                      _vm._s(resourceInfo.desc)
-                                                    )
-                                                  ]
-                                                )
-                                              : _vm._e()
-                                          ],
-                                          1
-                                        )
-                                      })
-                                    ],
-                                    2
-                                  )
-                                }),
-                                0
-                              )
-                            ],
-                            1
-                          )
-                        }),
-                        1
-                      )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p")
-                ],
-                1
-              )
-            ],
-            1
-          )
-        : _vm._e()
-    ])
+    _c("div", { staticClass: "detail" })
   ])
 }
 var staticRenderFns = []
@@ -8153,7 +7627,7 @@ var renderLabel = function renderLabel(h, data, context) {
     selectedClassName = selectedClassName(data);
   }
 
-  if (data.clickSelect) {
+  if (data.isChecked) {
     cls.push('org-tree-node-label-inner-check');
   }
 

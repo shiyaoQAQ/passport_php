@@ -87,7 +87,7 @@ export const renderLabel = (h, data, context) => {
     selectedClassName = selectedClassName(data)
   }
 
-  if (data.clickSelect) {
+  if (data.isChecked) {
       cls.push('org-tree-node-label-inner-check')
   }
 

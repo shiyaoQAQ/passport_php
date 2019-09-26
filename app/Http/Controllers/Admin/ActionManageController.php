@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Modules\Admin\Access\ActionModule;
 use App\Modules\Admin\Access\Constants\AccessConst;
 use App\Modules\Admin\Access\CpAccess;
 use App\Modules\Admin\Access\CpUserModule;
@@ -52,8 +53,29 @@ class ActionManageController extends Controller
      * @param Request $request
      * @return void
      */
-    public function showActionGroupTree(Request $request)
+    public function showActionGroupTree($groupId, Request $request)
     {
+        $gid = intval($groupId);
+        $treeInfo = ActionModule::getActionGroupDepartmentTree($gid);
+        return $this->json(0, 'ok', $treeInfo);
+    }
+
+    public function getActionGroupActions($groupId, Request $request)
+    {
+        $gid = intval($groupId);
+        // $groupInfo  = CpAccess::getActionGroupInfo($gid);
+        // if ($groupInfo['code'] != 0 || empty($groupInfo['data'])) {
+        //     die('请重试');
+        // }
+        // $groupInfo = $groupInfo['data'];
+        // $actionList = CpAccess::getActionByGroupId($gid);
+        // $departList = CpAccess::getDepartByGroupId($gid);
+        // $ret = CpAccess::getActionList($groupInfo['project']);
+        // return view('admin.access.departmentActionGroupAccess')->with('action_list', $ret)
+        //                                             ->with('group_info', $groupInfo)        
+        //                                             ->with('action_info_json', json_encode($actionList['data']))
+        //                                             ->with('deaprt_info_json', json_encode($departList['data']))
+        //                                             ->with('gid', $gid);
 
     }
 

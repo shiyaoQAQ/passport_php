@@ -67,7 +67,7 @@ class CpDepartment extends Model
                 if(!empty($ret)){
                     $departDetail['child'] = $ret;
                 }
-            }   
+            }
         }
         return $departList;
     }
@@ -76,7 +76,7 @@ class CpDepartment extends Model
         $allDepart   = $this->getAllDepart();
         $childDepart = array();
         foreach ($allDepart as $depart) {
-            if($depart['parent_id'] == $id){
+            if($depart['parent_id'] == $id) {
                 $depart['isExpand'] = 0;
                 $depart['isChecked'] = 0;
                 $childDepart[] = $depart;
