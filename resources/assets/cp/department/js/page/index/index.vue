@@ -314,6 +314,7 @@ export default {
         // 数据格式处理 ---- 
         dataFormatExpand(data, pid, checkId) {
             data.forEach((v, i) => {
+                v.isChecked = 0;
                 if (v.id == checkId) {
                     v.isChecked = 1;
                 }
@@ -548,14 +549,9 @@ export default {
             if (this.department == data) {
                 return;
             }
-            // this.department.name
-            // $('.org-tree-node-label-inner').removeClass('org-tree-node-label-inner-check')
-            // // if (this.department) {
-            // //     this.$set(this.department, 'isChecked', 0)
-            // // }
             this.department = data
+            this.dataFormatExpand(this.departmentTree, data.parent_id, data.id)
             // 获取部门相关信息
-            this.$set(this.department, 'isChecked', 1)
             this.getDepartHandle(data)
         },
         // tree-handle ---- end

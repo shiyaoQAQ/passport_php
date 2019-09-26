@@ -56,6 +56,7 @@ export default {
   display: inline-block;
   padding: 15px;
   background-color: #fff;
+  user-select: none;
 }
 
 .org-tree {
@@ -99,6 +100,7 @@ export default {
     min-width: 50px;
     white-space: nowrap;
     cursor: pointer;
+    border: 1px solid transparent;
   }
   .org-tree-node-label-inner-check {
       border: 1px solid #2db7f5;
