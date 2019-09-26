@@ -8,8 +8,9 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import App from '../app.vue';
 import Index from '../page/index/index.vue';
-import actionGroupList from '../page/actionGroupList/index.vue';
-import resourceGroupList from '../page/resourceGroupList/index.vue';
+import actionGroupList from '../page/actionGroupList/actionGroupList.vue';
+import actionGroupEdit from '../page/actionGroupEdit/actionGroupEdit.vue';
+import resourceGroupList from '../page/resourceGroupList/resourceGroupList.vue';
 
 Vue.use(Router);
 
@@ -25,16 +26,25 @@ export default new Router({
             name: 'app',
             component: App,
             children: [
+                // 组织架构页
                 {
                     path : '/index',
                     name : 'index',
                     component : Index,
                 },
+                // 权限组列表
                 {
                     path : '/actionGroup',
                     name : 'actionGroupList',
                     component : actionGroupList,
                 },
+                // 权限组编辑
+                {
+                    path : '/actionGroup/:groupId/edit',
+                    name : 'actionGroupEdit',
+                    component : actionGroupEdit,
+                },
+                // 资源组列表
                 {
                     path : '/resourceGroup',
                     name : 'resourceGroupList',
