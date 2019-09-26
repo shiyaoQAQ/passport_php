@@ -18,110 +18,27 @@
             
         </div>
         <div class="detail">
-            <!-- <div v-if="department != null">
-                <Card class='detailElement'>
-                    <p slot="title" style="font-size:20px;">{{ department.name }}</p>
-                    <p>
-                        <div class="departmentInfo">
-                            <span>标识：{{ department.mark }}</span>
-                            <span>邮箱：{{ department.email }}</span>
-                            <span>上级部门：<span v-if="departmentParent != null">{{ departmentParent.name }}</span></span>
-                        </div>
-                        <div class="departmentOperateList">
-                            <Button @click="editDepart" type="info">编辑</Button>
-                            <Button @click="addChildDepart" type="info">添加子节点</Button>
-                            <Button @click="delDepart" type="error">删除</Button>
-                        </div>
-                    </p>
-                </Card>
-                <Card class='detailElement'>
-                    <p class="userInputBlock">
-                        <Input class="userInput" type="text" v-model="userInput" placeholder="cp账号">
-                            <Icon type="ios-person-outline" slot="prepend"></Icon>
-                        </Input>
-                        <Button @click="addDepartmentUser" type="info">添加用户到部门</Button>
-                        <Button @click="addAdminUser" >新增一个管理员</Button>
-                    </p>
-                    <p class="userListBlock">
-                        <Table :columns="departmentUserColumn" :data="departmentUser"></Table>
-                    </p>
-                </Card>
-                <Card class='detailElement'>
-                    <p slot="title">权限详情</p>
-                    <p>
-                        <h4>独立权限</h4>
-                        <Collapse v-if="departmentAction.tmp != null">
-                            <Panel :name="index + ''" :key="index" v-for="(projectInfo, project, index) in departmentAction.tmp">
-                                {{ projectInfo.projectName }} 
-                                <Button type='info' size="small" @click="editTmpAction(project)">编辑{{ projectInfo.projectName}}权限</Button>
-                                <p slot="content">
-                                    <span class="actionGroup" :key="index" v-for="(controllerInfo, controller, index) in  projectInfo.controllerList" >
-                                        <span class="actionGroupTitle">{{ controllerInfo.name }}（{{ controller }}）</span>
-                                        <span :key="index" v-for="(actionInfo, index) in controllerInfo.actions">
-                                            <Tag color="cyan" v-if="actionInfo.desc">{{ actionInfo.desc }}</Tag>
-                                        </span>
+            <Card class='detailElement'>
+                <p slot="title">权限详情</p>
+                <p>
+                    <h4>独立权限</h4>
+                    <Collapse>
+                        <Panel :name="index + ''" :key="index" v-for="(projectInfo, project, index) in actionList">
+                            {{ projectInfo.projectName }} 
+                            <Button type='info' size="small" @click="editTmpAction(project)">编辑{{ projectInfo.projectName}}权限</Button>
+                            <p slot="content">
+                                <span class="actionGroup" :key="index" v-for="(controllerInfo, controller, index) in  projectInfo.controllerList" >
+                                    <span class="actionGroupTitle">{{ controllerInfo.name }}（{{ controller }}）</span>
+                                    <span :key="index" v-for="(actionInfo, index) in controllerInfo.actions">
+                                        <Tag color="cyan" v-if="actionInfo.desc">{{ actionInfo.desc }}</Tag>
                                     </span>
-                                </p>
-                            </Panel>
-                        </Collapse>
-                    </p>
-                    <p style="margin-top:10px;">
-                        <h4>权限包</h4>
-                        <Collapse v-if="departmentAction.groups != null">
-                            <Panel :name="index + ''" :key="index" v-for="(group, index) in departmentAction.groups">
-                                {{ group.name }} （{{ group.project }}:{{ group.desc }}） 
-                                <Button type='info' size="small" @click="editGroupAction(group.id)">编辑{{ group.name }}</Button>
-                                <p slot="content">
-                                    <span class="actionGroup" :key="index" v-for="(controllerInfo, controller, index) in  group.actions" >
-                                        <span class="actionGroupTitle">{{ controllerInfo.name }}（{{ controller }}）</span>
-                                        <span :key="index" v-for="(actionInfo, index) in controllerInfo.actions">
-                                            <Tag color="cyan" v-if="actionInfo.desc">{{ actionInfo.desc }}</Tag>
-                                        </span>
-                                    </span>
-                                </p>
-                            </Panel>
-                        </Collapse>
-                    </p>
-                </Card>
-                <Card>
-                    <p slot="title">资源详情</p>
-                    <p>
-                        <h4>独立资源</h4>
-                        <Collapse v-if="departmentResource.tmp != null">
-                            <Panel name="1">
-                                独立资源
-                                <Button type='info' size="small" @click="editTmpResource()">编辑独立资源</Button>
-                                <p slot="content">
-                                    <span class="actionGroup" :key="index" v-for="(controllerInfo, controller, index) in  departmentResource.tmp" >
-                                        <span class="actionGroupTitle">{{ controllerInfo.name }}（{{ controller }}）</span>
-                                        <span :key="index" v-for="(resourceInfo, index) in controllerInfo.resource">
-                                            <Tag color="cyan" v-if="resourceInfo.desc">{{ resourceInfo.desc }}</Tag>
-                                        </span>
-                                    </span>
-                                </p>
-                            </Panel>
-                        </Collapse>
-                    </p>
-                    <p style="margin-top:10px;">
-                        <h4>资源包</h4>
-                        <Collapse v-if="departmentResource.groups != null">
-                            <Panel :name="index + ''" :key="index" v-for="(group, index) in departmentResource.groups">
-                                {{ group.name }} （{{ group.desc }}） 
-                                <Button type='info' size="small" @click="editGroupResource(group.id)">编辑{{ group.name }}</Button>
-                                <p slot="content">
-                                    <span class="actionGroup" :key="index" v-for="(controllerInfo, controller, index) in  group.resources" >
-                                        <span class="actionGroupTitle">{{ controllerInfo.name }}（{{ controller }}）</span>
-                                        <span :key="index" v-for="(resourceInfo, index) in controllerInfo.resource">
-                                            <Tag color="cyan" v-if="resourceInfo.desc">{{ resourceInfo.desc }}</Tag>
-                                        </span>
-                                    </span>
-                                </p>
-                            </Panel>
-                        </Collapse>
-                    </p>
-                </Card>
+                                </span>
+                            </p>
+                        </Panel>
+                    </Collapse>
+                </p>
 
-            </div> -->
+            </Card>
         </div>
     </div>
 </template>
@@ -133,7 +50,6 @@ export default {
         return {
             // 当前权限组id
             groupId : 0,
-
             departmentTree: [],
             departmentTreeConfig : {
                 props : {
@@ -146,6 +62,8 @@ export default {
             },
             
             saveDepartmentLoading : false,
+
+            actionList : [],
 
             // 权限变更
             actionIncrease : [],
@@ -165,6 +83,17 @@ export default {
                     this.departmentTree = res.data;
                 }
             })
+        },
+        // 获取操作列表
+        getGroupActionList() {
+            $.ajax({
+                url:`/cp/departments/actionGroup/` + this.groupId + `/action`,
+                type:'GET',
+                success: (res) => {
+                    this.actionList = res.data.action_list;
+                }
+            })
+
         },
         // expandParent(data, pid, checkId) {
         //     var _this = this;
@@ -226,19 +155,26 @@ export default {
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                success : function(data) {
-                    _this.$Message.success({
-                        title: '',
-                        content: data.msg,
-                    });
-                    _this.getDepartmentTree()
+                success : function(res) {
+                    if (res.code == 0) {
+                        _this.$Message.success({
+                            title: '',
+                            content: res.msg,
+                        });
+                        _this.getDepartmentTree()
+                    } else {
+                        _this.$Message.error({
+                            title: '',
+                            content: '保存失败！错误信息：' + res.msg + res.code,
+                        });
+                    }
                     _this.saveDepartmentLoading = false
                 },
-                error : function(data) {
+                error : function(res) {
                     _this.saveDepartmentLoading = false
                     _this.$Message.error({
                         title: '',
-                        content: '保存失败！错误信息：' + data.msg + data.code,
+                        content: '网络错误',
                     });
                 }
             });
@@ -260,6 +196,7 @@ export default {
     mounted() {
         this.groupId = this.$route.params.groupId
         this.getDepartmentTree()
+        this.getGroupActionList()
     }
 }
 
@@ -286,36 +223,36 @@ export default {
         padding-left: 15px;
         overflow: scroll;
         height: 100%;
-        .departmentInfo {
-            span {
-                display: inline-block;
-                min-width: 120px;
-                margin-right: 10px;
-            }
-        }
-        .departmentOperateList {
-            margin-top:10px;
-            Button {
-                margin:5px;
-            }
-        }
+        // .departmentInfo {
+        //     span {
+        //         display: inline-block;
+        //         min-width: 120px;
+        //         margin-right: 10px;
+        //     }
+        // }
+        // .departmentOperateList {
+        //     margin-top:10px;
+        //     Button {
+        //         margin:5px;
+        //     }
+        // }
 
         .detailElement {
             margin-bottom : 15px;
         }
 
-        .userInputBlock {
-            overflow:hidden;
-            .userInput {
-                float: left;
-                width: 30%;
-            }
-            Button {
-                float: left;
-                margin-left: 10px;
-            }
-            margin-bottom: 20px;
-        }
+        // .userInputBlock {
+        //     overflow:hidden;
+        //     .userInput {
+        //         float: left;
+        //         width: 30%;
+        //     }
+        //     Button {
+        //         float: left;
+        //         margin-left: 10px;
+        //     }
+        //     margin-bottom: 20px;
+        // }
 
         .actionGroup {
             padding: 5px;

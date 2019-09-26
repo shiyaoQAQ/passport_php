@@ -13,8 +13,8 @@ class AccessErrorCode
     const INVAILD_ACTION_GROUP = 1020003;
     /** @message 无效的权限组 */
     const INVAILD_ACTION_GROUP_2 = 1020004;
-    /** @message 错误码1020005 */
-    const ERROR_1020005 = 1020005;
+    /** @message 无效的权限组 */
+    const INVAILD_ACTION_GROUP_3 = 1020005;
     /** @message 错误码1020006 */
     const ERROR_1020006 = 1020006;
     /** @message 错误码1020007 */

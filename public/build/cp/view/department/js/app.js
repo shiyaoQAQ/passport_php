@@ -318,89 +318,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -408,7 +325,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
         return {
             // 当前权限组id
             groupId: 0,
-
             departmentTree: [],
             departmentTreeConfig: {
                 props: {
@@ -421,6 +337,8 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             },
 
             saveDepartmentLoading: false,
+
+            actionList: [],
 
             // 权限变更
             actionIncrease: [],
@@ -441,6 +359,19 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 type: 'GET',
                 success: function success(res) {
                     _this2.departmentTree = res.data;
+                }
+            });
+        },
+
+        // 获取操作列表
+        getGroupActionList: function getGroupActionList() {
+            var _this3 = this;
+
+            $.ajax({
+                url: '/cp/departments/actionGroup/' + this.groupId + '/action',
+                type: 'GET',
+                success: function success(res) {
+                    _this3.actionList = res.data.action_list;
                 }
             });
         },
@@ -505,30 +436,37 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                success: function success(data) {
-                    _this.$Message.success({
-                        title: '',
-                        content: data.msg
-                    });
-                    _this.getDepartmentTree();
+                success: function success(res) {
+                    if (res.code == 0) {
+                        _this.$Message.success({
+                            title: '',
+                            content: res.msg
+                        });
+                        _this.getDepartmentTree();
+                    } else {
+                        _this.$Message.error({
+                            title: '',
+                            content: '保存失败！错误信息：' + res.msg + res.code
+                        });
+                    }
                     _this.saveDepartmentLoading = false;
                 },
-                error: function error(data) {
+                error: function error(res) {
                     _this.saveDepartmentLoading = false;
                     _this.$Message.error({
                         title: '',
-                        content: '保存失败！错误信息：' + data.msg + data.code
+                        content: '网络错误'
                     });
                 }
             });
         },
         operateTree: function operateTree(treeNodeList, callbackFunc) {
-            var _this3 = this;
+            var _this4 = this;
 
             treeNodeList.forEach(function (v, i) {
                 callbackFunc(v);
                 if (v.child) {
-                    _this3.operateTree(v.child, callbackFunc);
+                    _this4.operateTree(v.child, callbackFunc);
                 }
             });
         }
@@ -537,6 +475,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
     mounted: function mounted() {
         this.groupId = this.$route.params.groupId;
         this.getDepartmentTree();
+        this.getGroupActionList();
     }
 });
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__("./node_modules/jquery/dist/jquery.js")))
@@ -1934,7 +1873,7 @@ exports.push([module.i, ".org-tree-container {\n  display: inline-block;\n  padd
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page[data-v-c0c4c224] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-c0c4c224] {\n  float: left;\n  width: 50%;\n  background-color: #fff;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail[data-v-c0c4c224] {\n  float: right;\n  width: 50%;\n  padding-left: 15px;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail .departmentInfo span[data-v-c0c4c224] {\n  display: inline-block;\n  min-width: 120px;\n  margin-right: 10px;\n}\n.page .detail .departmentOperateList[data-v-c0c4c224] {\n  margin-top: 10px;\n}\n.page .detail .departmentOperateList Button[data-v-c0c4c224] {\n  margin: 5px;\n}\n.page .detail .detailElement[data-v-c0c4c224] {\n  margin-bottom: 15px;\n}\n.page .detail .userInputBlock[data-v-c0c4c224] {\n  overflow: hidden;\n  margin-bottom: 20px;\n}\n.page .detail .userInputBlock .userInput[data-v-c0c4c224] {\n  float: left;\n  width: 30%;\n}\n.page .detail .userInputBlock Button[data-v-c0c4c224] {\n  float: left;\n  margin-left: 10px;\n}\n.page .detail .actionGroup[data-v-c0c4c224] {\n  padding: 5px;\n  display: block;\n}\n.page .detail .actionGroup .actionGroupTitle[data-v-c0c4c224] {\n  display: block;\n  font-size: 12px;\n}\n", ""]);
+exports.push([module.i, ".page[data-v-c0c4c224] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-c0c4c224] {\n  float: left;\n  width: 50%;\n  background-color: #fff;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail[data-v-c0c4c224] {\n  float: right;\n  width: 50%;\n  padding-left: 15px;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail .detailElement[data-v-c0c4c224] {\n  margin-bottom: 15px;\n}\n.page .detail .actionGroup[data-v-c0c4c224] {\n  padding: 5px;\n  display: block;\n}\n.page .detail .actionGroup .actionGroupTitle[data-v-c0c4c224] {\n  display: block;\n  font-size: 12px;\n}\n", ""]);
 
 
 /***/ }),
@@ -3272,7 +3211,108 @@ var render = function() {
       )
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "detail" })
+    _c(
+      "div",
+      { staticClass: "detail" },
+      [
+        _c(
+          "Card",
+          { staticClass: "detailElement" },
+          [
+            _c("p", { attrs: { slot: "title" }, slot: "title" }, [
+              _vm._v("权限详情")
+            ]),
+            _vm._v(" "),
+            _c("p"),
+            _c("h4", [_vm._v("独立权限")]),
+            _vm._v(" "),
+            _c(
+              "Collapse",
+              _vm._l(_vm.actionList, function(projectInfo, project, index) {
+                return _c(
+                  "Panel",
+                  { key: index, attrs: { name: index + "" } },
+                  [
+                    _vm._v(
+                      "\n                        " +
+                        _vm._s(projectInfo.projectName) +
+                        " \n                        "
+                    ),
+                    _c(
+                      "Button",
+                      {
+                        attrs: { type: "info", size: "small" },
+                        on: {
+                          click: function($event) {
+                            return _vm.editTmpAction(project)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v(
+                          "编辑" + _vm._s(projectInfo.projectName) + "权限"
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "p",
+                      { attrs: { slot: "content" }, slot: "content" },
+                      _vm._l(projectInfo.controllerList, function(
+                        controllerInfo,
+                        controller,
+                        index
+                      ) {
+                        return _c(
+                          "span",
+                          { key: index, staticClass: "actionGroup" },
+                          [
+                            _c("span", { staticClass: "actionGroupTitle" }, [
+                              _vm._v(
+                                _vm._s(controllerInfo.name) +
+                                  "（" +
+                                  _vm._s(controller) +
+                                  "）"
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _vm._l(controllerInfo.actions, function(
+                              actionInfo,
+                              index
+                            ) {
+                              return _c(
+                                "span",
+                                { key: index },
+                                [
+                                  actionInfo.desc
+                                    ? _c("Tag", { attrs: { color: "cyan" } }, [
+                                        _vm._v(_vm._s(actionInfo.desc))
+                                      ])
+                                    : _vm._e()
+                                ],
+                                1
+                              )
+                            })
+                          ],
+                          2
+                        )
+                      }),
+                      0
+                    )
+                  ],
+                  1
+                )
+              }),
+              1
+            ),
+            _vm._v(" "),
+            _c("p")
+          ],
+          1
+        )
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = []

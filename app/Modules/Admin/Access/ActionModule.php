@@ -67,4 +67,40 @@ class ActionModule
         }
     }
 
+    /**
+     * 获取权限组所选权限列表
+     *
+     * @param [type] $gid
+     * @return void
+     */
+    public static function getActionGroupActionList($gid)
+    {
+        $groupInfo  = CpAccess::getActionGroupInfo($gid);
+        if ($groupInfo['code'] != 0 || empty($groupInfo['data'])) {
+            throwWorkError(AccessErrorCode::INVAILD_ACTION_GROUP_3);
+        }
+        $groupInfo = $groupInfo['data'];
+        // 获取所有action
+        $projectActionList = CpAccess::getActionList($groupInfo['project']);
+        $groupActionList = CpAccess::getActionByGroupId($gid);
+        $groupActionList = $groupActionList['data'];
+        $groupActionConList = array_column($groupActionList, 'con_action');
+
+        foreach ($projectActionList as &$controller) {
+            if ($controller['action']) {
+                foreach ($controller['action'] as &$action) {
+                    $conAction = $action['controller'] . '-' . $action['action'];
+                    if (in_array($conAction, $groupActionConList)) {
+                        $action['isChecked'] = 1;
+                        $action['originIsChecked'] = 1;
+                    } else {
+                        $action['isChecked'] = 0;
+                        $action['originIsChecked'] = 0;
+                    }
+                }
+            }
+        }
+
+        return $projectActionList;
+    }
 }

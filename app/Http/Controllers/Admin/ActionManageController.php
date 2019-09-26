@@ -61,22 +61,22 @@ class ActionManageController extends Controller
         return $this->json(0, 'ok', $treeInfo);
     }
 
-    public function getActionGroupActions($groupId, Request $request)
+    public function listActionGroupAction($groupId, Request $request)
     {
         $gid = intval($groupId);
-        // $groupInfo  = CpAccess::getActionGroupInfo($gid);
-        // if ($groupInfo['code'] != 0 || empty($groupInfo['data'])) {
-        //     die('请重试');
-        // }
-        // $groupInfo = $groupInfo['data'];
-        // $actionList = CpAccess::getActionByGroupId($gid);
-        // $departList = CpAccess::getDepartByGroupId($gid);
-        // $ret = CpAccess::getActionList($groupInfo['project']);
-        // return view('admin.access.departmentActionGroupAccess')->with('action_list', $ret)
-        //                                             ->with('group_info', $groupInfo)        
-        //                                             ->with('action_info_json', json_encode($actionList['data']))
-        //                                             ->with('deaprt_info_json', json_encode($departList['data']))
-        //                                             ->with('gid', $gid);
+
+        $actionList = ActionModule::getActionGroupActionList($gid);
+        return $this->json(0, 'ok', [
+            'action_list' => $actionList
+        ]);
+
+
+        
+        return view('admin.access.departmentActionGroupAccess')->with('action_list', $ret)
+                                                    ->with('group_info', $groupInfo)        
+                                                    ->with('action_info_json', json_encode($actionList['data']))
+                                                    ->with('deaprt_info_json', json_encode($departList['data']))
+                                                    ->with('gid', $gid);
 
     }
 
@@ -87,7 +87,7 @@ class ActionManageController extends Controller
      * @param Request $requset
      * @return void
      */
-    public function updateActionGroupDepartment($groupId, Request $requset)
+    public function updateActionGroupDepartment($groupId, Request $request)
     {
         $gid = intval($groupId);
         if (empty ($gid)) {
@@ -98,8 +98,17 @@ class ActionManageController extends Controller
             throwWorkError(AccessErrorCode::INVAILD_ACTION_GROUP);
         }
         // 获取更新资源
+        $departmentIncrease = $request->input('departmentIncrease');
+        $departmentReduce = $request->input('departmentReduce');
 
-        return $this->json(10, '更新成功');
+        if (!empty($departmentIncrease)) {
+            CpAccess::addDepartActionGroup($departmentIncrease, $gid);
+        }
+        if (!empty($departmentReduce)) {
+            CpAccess::removeDepartActionGroup($departmentReduce, $gid);
+        }
+    
+        return $this->json(0, '更新成功');
     }
 
     /**
