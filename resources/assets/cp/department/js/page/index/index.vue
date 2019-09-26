@@ -2,13 +2,6 @@
     <div class="page">
         <div class="tree">
             <div>
-                <!-- <orgTree 
-                    :data="testTree"
-                    :collapsable="departmentTreeConfig.collapsable"
-                    :horizontal="departmentTreeConfig.horizontal"
-                    @on-expand="departmentOnExpand"
-                    @on-node-click="departmentOnClick"
-                ></orgTree> -->
                 <orgTree 
                     v-for="tree,index in departmentTree"
                     :key="index"
@@ -169,7 +162,7 @@ export default {
                 props : {
                     label : 'name',
                     children : 'child',
-                    expand : 'expand',
+                    expand : 'isExpand',
                 },
                 collapsable : true,
                 horizontal : true,
@@ -217,7 +210,6 @@ export default {
                                 },
                                 on: {
                                     click: () => {
-                                        // console.log(params);
                                         this.delDepartUser(params.row.uid)
                                     }
                                 }
@@ -250,38 +242,8 @@ export default {
                 url:`/cp/departments/tree`,
                 method:'GET',
                 success: (res) => {
-                    this.addAttr(res.data);
                     this.departmentTree = res.data;
-                    this.expandParent(this.departmentTree, pid, checkId);
-                }
-            })
-        },
-        addAttr(data) {
-            data.forEach((v,i) => {
-                v.expand = false;
-                if (v.child) {
-                    this.addAttr(v.child);
-                }
-            })
-        },
-        expandParent(data, pid, checkId) {
-            var _this = this;
-            data.forEach(function(v, i) {
-                v.clickSelect = false;
-                if (v.id == checkId) {
-                    console.log(v.id, checkId);
-                    
-                    v.clickSelect = true;
-                }
-                if (v.id == pid) {
-                    _this.$set(v, 'expand', true);
-                    _this.expandParent(_this.departmentTree, v.parent_id, checkId);
-                    new Error("StopForeach");
-                }
-                if (!v.child) {
-                    return false;
-                }else {
-                    _this.expandParent(v.child, pid, checkId)
+                    this.dataFormatExpand(this.departmentTree, pid, checkId);
                 }
             })
         },
@@ -292,66 +254,83 @@ export default {
                 url:`/cp/longrentdepartment/ajaxgetalldepart`,
                 method:'GET',
                 success: (res) => {
-                    _this.allDepartmentList = res.data;
+                    this.allDepartmentList = res.data;
                 }
             })
         },
         // 获取节点的父节点
-        getDepartmentParent(data) {
-            var _this = this
-            let did = data.id
+        getDepartmentParent(did) {
             this.departmentParent = null
             this.$Request({
-                url : `/cp/departments/` + did + `/parent`,
+                url : `/cp/departments/${did}/parent`,
                 method:'GET',
                 success: (res) => {
-                    _this.departmentParent= res.data;
+                    this.departmentParent= res.data;
                 }
             })
         },
         // 获取节点的用户
-        getDepartmentUser(data = null) {
+        getDepartmentUser(did = null) {
             if (data == null) {
                 data = this.department
             }
-            var _this = this
-            let did = data.id
             this.departmentUser = []
             this.$Request({
                 url : `/cp/departments/` + did + `/user`,
                 method:'GET',
                 success: (res) => {
-                    _this.departmentUser= res.data;
+                    this.departmentUser= res.data;
                 }
             })
         },
         // 获取节点的操作
-        getDepartmentAction(data) {
-            var _this = this
-            let did = data.id
+        getDepartmentAction(did) {
             this.departmentAction = {}
             this.$Request({
-                url : `/cp/departments/` + did + `/action`,
+                url : `/cp/departments/${did}/action`,
                 method:'GET',
                 success: (res) => {
-                    _this.departmentAction= res.data;
+                    this.departmentAction= res.data;
                 }
             })
         },
         // 获取节点的资源
         getDepartmentResource(data) {
-            var _this = this
-            let did = data.id
             this.departmentResource = {}
             this.$Request({
-                url : `/cp/departments/` + did + `/resource`,
+                url : `/cp/departments/${did}/resource`,
                 method:'GET',
                 success: (res) => {
-                    _this.departmentResource= res.data;
+                    this.departmentResource= res.data;
                 }
             })
-            
         },
+        // 获取部门相关信息
+        getDepartHandle(did) {
+            this.getDepartmentParent(did)
+            this.getDepartmentUser(did)
+            this.getDepartmentAction(did)
+            this.getDepartmentResource(did)
+        },
+        dataFormatExpand(data, pid, checkId) {
+            data.forEach((v, i) => {
+                // v.isChecked = 0;
+                if (v.id == checkId) {
+                    v.isChecked = 1;
+                }
+                if (v.id == pid) {
+                    this.$set(v, 'isExpand', 1);
+                    this.dataFormatExpand(this.departmentTree, v.parent_id, checkId);
+                    new Error("StopForeach");
+                }
+                if (!v.child) {
+                    return false;
+                }else {
+                    this.dataFormatExpand(v.child, pid, checkId)
+                }
+            })
+        },
+        // 数据格式处理 ---- end
         // 编辑部门信息
         editDepart() {
             this.departmentModalData = {
@@ -460,8 +439,6 @@ export default {
                 success : function(data){
                     if (data.code == 0) {
                         _this.$Message.success(data.msg);
-                        console.log(_this.department.parent_id, _this.department.parent_id);
-                        
                         _this.getDepartmentTree(_this.department.parent_id, _this.department.parent_id);
                         _this.unselectedDepartment()
                     }
@@ -475,42 +452,6 @@ export default {
             this.departmentUser = []
             this.departmentAction = {}
             this.departmentResource = {}
-        },
-        // 部门节点展开事件
-        departmentOnExpand(e, data) {
-            if ("expand" in data) {
-                data.expand = !data.expand;
-                if (!data.expand && data.children) {
-                    this.collapse(data.children);
-                }
-            } else {
-                this.$set(data, "expand", true);
-            }
-        },
-        collapse(list) {
-            var _this = this;
-            list.forEach(function(child) {
-                if (child.expand) {
-                    child.expand = false;
-                }
-                child.children && _this.collapse(child.children);
-            });
-        },
-        // 部门节点点击事件
-        departmentOnClick(e, data) {
-            // console.log(data);
-            // 幂等性处理
-            if (this.department == data) {
-                return;
-            }
-            this.department = data
-            // 获取部门相关信息
-            this.getDepartmentParent(data)
-            this.getDepartmentUser(data)
-            this.getDepartmentAction(data)
-            this.getDepartmentResource(data)
-            $('.org-tree-node-label-inner').removeClass('org-tree-node-label-inner-check')
-            e.target.className += ' org-tree-node-label-inner-check'
         },
         // 编辑独立权限
         editTmpAction(project) {
@@ -572,7 +513,6 @@ export default {
                 data : {
                     did: this.department.id, 
                     uid: uid,
-                    // _token:$('meta[name="csrf-token"]').attr('content')
                 },
                 method : 'POST',
                 dataType:'json',
@@ -584,10 +524,46 @@ export default {
                 },
             });
         },
-        
+        // tree-handle ----
+        // 部门节点展开事件
+        departmentOnExpand(e, data) {
+            if ("isExpand" in data) {
+                data.isExpand = data.isExpand ? 0 : 1;
+                if (!data.isExpand && data.children) {
+                    this.collapse(data.children);
+                }
+            } else {
+                this.$set(data, "isExpand", 1);
+            }
+        },
+        collapse(list) {
+            var _this = this;
+            list.forEach(function(child) {
+                if (child.isExpand) {
+                    child.isExpand = 0;
+                }
+                child.children && _this.collapse(child.children);
+            });
+        },
+        // 部门节点点击事件
+        departmentOnClick(e, data) {
+            // 幂等性处理
+            if (this.department == data) {
+                return;
+            }
+            this.department = data
+            // 获取部门相关信息
+            this.getDepartHandle(data.id)
+            // this.getDepartmentParent(data)
+            // this.getDepartmentUser(data)
+            // this.getDepartmentAction(data)
+            // this.getDepartmentResource(data)
+            $('.org-tree-node-label-inner').removeClass('org-tree-node-label-inner-check')
+            e.target.className += ' org-tree-node-label-inner-check'
+        },
+        // tree-handle ---- end
     },
     created() {
-
     },
     mounted() {
         this.getDepartmentTree()
