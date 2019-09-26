@@ -233,14 +233,14 @@ export default {
         }
     },
     components: {
-        OrgTree
+        OrgTree 
     },
     methods: {
         // 获取组织架构树信息
         getDepartmentTree(pid = 1, checkId = null) {
-            this.$Request({
+            $.ajax({
                 url:`/cp/departments/tree`,
-                method:'GET',
+                type:'GET',
                 success: (res) => {
                     this.departmentTree = res.data;
                     this.dataFormatExpand(this.departmentTree, pid, checkId);
@@ -251,7 +251,7 @@ export default {
         getAllDepartmentList() {
             this.$Request({
                 url:`/cp/longrentdepartment/ajaxgetalldepart`,
-                method:'GET',
+                type:'GET',
                 success: (res) => {
                     this.allDepartmentList = res.data;
                 }
@@ -443,7 +443,14 @@ export default {
         },
         // 编辑独立权限
         editTmpAction(project) {
-            window.open('/cp/longrentdepartment/actionaccessdetail?id=' + this.department.id + '&project=' + project)
+            // window.open('/cp/longrentdepartment/actionaccessdetail?id=' + this.department.id + '&project=' + project)
+            this.$router.push({
+                name : "departmentActionEdit",
+                params : {
+                    did : this.department.id,
+                    project : project,
+                },
+            })
         },
         // 编辑组权限
         editGroupAction(groupid) {
@@ -474,7 +481,10 @@ export default {
             }else {
                 this.$Request({
                     url: '/cp/longrentdepartment/ajaxadduserbycpaccount',
-                    method:'post',
+                    type:'post',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
                     data:{
                         did : this.department.id,
                         cp_account : this.userInput,
@@ -499,7 +509,10 @@ export default {
                     did: this.department.id, 
                     uid: uid,
                 },
-                method : 'POST',
+                type : 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
                 dataType:'json',
                 success: (data) =>{
                     if (data.code == 0) {

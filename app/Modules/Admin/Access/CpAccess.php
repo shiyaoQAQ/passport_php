@@ -244,7 +244,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
     public static function addDepartActionGroup($dids, $gid)
     {
         if (empty($dids)) {
-            returnself::modelReturn(800030, 'action列表为空');
+            return self::modelReturn(800030, 'action列表为空');
         }
         $dDG = new CpDepartmentAction();
         $groupInfo = array_get(CpAccess::getActionGroupInfo($gid), 'data');

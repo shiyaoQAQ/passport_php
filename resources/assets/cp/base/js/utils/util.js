@@ -4,7 +4,7 @@ function request(formData) {
         method,
         success,
         data = null,
-        fail = () => {},
+        error = null,
         complete = () => {},
     } = formData;
     $.ajax({
@@ -18,14 +18,30 @@ function request(formData) {
             if (success instanceof Function) {
                 if (res.code == 0) {
                     success(res);
-                }else {
-                    alert(res.msg);
+                } else {
+                    // 判断是否有错误回调
+                    if (error == null) {
+                        this.$Modal.error({
+                            title: '操作失败',
+                            content: res.msg + ' ' + res.code,
+                        });
+                    } else {
+                        error(res)
+                    }
+
                 }
             }
         },
         fail: (res) => {
-            alert('请求失败！')
-            fail(res)
+            // 判断是否有错误回调
+            if (error == null) {
+                this.$Modal.error({
+                    title: '请求失败',
+                    content: '请求失败！',
+                });
+            } else {
+                error(res)
+            }
         },
         complete: (res) => {
             complete(res.responseJSON)

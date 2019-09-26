@@ -10,6 +10,7 @@ import App from '../app.vue';
 import Index from '../page/index/index.vue';
 import actionGroupList from '../page/actionGroupList/actionGroupList.vue';
 import actionGroupEdit from '../page/actionGroupEdit/actionGroupEdit.vue';
+import departmentActionEdit from '../page/departmentActionEdit/departmentActionEdit.vue';
 import resourceGroupList from '../page/resourceGroupList/resourceGroupList.vue';
 
 Vue.use(Router);
@@ -41,6 +42,12 @@ export default new Router({
                 // 权限组编辑
                 {
                     path : '/actionGroup/:groupId/edit',
+                    name : 'departmentActionEdit',
+                    component : departmentActionEdit,
+                },
+                // 部门独立权限编辑
+                {
+                    path : '/department/:did/action/edit',
                     name : 'actionGroupEdit',
                     component : actionGroupEdit,
                 },
