@@ -120,7 +120,7 @@
                 <!-- <Card>{{ department }}</Card>
                 <div></div> -->
                 <Modal v-model="addDepartmentModal" @on-ok="saveDepartment" :loading="addDepartmentModalConfig.loading" ok-text="保存">
-                    <h3 v-if="this.addDepartmentModalConfig.operate == 'addChild'">添加子节点</h3>
+                    <h3 v-if="addDepartmentModalConfig.operate == 'addChild'">添加子节点</h3>
                     <h3 v-else>节点编辑</h3>
                     <ul>
                         <li class="modalLI">
@@ -249,7 +249,6 @@ export default {
         },
         // 获取所有部门信息 以供编辑部门的时候使用
         getAllDepartmentList() {
-            var _this = this
             this.$Request({
                 url:`/cp/longrentdepartment/ajaxgetalldepart`,
                 method:'GET',
@@ -259,24 +258,24 @@ export default {
             })
         },
         // 获取节点的父节点
-        getDepartmentParent(did) {
+        getDepartmentParent(data) {
             this.departmentParent = null
             this.$Request({
-                url : `/cp/departments/${did}/parent`,
+                url : `/cp/departments/${data.id}/parent`,
                 method:'GET',
                 success: (res) => {
-                    this.departmentParent= res.data;
+                    this.departmentParent = res.data;
                 }
             })
         },
         // 获取节点的用户
-        getDepartmentUser(did = null) {
+        getDepartmentUser(data = null) {
             if (data == null) {
                 data = this.department
             }
             this.departmentUser = []
             this.$Request({
-                url : `/cp/departments/` + did + `/user`,
+                url : `/cp/departments/${data.id}/user`,
                 method:'GET',
                 success: (res) => {
                     this.departmentUser= res.data;
@@ -284,10 +283,10 @@ export default {
             })
         },
         // 获取节点的操作
-        getDepartmentAction(did) {
+        getDepartmentAction(data) {
             this.departmentAction = {}
             this.$Request({
-                url : `/cp/departments/${did}/action`,
+                url : `/cp/departments/${data.id}/action`,
                 method:'GET',
                 success: (res) => {
                     this.departmentAction= res.data;
@@ -298,7 +297,7 @@ export default {
         getDepartmentResource(data) {
             this.departmentResource = {}
             this.$Request({
-                url : `/cp/departments/${did}/resource`,
+                url : `/cp/departments/${data.id}/resource`,
                 method:'GET',
                 success: (res) => {
                     this.departmentResource= res.data;
@@ -306,15 +305,15 @@ export default {
             })
         },
         // 获取部门相关信息
-        getDepartHandle(did) {
-            this.getDepartmentParent(did)
-            this.getDepartmentUser(did)
-            this.getDepartmentAction(did)
-            this.getDepartmentResource(did)
+        getDepartHandle(data) {
+            this.getDepartmentParent(data)
+            this.getDepartmentUser(data)
+            this.getDepartmentAction(data)
+            this.getDepartmentResource(data)
         },
+        // 数据格式处理 ---- 
         dataFormatExpand(data, pid, checkId) {
             data.forEach((v, i) => {
-                // v.isChecked = 0;
                 if (v.id == checkId) {
                     v.isChecked = 1;
                 }
@@ -363,10 +362,9 @@ export default {
             }
         },
         updateDepart() {
-            let _this = this
             this.$Request({
-                url  : '/cp/longrentdepartment/ajaxupdatedepart',
-                data : {
+                url: '/cp/longrentdepartment/ajaxupdatedepart',
+                data: {
                     id: this.departmentModalData.id,
                     name: this.departmentModalData.name,
                     pid: this.departmentModalData.pid,
@@ -374,30 +372,29 @@ export default {
                     code: 0,
                     email: this.departmentModalData.email,
                 },
-                method : 'POST',
-                success : function(data) {
+                method: 'POST',
+                success: (data) => {
                     if (data.code == 0) {
-                        _this.$Message.success(data.msg)
-                        _this.getDepartmentTree(_this.departmentModalData.pid, _this.departmentModalData.id)
+                        this.$Message.success(data.msg)
+                        this.getDepartmentTree(this.departmentModalData.pid, this.departmentModalData.id)
                         // 更新当前节点信息 这里还是不要请求后台了 提升性能
-                        _this.department.name = _this.departmentModalData.name
-                        _this.department.mark = _this.departmentModalData.mark
-                        _this.department.email = _this.departmentModalData.email
-                        if (_this.department.parent_id != _this.departmentModalData.pid + '') {
-                            _this.department.parent_id = _this.departmentModalData.pid + ''
-                            _this.getDepartmentParent(_this.department)
+                        this.department.name = this.departmentModalData.name
+                        this.department.mark = this.departmentModalData.mark
+                        this.department.email = this.departmentModalData.email
+                        if (this.department.parent_id != this.departmentModalData.pid + '') {
+                            this.department.parent_id = this.departmentModalData.pid + ''
+                            this.getDepartmentParent(this.department)
                         }
-                        _this.addDepartmentModalConfig.loading = false
-                        _this.addDepartmentModal = false
-                        _this.$nextTick(() => { _this.addDepartmentModalConfig.loading = true; })
+                        this.addDepartmentModalConfig.loading = false
+                        this.addDepartmentModal = false
+                        this.$nextTick(() => { this.addDepartmentModalConfig.loading = true; })
                     } else {
-                        _this.$nextTick(() => { _this.addDepartmentModalConfig.loading = true; })
+                        this.$nextTick(() => { this.addDepartmentModalConfig.loading = true; })
                     }
                 },
             });
         },
         storeChildDepart() {
-            let _this = this
             this.$Request({
                 url: '/cp/longrentdepartment/ajaxadddepart',
                 data: {
@@ -407,17 +404,17 @@ export default {
                     email: this.departmentModalData.email,
                     code: 0,
                 },
-                method : 'POST',
-                success : function(data) {
+                method: 'POST',
+                success: (data) => {
                     if(data.code == 0) {
-                        _this.$Message.success(data.msg);
-                        _this.getDepartmentTree(_this.departmentModalData.pid, _this.departmentModalData.pid)
-                        _this.getAllDepartmentList()
-                        _this.addDepartmentModalConfig.loading = false
-                        _this.addDepartmentModal = false
-                        _this.$nextTick(() => { _this.addDepartmentModalConfig.loading = true; })
+                        this.$Message.success(data.msg);
+                        this.getDepartmentTree(this.departmentModalData.pid, this.departmentModalData.pid)
+                        this.getAllDepartmentList()
+                        this.addDepartmentModalConfig.loading = false
+                        this.addDepartmentModal = false
+                        this.$nextTick(() => { this.addDepartmentModalConfig.loading = true; })
                     } else {
-                        _this.$nextTick(() => { _this.addDepartmentModalConfig.loading = true; })
+                        this.$nextTick(() => { this.addDepartmentModalConfig.loading = true; })
                     }
                 },
             }); 
@@ -427,31 +424,22 @@ export default {
             if (!confirm('确认要删除这个部门么？')) {
                 return true;
             }
-            let _this = this
             this.$Request({
                 url: '/cp/longrentdepartment/ajaxdeletedepart',
                 data: {
-                    id:_this.department.id,
-                    // _token: $('meta[name="csrf-token"]').attr('content')
+                    id: this.department.id,
                 },
-                method : 'POST',
+                method: 'POST',
                 dataType:'json',
-                success : function(data){
+                success: (data) => {
                     if (data.code == 0) {
-                        _this.$Message.success(data.msg);
-                        _this.getDepartmentTree(_this.department.parent_id, _this.department.parent_id);
-                        _this.unselectedDepartment()
+                        this.$Message.success(data.msg);
+                        this.getDepartmentTree(this.department.parent_id, this.department.parent_id);
+                        this.department = this.departmentParent;
+                        this.getDepartHandle(this.departmentParent)
                     }
                 },
             }); 
-        },
-        // 取消节点选择
-        unselectedDepartment() {
-            this.department = null
-            this.departmentParent = null
-            this.departmentUser = []
-            this.departmentAction = {}
-            this.departmentResource = {}
         },
         // 编辑独立权限
         editTmpAction(project) {
@@ -475,7 +463,6 @@ export default {
         },
         // 添加用户到部门
         addDepartmentUser() {
-            var _this = this;
             if (!this.department.id) {
                 this.$Message.warning({
                     content: '请选择部门',
@@ -485,18 +472,17 @@ export default {
                     content: '请输入账号',
                 })
             }else {
-                _this.$Request({
+                this.$Request({
                     url: '/cp/longrentdepartment/ajaxadduserbycpaccount',
                     method:'post',
                     data:{
-                        did : _this.department.id,
-                        cp_account : _this.userInput,
-                        // _token : $('meta[name="csrf-token"]').attr('content')
+                        did : this.department.id,
+                        cp_account : this.userInput,
                     },
                     success: (res) => {
                         if (res.code == 0) {
-                            _this.$Message.success('保存成功');
-                            _this.getDepartmentUser();
+                            this.$Message.success('保存成功');
+                            this.getDepartmentUser();
                         }
                     }
                 })
@@ -504,11 +490,10 @@ export default {
         },
         // 删除用户
         delDepartUser(uid) {
-            var _this = this;
             if (!confirm('您是否要删除此用户')) {
                 return
             }
-            _this.$Request({
+            this.$Request({
                 url  : '/cp/longrentdepartment/ajaxdeldepartuser',
                 data : {
                     did: this.department.id, 
@@ -516,10 +501,10 @@ export default {
                 },
                 method : 'POST',
                 dataType:'json',
-                success : function(data){
+                success: (data) =>{
                     if (data.code == 0) {
-                        _this.$Message.success('删除成功');
-                        _this.getDepartmentUser();
+                        this.$Message.success('删除成功');
+                        this.getDepartmentUser();
                     }
                 },
             });
@@ -537,12 +522,11 @@ export default {
             }
         },
         collapse(list) {
-            var _this = this;
-            list.forEach(function(child) {
+            list.forEach((child) => {
                 if (child.isExpand) {
                     child.isExpand = 0;
                 }
-                child.children && _this.collapse(child.children);
+                child.children && this.collapse(child.children);
             });
         },
         // 部门节点点击事件
@@ -551,15 +535,15 @@ export default {
             if (this.department == data) {
                 return;
             }
+            // this.department.name
+            // $('.org-tree-node-label-inner').removeClass('org-tree-node-label-inner-check')
+            // // if (this.department) {
+            // //     this.$set(this.department, 'isChecked', 0)
+            // // }
             this.department = data
             // 获取部门相关信息
-            this.getDepartHandle(data.id)
-            // this.getDepartmentParent(data)
-            // this.getDepartmentUser(data)
-            // this.getDepartmentAction(data)
-            // this.getDepartmentResource(data)
-            $('.org-tree-node-label-inner').removeClass('org-tree-node-label-inner-check')
-            e.target.className += ' org-tree-node-label-inner-check'
+            this.$set(this.department, 'isChecked', 1)
+            this.getDepartHandle(data)
         },
         // tree-handle ---- end
     },
