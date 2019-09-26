@@ -467,11 +467,23 @@ export default {
         },
         // 编辑独立资源
         editTmpResource() {
-            window.open('/cp/longrentdepartment/depart_resource_detail?id=' + this.department.id)
+            this.$router.push({
+                name : "departmentResourceEdit",
+                params : {
+                    did : this.department.id,
+                },
+            })
+            // window.open('/cp/longrentdepartment/depart_resource_detail?id=' + this.department.id)
         },
         // 编辑组资源
         editGroupResource(groupid) {
-            window.open('/cp/longrentdepartment/resourcegroupdetail?id=' + groupid);
+            // window.open('/cp/longrentdepartment/resourcegroupdetail?id=' + groupid);
+            this.$router.push({
+                name : "resourceGroupEdit",
+                params : {
+                    groupId : groupid,
+                },
+            })
         },
         // 添加管理员
         addAdminUser() {

@@ -1039,6 +1039,153 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js??ref--0-0!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue?vue&type=script&lang=js&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_org_tree_index_js__ = __webpack_require__("./resources/assets/cp/department/js/components/org-tree/index.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    data: function data() {
+        return {
+            // 当前资源组id
+            did: 0,
+            project: '',
+            saveResourceLoading: false,
+
+            resourceList: []
+        };
+    },
+
+    components: {
+        OrgTree: __WEBPACK_IMPORTED_MODULE_0__components_org_tree_index_js__["a" /* default */]
+    },
+    methods: {
+        // 获取操作列表
+        getResourceList: function getResourceList() {
+            var _this2 = this;
+
+            $.ajax({
+                url: '/cp/departments/' + this.did + '/tmpResource/resource',
+                data: {
+                    project: this.project
+                },
+                type: 'GET',
+                success: function success(res) {
+                    _this2.resourceList = res.data.resource_list;
+                }
+            });
+        },
+
+        // 切换资源
+        changeResource: function changeResource(resourceInfo) {
+            resourceInfo.isChecked = 1 - resourceInfo.isChecked;
+        },
+
+        // 保存资源
+        saveResource: function saveResource() {
+            // 递归计算变更
+            // 部门树变更
+            this.saveResourceLoading = true;
+            var resourceIncrease = [];
+            var resourceReduce = [];
+            var _this = this;
+            this.resourceList.forEach(function (controller, i) {
+                if (controller.resource) {
+                    controller.resource.forEach(function (resource, ai) {
+                        if (resource.isChecked != resource.originIsChecked) {
+                            if (resource.isChecked == 1) {
+                                resourceIncrease.push(resource.controller + '@' + resource.resource);
+                            } else {
+                                resourceReduce.push(resource.controller + '@' + resource.resource);
+                            }
+                        }
+                    });
+                }
+            });
+            if (resourceIncrease.length == 0 && resourceReduce.length == 0) {
+                _this.$Message.error('您没有任何变更啊');
+                _this.saveResourceLoading = false;
+                return;
+            }
+
+            // 调用更新接口
+            $.ajax({
+                url: '/cp/departments/' + this.did + '/tmpResource/resource',
+                data: {
+                    resourceIncrease: resourceIncrease,
+                    resourceReduce: resourceReduce,
+                    project: this.project
+                },
+                type: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function success(res) {
+                    if (res.code == 0) {
+                        _this.$Message.success({
+                            title: '',
+                            content: res.msg
+                        });
+                        _this.getResourceList();
+                    } else {
+                        _this.$Message.error({
+                            title: '',
+                            content: '保存失败！错误信息：' + res.msg + res.code
+                        });
+                    }
+                    _this.saveResourceLoading = false;
+                },
+                error: function error(res) {
+                    _this.saveResourceLoading = false;
+                    _this.$Message.error({
+                        title: '',
+                        content: '网络错误'
+                    });
+                }
+            });
+        }
+    },
+    created: function created() {},
+    mounted: function mounted() {
+        this.did = this.$route.params.did;
+        this.project = this.$route.query.project;
+        // this.getDepartmentTree()
+        this.getResourceList();
+    }
+});
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__("./node_modules/jquery/dist/jquery.js")))
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js??ref--0-0!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/index/index.vue?vue&type=script&lang=js&":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1552,12 +1699,24 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
         // 编辑独立资源
         editTmpResource: function editTmpResource() {
-            window.open('/cp/longrentdepartment/depart_resource_detail?id=' + this.department.id);
+            this.$router.push({
+                name: "departmentResourceEdit",
+                params: {
+                    did: this.department.id
+                }
+            });
+            // window.open('/cp/longrentdepartment/depart_resource_detail?id=' + this.department.id)
         },
 
         // 编辑组资源
         editGroupResource: function editGroupResource(groupid) {
-            window.open('/cp/longrentdepartment/resourcegroupdetail?id=' + groupid);
+            // window.open('/cp/longrentdepartment/resourcegroupdetail?id=' + groupid);
+            this.$router.push({
+                name: "resourceGroupEdit",
+                params: {
+                    groupId: groupid
+                }
+            });
         },
 
         // 添加管理员
@@ -1664,6 +1823,263 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
     mounted: function mounted() {
         this.getDepartmentTree();
         this.getAllDepartmentList();
+    }
+});
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__("./node_modules/jquery/dist/jquery.js")))
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??ref--0-0!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue?vue&type=script&lang=js&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_org_tree_index_js__ = __webpack_require__("./resources/assets/cp/department/js/components/org-tree/index.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+    data: function data() {
+        return {
+            // 当前资源组id
+            groupId: 0,
+            departmentTree: [],
+            departmentTreeConfig: {
+                props: {
+                    label: 'name',
+                    children: 'child',
+                    expand: 'isExpand'
+                },
+                collapsable: false,
+                horizontal: true
+            },
+
+            saveDepartmentLoading: false,
+            saveResourceLoading: false,
+
+            resourceList: []
+        };
+    },
+
+    components: {
+        OrgTree: __WEBPACK_IMPORTED_MODULE_0__components_org_tree_index_js__["a" /* default */]
+    },
+    methods: {
+        // 获取组织架构树信息
+        getDepartmentTree: function getDepartmentTree() {
+            var _this2 = this;
+
+            $.ajax({
+                url: '/cp/departments/resourceGroup/' + this.groupId + '/tree',
+                type: 'GET',
+                success: function success(res) {
+                    _this2.departmentTree = res.data;
+                }
+            });
+        },
+
+        // 获取操作列表
+        getGroupResourceList: function getGroupResourceList() {
+            var _this3 = this;
+
+            $.ajax({
+                url: '/cp/departments/resourceGroup/' + this.groupId + '/resource',
+                type: 'GET',
+                success: function success(res) {
+                    _this3.resourceList = res.data.resource_list;
+                }
+            });
+        },
+        departmentOnClick: function departmentOnClick(e, data) {
+            // 进行选择或反选
+            data.isChecked = 1 - data.isChecked;
+        },
+        saveDepartment: function saveDepartment() {
+            // 递归计算变更
+            // 部门树变更
+            this.saveDepartmentLoading = true;
+            var departmentIncrease = [];
+            var departmentReduce = [];
+            var _this = this;
+            this.operateTree(this.departmentTree, function (node) {
+                if (node.isChecked != node.originIsChecked) {
+                    if (node.isChecked == 1) {
+                        departmentIncrease.push(node.id);
+                    } else {
+                        departmentReduce.push(node.id);
+                    }
+                }
+            });
+            if (departmentIncrease.length == 0 && departmentReduce.length == 0) {
+                _this.$Message.error('您没有任何变更啊');
+                _this.saveDepartmentLoading = false;
+                return;
+            }
+
+            // 调用更新接口
+            $.ajax({
+                url: '/cp/departments/resourceGroup/' + _this.groupId + '/department',
+                data: {
+                    departmentIncrease: departmentIncrease,
+                    departmentReduce: departmentReduce
+                },
+                type: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function success(res) {
+                    if (res.code == 0) {
+                        _this.$Message.success({
+                            title: '',
+                            content: res.msg
+                        });
+                        _this.getDepartmentTree();
+                    } else {
+                        _this.$Message.error({
+                            title: '',
+                            content: '保存失败！错误信息：' + res.msg + res.code
+                        });
+                    }
+                    _this.saveDepartmentLoading = false;
+                },
+                error: function error(res) {
+                    _this.saveDepartmentLoading = false;
+                    _this.$Message.error({
+                        title: '',
+                        content: '网络错误'
+                    });
+                }
+            });
+        },
+
+        // 树递归方法
+        operateTree: function operateTree(treeNodeList, callbackFunc) {
+            var _this4 = this;
+
+            treeNodeList.forEach(function (v, i) {
+                callbackFunc(v);
+                if (v.child) {
+                    _this4.operateTree(v.child, callbackFunc);
+                }
+            });
+        },
+
+        // 切换资源
+        changeResource: function changeResource(resourceInfo) {
+            resourceInfo.isChecked = 1 - resourceInfo.isChecked;
+        },
+
+        // 保存资源
+        saveResource: function saveResource() {
+            // 递归计算变更
+            // 部门树变更
+            this.saveResourceLoading = true;
+            var resourceIncrease = [];
+            var resourceReduce = [];
+            var _this = this;
+            this.resourceList.forEach(function (controller, i) {
+                if (controller.resource) {
+                    controller.resource.forEach(function (resource, ai) {
+                        if (resource.isChecked != resource.originIsChecked) {
+                            if (resource.isChecked == 1) {
+                                resourceIncrease.push(resource.controller + '@' + resource.resource);
+                            } else {
+                                resourceReduce.push(resource.controller + '@' + resource.resource);
+                            }
+                        }
+                    });
+                }
+            });
+            if (resourceIncrease.length == 0 && resourceReduce.length == 0) {
+                _this.$Message.error('您没有任何变更啊');
+                _this.saveResourceLoading = false;
+                return;
+            }
+
+            // 调用更新接口
+            $.ajax({
+                url: '/cp/departments/resourceGroup/' + _this.groupId + '/resource',
+                data: {
+                    resourceIncrease: resourceIncrease,
+                    resourceReduce: resourceReduce
+                },
+                type: 'PUT',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function success(res) {
+                    if (res.code == 0) {
+                        _this.$Message.success({
+                            title: '',
+                            content: res.msg
+                        });
+                        _this.getGroupResourceList();
+                    } else {
+                        _this.$Message.error({
+                            title: '',
+                            content: '保存失败！错误信息：' + res.msg + res.code
+                        });
+                    }
+                    _this.saveResourceLoading = false;
+                },
+                error: function error(res) {
+                    _this.saveResourceLoading = false;
+                    _this.$Message.error({
+                        title: '',
+                        content: '网络错误'
+                    });
+                }
+            });
+        }
+    },
+    created: function created() {},
+    mounted: function mounted() {
+        this.groupId = this.$route.params.groupId;
+        this.getDepartmentTree();
+        this.getGroupResourceList();
     }
 });
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__("./node_modules/jquery/dist/jquery.js")))
@@ -2017,7 +2433,13 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         // 页面跳转
         jumpPage: function jumpPage(pa, v) {
             if (pa == 'resourcegroupdetail') {
-                window.location = '/cp/longrentdepartment/resourcegroupdetail?id=' + v.id;
+                // window.location = '/cp/longrentdepartment/resourcegroupdetail?id=' + v.id
+                this.$router.push({
+                    name: "resourceGroupEdit",
+                    params: {
+                        groupId: v.id
+                    }
+                });
             }
         }
     },
@@ -2091,12 +2513,32 @@ exports.push([module.i, ".page .pageCenter[data-v-138195f4] {\n  width: 1200px;\
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue?vue&type=style&index=0&id=088f4746&lang=less&scoped=true&":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
+// Module
+exports.push([module.i, ".page .pageCenter[data-v-088f4746] {\n  width: 1200px;\n  background-color: #fff;\n  margin: 0 auto;\n  padding: 15px;\n}\n.page .pageCenter .detailElement[data-v-088f4746] {\n  margin-bottom: 15px;\n}\n.page .pageCenter .resourceButton[data-v-088f4746] {\n  margin: 3px;\n}\n", ""]);
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/index/index.vue?vue&type=style&index=0&id=e9683ca8&lang=less&scoped=true&":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
 exports.push([module.i, ".page[data-v-e9683ca8] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-e9683ca8] {\n  float: left;\n  width: 50%;\n  background-color: #fff;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail[data-v-e9683ca8] {\n  float: right;\n  width: 50%;\n  padding-left: 15px;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail .departmentInfo span[data-v-e9683ca8] {\n  display: inline-block;\n  min-width: 120px;\n  margin-right: 10px;\n}\n.page .detail .departmentOperateList[data-v-e9683ca8] {\n  margin-top: 10px;\n}\n.page .detail .departmentOperateList Button[data-v-e9683ca8] {\n  margin: 5px;\n}\n.page .detail .detailElement[data-v-e9683ca8] {\n  margin-bottom: 15px;\n}\n.page .detail .userInputBlock[data-v-e9683ca8] {\n  overflow: hidden;\n  margin-bottom: 20px;\n}\n.page .detail .userInputBlock .userInput[data-v-e9683ca8] {\n  float: left;\n  width: 30%;\n}\n.page .detail .userInputBlock Button[data-v-e9683ca8] {\n  float: left;\n  margin-left: 10px;\n}\n.page .detail .actionGroup[data-v-e9683ca8] {\n  padding: 5px;\n  display: block;\n}\n.page .detail .actionGroup .actionGroupTitle[data-v-e9683ca8] {\n  display: block;\n  font-size: 12px;\n}\n", ""]);
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue?vue&type=style&index=0&id=105c4ebe&lang=less&scoped=true&":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
+// Module
+exports.push([module.i, ".page[data-v-105c4ebe] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-105c4ebe] {\n  float: left;\n  width: 50%;\n  background-color: #fff;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail[data-v-105c4ebe] {\n  float: right;\n  width: 50%;\n  padding-left: 15px;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail .detailElement[data-v-105c4ebe] {\n  margin-bottom: 15px;\n}\n.page .detail .resourceButton[data-v-105c4ebe] {\n  margin: 3px;\n}\n", ""]);
 
 
 /***/ }),
@@ -2590,10 +3032,56 @@ if (content.locals) {
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/dist/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue?vue&type=style&index=0&id=088f4746&lang=less&scoped=true&":
+/***/ (function(module, exports, __webpack_require__) {
+
+var content = __webpack_require__("./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue?vue&type=style&index=0&id=088f4746&lang=less&scoped=true&");
+
+if (typeof content === 'string') {
+  content = [[module.i, content, '']];
+}
+
+var options = {}
+
+options.insert = "head";
+options.singleton = false;
+
+var update = __webpack_require__("./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js")(content, options);
+
+if (content.locals) {
+  module.exports = content.locals;
+}
+
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/dist/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/index/index.vue?vue&type=style&index=0&id=e9683ca8&lang=less&scoped=true&":
 /***/ (function(module, exports, __webpack_require__) {
 
 var content = __webpack_require__("./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/index/index.vue?vue&type=style&index=0&id=e9683ca8&lang=less&scoped=true&");
+
+if (typeof content === 'string') {
+  content = [[module.i, content, '']];
+}
+
+var options = {}
+
+options.insert = "head";
+options.singleton = false;
+
+var update = __webpack_require__("./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js")(content, options);
+
+if (content.locals) {
+  module.exports = content.locals;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/dist/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue?vue&type=style&index=0&id=105c4ebe&lang=less&scoped=true&":
+/***/ (function(module, exports, __webpack_require__) {
+
+var content = __webpack_require__("./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue?vue&type=style&index=0&id=105c4ebe&lang=less&scoped=true&");
 
 if (typeof content === 'string') {
   content = [[module.i, content, '']];
@@ -3852,6 +4340,150 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue?vue&type=template&id=088f4746&scoped=true&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "page" }, [
+    _c(
+      "div",
+      { staticClass: "pageCenter" },
+      [
+        _c(
+          "Card",
+          { staticClass: "detailElement" },
+          [
+            _c("p", { attrs: { slot: "title" }, slot: "title" }, [
+              _vm._v("资源详情")
+            ]),
+            _vm._v(" "),
+            _c("p"),
+            _c(
+              "div",
+              [
+                _c(
+                  "Button",
+                  {
+                    staticClass: "saveResource",
+                    attrs: {
+                      loading: _vm.saveResourceLoading,
+                      type: "primary"
+                    },
+                    on: { click: _vm.saveResource }
+                  },
+                  [_vm._v("保存资源")]
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "Collapse",
+              _vm._l(_vm.resourceList, function(controllerInfo, index) {
+                return _c(
+                  "Panel",
+                  { key: index, attrs: { name: index + "" } },
+                  [
+                    _c("span", { staticClass: "resourceGroupTitle" }, [
+                      _vm._v(
+                        _vm._s(controllerInfo.desc) +
+                          "（" +
+                          _vm._s(controllerInfo.controller) +
+                          "）"
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _vm._l(controllerInfo.resource, function(
+                      resourceInfo,
+                      index
+                    ) {
+                      return _c(
+                        "span",
+                        { key: index },
+                        [
+                          resourceInfo.originIsChecked == 1
+                            ? _c("Tag", { attrs: { color: "cyan" } }, [
+                                _vm._v(_vm._s(resourceInfo.desc))
+                              ])
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "p",
+                      { attrs: { slot: "content" }, slot: "content" },
+                      _vm._l(controllerInfo.resource, function(
+                        resourceInfo,
+                        index
+                      ) {
+                        return _c(
+                          "span",
+                          { key: index },
+                          [
+                            resourceInfo.isChecked == 1
+                              ? _c(
+                                  "Button",
+                                  {
+                                    staticClass: "resourceButton",
+                                    attrs: { size: "small", type: "info" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.changeResource(resourceInfo)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v(_vm._s(resourceInfo.desc))]
+                                )
+                              : _c(
+                                  "Button",
+                                  {
+                                    staticClass: "resourceButton",
+                                    attrs: { size: "small" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.changeResource(resourceInfo)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v(_vm._s(resourceInfo.desc))]
+                                )
+                          ],
+                          1
+                        )
+                      }),
+                      0
+                    )
+                  ],
+                  2
+                )
+              }),
+              1
+            ),
+            _vm._v(" "),
+            _c("p")
+          ],
+          1
+        )
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/index/index.vue?vue&type=template&id=e9683ca8&scoped=true&":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -4554,6 +5186,185 @@ var render = function() {
           )
         : _vm._e()
     ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue?vue&type=template&id=105c4ebe&scoped=true&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "page" }, [
+    _c("div", { staticClass: "tree" }, [
+      _c(
+        "div",
+        [
+          _c(
+            "Button",
+            {
+              staticClass: "saveDepartment",
+              attrs: { loading: _vm.saveDepartmentLoading, type: "primary" },
+              on: { click: _vm.saveDepartment }
+            },
+            [_vm._v("保存部门")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        _vm._l(_vm.departmentTree, function(tree, index) {
+          return _c("orgTree", {
+            key: index,
+            attrs: {
+              data: tree,
+              props: _vm.departmentTreeConfig.props,
+              collapsable: _vm.departmentTreeConfig.collapsable,
+              horizontal: _vm.departmentTreeConfig.horizontal
+            },
+            on: { "on-node-click": _vm.departmentOnClick }
+          })
+        }),
+        1
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "detail" },
+      [
+        _c(
+          "Card",
+          { staticClass: "detailElement" },
+          [
+            _c("p", { attrs: { slot: "title" }, slot: "title" }, [
+              _vm._v("资源详情")
+            ]),
+            _vm._v(" "),
+            _c("p"),
+            _c(
+              "div",
+              [
+                _c(
+                  "Button",
+                  {
+                    staticClass: "saveResource",
+                    attrs: {
+                      loading: _vm.saveResourceLoading,
+                      type: "primary"
+                    },
+                    on: { click: _vm.saveResource }
+                  },
+                  [_vm._v("保存资源")]
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "Collapse",
+              _vm._l(_vm.resourceList, function(controllerInfo, index) {
+                return _c(
+                  "Panel",
+                  { key: index, attrs: { name: index + "" } },
+                  [
+                    _c("span", { staticClass: "resourceGroupTitle" }, [
+                      _vm._v(
+                        _vm._s(controllerInfo.desc) +
+                          "（" +
+                          _vm._s(controllerInfo.controller) +
+                          "）"
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _vm._l(controllerInfo.resource, function(
+                      resourceInfo,
+                      index
+                    ) {
+                      return _c(
+                        "span",
+                        { key: index },
+                        [
+                          resourceInfo.originIsChecked == 1
+                            ? _c("Tag", { attrs: { color: "cyan" } }, [
+                                _vm._v(_vm._s(resourceInfo.desc))
+                              ])
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    }),
+                    _vm._v(" "),
+                    _c(
+                      "p",
+                      { attrs: { slot: "content" }, slot: "content" },
+                      _vm._l(controllerInfo.resource, function(
+                        resourceInfo,
+                        index
+                      ) {
+                        return _c(
+                          "span",
+                          { key: index },
+                          [
+                            resourceInfo.isChecked == 1
+                              ? _c(
+                                  "Button",
+                                  {
+                                    staticClass: "resourceButton",
+                                    attrs: { size: "small", type: "info" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.changeResource(resourceInfo)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v(_vm._s(resourceInfo.desc))]
+                                )
+                              : _c(
+                                  "Button",
+                                  {
+                                    staticClass: "resourceButton",
+                                    attrs: { size: "small" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.changeResource(resourceInfo)
+                                      }
+                                    }
+                                  },
+                                  [_vm._v(_vm._s(resourceInfo.desc))]
+                                )
+                          ],
+                          1
+                        )
+                      }),
+                      0
+                    )
+                  ],
+                  2
+                )
+              }),
+              1
+            ),
+            _vm._v(" "),
+            _c("p")
+          ],
+          1
+        )
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = []
@@ -7703,7 +8514,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -7884,7 +8695,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -7995,7 +8806,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -8239,7 +9050,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -8323,7 +9134,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -8407,7 +9218,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -8465,26 +9276,83 @@ component.options.__file = "resources/assets/cp/department/js/page/departmentAct
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_runtime_componentNormalizer_js__ = __webpack_require__("./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-var render, staticRenderFns
-var script = {}
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__departmentResourceEdit_vue_vue_type_template_id_088f4746_scoped_true___ = __webpack_require__("./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue?vue&type=template&id=088f4746&scoped=true&");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__departmentResourceEdit_vue_vue_type_script_lang_js___ = __webpack_require__("./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue?vue&type=script&lang=js&");
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__departmentResourceEdit_vue_vue_type_style_index_0_id_088f4746_lang_less_scoped_true___ = __webpack_require__("./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue?vue&type=style&index=0&id=088f4746&lang=less&scoped=true&");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_runtime_componentNormalizer_js__ = __webpack_require__("./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
 
 
 /* normalize component */
 
-var component = Object(__WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_runtime_componentNormalizer_js__["a" /* default */])(
-  script,
-  render,
-  staticRenderFns,
+var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_runtime_componentNormalizer_js__["a" /* default */])(
+  __WEBPACK_IMPORTED_MODULE_1__departmentResourceEdit_vue_vue_type_script_lang_js___["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_0__departmentResourceEdit_vue_vue_type_template_id_088f4746_scoped_true___["a" /* render */],
+  __WEBPACK_IMPORTED_MODULE_0__departmentResourceEdit_vue_vue_type_template_id_088f4746_scoped_true___["b" /* staticRenderFns */],
   false,
   null,
-  null,
+  "088f4746",
   null
   
 )
 
+/* hot reload */
+if (false) {
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  api.install(require('vue'))
+  if (api.compatible) {
+    module.hot.accept()
+    if (!api.isRecorded('088f4746')) {
+      api.createRecord('088f4746', component.options)
+    } else {
+      api.reload('088f4746', component.options)
+    }
+    module.hot.accept("./departmentResourceEdit.vue?vue&type=template&id=088f4746&scoped=true&", function () {
+      api.rerender('088f4746', {
+        render: render,
+        staticRenderFns: staticRenderFns
+      })
+    })
+  }
+}
 component.options.__file = "resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue"
 /* harmony default export */ __webpack_exports__["a"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue?vue&type=script&lang=js&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_babel_loader_lib_index_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentResourceEdit_vue_vue_type_script_lang_js___ = __webpack_require__("./node_modules/babel-loader/lib/index.js??ref--0-0!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue?vue&type=script&lang=js&");
+/* unused harmony namespace reexport */
+ /* harmony default export */ __webpack_exports__["a"] = (__WEBPACK_IMPORTED_MODULE_0__node_modules_babel_loader_lib_index_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentResourceEdit_vue_vue_type_script_lang_js___["a" /* default */]); 
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue?vue&type=style&index=0&id=088f4746&lang=less&scoped=true&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentResourceEdit_vue_vue_type_style_index_0_id_088f4746_lang_less_scoped_true___ = __webpack_require__("./node_modules/style-loader/dist/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue?vue&type=style&index=0&id=088f4746&lang=less&scoped=true&");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentResourceEdit_vue_vue_type_style_index_0_id_088f4746_lang_less_scoped_true____default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentResourceEdit_vue_vue_type_style_index_0_id_088f4746_lang_less_scoped_true___);
+/* unused harmony reexport namespace */
+ /* unused harmony default export */ var _unused_webpack_default_export = (__WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentResourceEdit_vue_vue_type_style_index_0_id_088f4746_lang_less_scoped_true____default.a); 
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue?vue&type=template&id=088f4746&scoped=true&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentResourceEdit_vue_vue_type_template_id_088f4746_scoped_true___ = __webpack_require__("./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/departmentResourceEdit/departmentResourceEdit.vue?vue&type=template&id=088f4746&scoped=true&");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentResourceEdit_vue_vue_type_template_id_088f4746_scoped_true___["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_departmentResourceEdit_vue_vue_type_template_id_088f4746_scoped_true___["b"]; });
+
 
 /***/ }),
 
@@ -8518,7 +9386,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -8576,26 +9444,83 @@ component.options.__file = "resources/assets/cp/department/js/page/index/index.v
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_runtime_componentNormalizer_js__ = __webpack_require__("./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-var render, staticRenderFns
-var script = {}
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__resourceGroupEdit_vue_vue_type_template_id_105c4ebe_scoped_true___ = __webpack_require__("./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue?vue&type=template&id=105c4ebe&scoped=true&");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__resourceGroupEdit_vue_vue_type_script_lang_js___ = __webpack_require__("./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue?vue&type=script&lang=js&");
+/* unused harmony namespace reexport */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__resourceGroupEdit_vue_vue_type_style_index_0_id_105c4ebe_lang_less_scoped_true___ = __webpack_require__("./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue?vue&type=style&index=0&id=105c4ebe&lang=less&scoped=true&");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_runtime_componentNormalizer_js__ = __webpack_require__("./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
 
 
 /* normalize component */
 
-var component = Object(__WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_runtime_componentNormalizer_js__["a" /* default */])(
-  script,
-  render,
-  staticRenderFns,
+var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_runtime_componentNormalizer_js__["a" /* default */])(
+  __WEBPACK_IMPORTED_MODULE_1__resourceGroupEdit_vue_vue_type_script_lang_js___["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_0__resourceGroupEdit_vue_vue_type_template_id_105c4ebe_scoped_true___["a" /* render */],
+  __WEBPACK_IMPORTED_MODULE_0__resourceGroupEdit_vue_vue_type_template_id_105c4ebe_scoped_true___["b" /* staticRenderFns */],
   false,
   null,
-  null,
+  "105c4ebe",
   null
   
 )
 
+/* hot reload */
+if (false) {
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  api.install(require('vue'))
+  if (api.compatible) {
+    module.hot.accept()
+    if (!api.isRecorded('105c4ebe')) {
+      api.createRecord('105c4ebe', component.options)
+    } else {
+      api.reload('105c4ebe', component.options)
+    }
+    module.hot.accept("./resourceGroupEdit.vue?vue&type=template&id=105c4ebe&scoped=true&", function () {
+      api.rerender('105c4ebe', {
+        render: render,
+        staticRenderFns: staticRenderFns
+      })
+    })
+  }
+}
 component.options.__file = "resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue"
 /* harmony default export */ __webpack_exports__["a"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue?vue&type=script&lang=js&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_babel_loader_lib_index_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_resourceGroupEdit_vue_vue_type_script_lang_js___ = __webpack_require__("./node_modules/babel-loader/lib/index.js??ref--0-0!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue?vue&type=script&lang=js&");
+/* unused harmony namespace reexport */
+ /* harmony default export */ __webpack_exports__["a"] = (__WEBPACK_IMPORTED_MODULE_0__node_modules_babel_loader_lib_index_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_resourceGroupEdit_vue_vue_type_script_lang_js___["a" /* default */]); 
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue?vue&type=style&index=0&id=105c4ebe&lang=less&scoped=true&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_resourceGroupEdit_vue_vue_type_style_index_0_id_105c4ebe_lang_less_scoped_true___ = __webpack_require__("./node_modules/style-loader/dist/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue?vue&type=style&index=0&id=105c4ebe&lang=less&scoped=true&");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_resourceGroupEdit_vue_vue_type_style_index_0_id_105c4ebe_lang_less_scoped_true____default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_resourceGroupEdit_vue_vue_type_style_index_0_id_105c4ebe_lang_less_scoped_true___);
+/* unused harmony reexport namespace */
+ /* unused harmony default export */ var _unused_webpack_default_export = (__WEBPACK_IMPORTED_MODULE_0__node_modules_style_loader_dist_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_less_loader_dist_cjs_js_node_modules_vue_loader_lib_index_js_vue_loader_options_resourceGroupEdit_vue_vue_type_style_index_0_id_105c4ebe_lang_less_scoped_true____default.a); 
+
+/***/ }),
+
+/***/ "./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue?vue&type=template&id=105c4ebe&scoped=true&":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_resourceGroupEdit_vue_vue_type_template_id_105c4ebe_scoped_true___ = __webpack_require__("./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/assets/cp/department/js/page/resourceGroupEdit/resourceGroupEdit.vue?vue&type=template&id=105c4ebe&scoped=true&");
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_resourceGroupEdit_vue_vue_type_template_id_105c4ebe_scoped_true___["a"]; });
+/* harmony namespace reexport (by used) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_resourceGroupEdit_vue_vue_type_template_id_105c4ebe_scoped_true___["b"]; });
+
 
 /***/ }),
 
@@ -8629,7 +9554,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()

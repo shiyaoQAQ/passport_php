@@ -333,7 +333,13 @@ export default {
         // 页面跳转
         jumpPage(pa, v) {
             if (pa == 'resourcegroupdetail') {
-                window.location = '/cp/longrentdepartment/resourcegroupdetail?id=' + v.id
+                // window.location = '/cp/longrentdepartment/resourcegroupdetail?id=' + v.id
+                this.$router.push({
+                    name : "resourceGroupEdit",
+                    params : {
+                        groupId : v.id,
+                    },
+                })
             }
         }
     },

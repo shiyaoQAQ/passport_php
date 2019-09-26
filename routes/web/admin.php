@@ -35,7 +35,13 @@ Route::group(['middleware' => ['cpauth']], function () {
     Route::put('/departments/actionGroup/{groupId}/department', 'ActionManageController@updateActionGroupDepartment');
     Route::put('/departments/actionGroup/{groupId}/action', 'ActionManageController@updateActionGroupAction');
     
+    Route::get('/departments/{did}/tmpResource/resource', 'ResourceManageController@listDepartmentTmpResource');
+    Route::put('/departments/{did}/tmpResource/resource', 'ResourceManageController@updateDepartmentTmpResource');
     Route::get('/departments/resourceGroup', 'ResourceManageController@listResourceGroup');
+    Route::get('/departments/resourceGroup/{groupId}/tree', 'ResourceManageController@showResourceGroupTree');
+    Route::get('/departments/resourceGroup/{groupId}/resource', 'ResourceManageController@listResourceGroupResource');
+    Route::put('/departments/resourceGroup/{groupId}/department', 'ResourceManageController@updateResourceGroupDepartment');
+    Route::put('/departments/resourceGroup/{groupId}/resource', 'ResourceManageController@updateResourceGroupResource');
 
     // 旧组织架构
     Route::get('/department', 'AccessController@department');
