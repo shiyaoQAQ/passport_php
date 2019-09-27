@@ -1,10 +1,7 @@
 <template>
     <div class="page">
         <div class="pageCenter">
-            <h2>权限组管理</h2>
-            <div class="createOperate">
-                <Button type="info" @click="createItem">添 加</Button>
-            </div>
+            <h2>权限组管理 <Button type="info" @click="createItem">添 加</Button></h2>
             <div class="actionGroupList">
                 <Table highlight-row :columns="actionGroupColumn" :data="actionGroupList"></Table>
                 <!-- <table class="">
@@ -30,32 +27,31 @@
                     </tr>
                 </table> -->
             </div>
-
-            <Modal v-model="modal" @on-ok="storeItem" :loading="modalConfig.loading" ok-text="保存">
-                <h3 v-if="this.modalConfig.operate == 'add'">添加</h3>
-                <h3 v-else>编辑</h3>
-                <ul>
-                    <li  class="modalLI">
-                        <span>名称:</span>
-                        <i-input style="width:300px" v-model="modalData.name"></i-input>
-                    </li>
-                    <li  class="modalLI">
-                        <span>描述:</span>
-                        <i-input style="width:300px" v-model="modalData.desc"></i-input>
-                    </li>
-                    <li  class="modalLI">
-                        <span>所属项目:</span>
-                        <i-select 
-                            style="width:300px" 
-                            v-model="modalData.project"
-                            :disabled="this.modalConfig.operate != 'add'"
-                            >
-                            <i-option v-for="(desc, index) in accessProjectList" :value="index" :key="index">{{ desc }} </i-option>
-                        </i-select>
-                    </li>
-                </ul>
-            </Modal>
         </div>
+        <Modal v-model="modal" @on-ok="storeItem" :loading="modalConfig.loading" ok-text="保存">
+            <h3 v-if="this.modalConfig.operate == 'add'">添加</h3>
+            <h3 v-else>编辑</h3>
+            <ul>
+                <li  class="modalLI">
+                    <span>名称:</span>
+                    <i-input style="width:300px" v-model="modalData.name"></i-input>
+                </li>
+                <li  class="modalLI">
+                    <span>描述:</span>
+                    <i-input style="width:300px" v-model="modalData.desc"></i-input>
+                </li>
+                <li  class="modalLI">
+                    <span>所属项目:</span>
+                    <i-select 
+                        style="width:300px" 
+                        v-model="modalData.project"
+                        :disabled="this.modalConfig.operate != 'add'"
+                        >
+                        <i-option v-for="(desc, index) in accessProjectList" :value="index" :key="index">{{ desc }} </i-option>
+                    </i-select>
+                </li>
+            </ul>
+        </Modal>
         <!-- <div class="driverPage">
             <Page :total="dataList.total" :page-size="dataList.per_page"  :current="dataList.current_page" @on-change="getDataList"></Page>
         </div> -->
@@ -356,24 +352,18 @@ export default {
 
 <style lang="less" scoped>
 .page {
+    h2 {
+        margin-bottom: 15px;
+    }
     .pageCenter {
-        width: 1200px;
+        width: 1000px;
         background-color: #fff;
         margin: 0 auto;
         padding: 15px;
-    }
-    .createOperate {
-        Button {
-            margin: 10px;
+        .actionGroupList {
+            margin-bottom: 50px;
         }
     }
-    .actionGroupList {
-        margin-bottom: 50px;
-        // .ivu-btn-info {
-        //     margin: 0px 10px 0px 10px;
-        // }
-    }
-
 }
 .ivu-modal-body{
     .modalLI {

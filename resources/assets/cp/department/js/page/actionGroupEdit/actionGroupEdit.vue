@@ -1,10 +1,16 @@
 <template>
     <div class="page">
         <div class="tree">
-            <div>
-                <Button @click="saveDepartment" :loading="saveDepartmentLoading" class="saveDepartment" type="primary">保存部门</Button>
+            <div class="content_options">
+                <Button
+                    @click="saveDepartment"
+                    :loading="saveDepartmentLoading"
+                    class="saveDepartment"
+                    type="primary">
+                    保存部门
+                </Button>
             </div>
-            <div>
+            <div class="content">
                 <orgTree 
                     v-for="tree,index in departmentTree"
                     :key="index"
@@ -12,35 +18,48 @@
                     :props="departmentTreeConfig.props"
                     :collapsable="departmentTreeConfig.collapsable"
                     :horizontal="departmentTreeConfig.horizontal"
-                    @on-node-click="departmentOnClick"
-                ></orgTree>
+                    @on-node-click="departmentOnClick">
+                </orgTree>
             </div>
-            
         </div>
         <div class="detail">
-            
-            <Card class='detailElement'>
+            <Card class='content detailElement'>
                 <p slot="title">
-                    <span v-if="groupDetail!=null">{{ groupDetail.name }}（{{ groupDetail.desc }}）</span>
+                    <span v-if="groupDetail != null">{{ groupDetail.name }}（{{ groupDetail.desc }}）</span>
                 </p>
-                <p>
-                    <div><Button @click="saveAction" :loading="saveActionLoading" class="saveAction" type="primary">保存权限</Button></div>
-                    <Collapse>
-                        <Panel :name="index + ''" :key="index" v-for="(controllerInfo, index) in actionList">
-                            <span class="actionGroupTitle">{{ controllerInfo.desc }}（{{ controllerInfo.controller }}）</span>
-                            <span :key="index" v-for="(actionInfo, index) in controllerInfo.action">
-                                <Tag color="cyan" v-if="actionInfo.originIsChecked == 1">{{ actionInfo.desc }}</Tag>
+                <Collapse v-model="actionCollapse" v-if="actionList.length">
+                    <Panel
+                        v-for="(controllerInfo, index) in actionList"
+                        :name="controllerInfo.controller"
+                        :key="index">
+                        <span class="actionGroupTitle">
+                            {{ controllerInfo.desc }}（{{ controllerInfo.controller }}）
+                        </span>
+                        <p slot="content">
+                            <span
+                                v-for="(actionInfo, index) in controllerInfo.action"
+                                :key="index">
+                                <Button
+                                    class="actionButton"
+                                    @click="changeAction(actionInfo)"
+                                    size="small"
+                                    :type="actionInfo.isChecked == 1 ? 'info' : 'default'">
+                                    {{ actionInfo.desc }}
+                                </Button>
                             </span>
-                            <p slot="content">
-                                <span :key="index" v-for="(actionInfo, index) in controllerInfo.action">
-                                    <Button class="actionButton" @click="changeAction(actionInfo)" size="small" type="info" v-if="actionInfo.isChecked == 1">{{ actionInfo.desc }}</Button>
-                                    <Button class="actionButton" @click="changeAction(actionInfo)" size="small" v-else>{{ actionInfo.desc }}</Button>
-                                </span>
-                            </p>
-                        </Panel>
-                    </Collapse>
-                </p>
+                        </p>
+                    </Panel>
+                </Collapse>
             </Card>
+            <div class="content_options">
+                <Button
+                    @click="saveAction"
+                    :loading="saveActionLoading"
+                    class="saveAction"
+                    type="primary">
+                    保存权限
+                </Button>
+            </div>
         </div>
     </div>
 </template>
@@ -51,23 +70,22 @@ export default {
     data() {
         return {
             // 当前权限组id
-            groupId : 0,
-            groupDetail : null,
+            groupId: 0,
+            groupDetail: null,
             departmentTree: [],
-            departmentTreeConfig : {
-                props : {
-                    label : 'name',
-                    children : 'child',
-                    expand : 'isExpand',
+            departmentTreeConfig: {
+                props: {
+                    label: 'name',
+                    children: 'child',
+                    expand: 'isExpand',
                 },
-                collapsable : false,
-                horizontal : true,
+                collapsable: false,
+                horizontal: true,
             },
-            
-            saveDepartmentLoading : false,
-            saveActionLoading : false,
-
-            actionList : [],
+            saveDepartmentLoading: false,
+            saveActionLoading: false,
+            actionList: [],
+            actionCollapse: []
         }
     },
     components: {
@@ -100,6 +118,9 @@ export default {
                 url:`/cp/departments/actionGroup/` + this.groupId + `/action`,
                 type:'GET',
                 success: (res) => {
+                    res.data.action_list.forEach((v, i) => {
+                        this.actionCollapse.push(v.controller);
+                    })
                     this.actionList = res.data.action_list;
                 }
             })
@@ -260,12 +281,36 @@ export default {
 <style lang="less" scoped>
 .page {
     height: calc(100vh - 70px);
+    .tree, .detail {
+        width: 50%;
+        position: relative;
+        height: 100%;
+        .content_options {
+            height: 50px;
+            line-height: 50px;
+            background-color: #fff;
+            box-shadow: 0 -5px 5px rgba(153,153,153,0.15);
+            position: absolute;
+            bottom: 16px;
+            z-index: 1000;
+            text-align: center;
+            Button {
+                margin: 10px 10px;
+            }
+        }
+        .content {
+            overflow: scroll;
+            height: 100%;
+            padding-bottom: 50px;
+        }
+    }
     .tree {
         float:left;
-        width: 50%;
         background-color: #fff;
-        overflow: scroll;
-        height: 100%;
+        .content_options {
+            width: 100%;
+            left: 0px;
+        }
         // position:relative;
         // .saveDepartment {
         //     position: absolute;
@@ -273,10 +318,14 @@ export default {
     }
     .detail {
         float:right;
-        width: 50%;
         padding-left: 15px;
-        overflow: scroll;
-        height: 100%;
+        .content_options {
+            width: calc(100% - 15px);
+            left: 15px;
+        }
+        .actionButton {
+            margin:5px;
+        }
         // .departmentInfo {
         //     span {
         //         display: inline-block;
@@ -291,9 +340,7 @@ export default {
         //     }
         // }
 
-        .detailElement {
-            margin-bottom : 15px;
-        }
+
 
         // .userInputBlock {
         //     overflow:hidden;
@@ -316,11 +363,6 @@ export default {
         //         font-size: 12px;
         //     }
         // }
-
-        .actionButton {
-            margin:3px;
-        }
-        
     }
 }
 </style>

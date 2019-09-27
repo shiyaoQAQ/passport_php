@@ -1,10 +1,7 @@
 <template>
     <div class="page">
         <div class="pageCenter">
-            <h2>资源组管理</h2>
-            <div class="createOperate">
-                <Button type="info" @click="createItem">添 加</Button>
-            </div>
+            <h2>资源组管理 <Button type="info" @click="createItem">添 加</Button></h2>
             <div class="resourceGroupList">
                 <Table highlight-row :columns="resourceGroupColumn" :data="resourceGroupList"></Table>
                 <!-- <table class="">
@@ -357,24 +354,21 @@ export default {
 
 <style lang="less" scoped>
 .page {
+    h2 {
+        margin-bottom: 15px;
+    }
     .pageCenter {
-        width: 1200px;
+        width: 1000px;
         background-color: #fff;
         margin: 0 auto;
         padding: 15px;
-    }
-    .createOperate {
-        Button {
-            margin: 10px;
+        .resourceGroupList {
+            margin-bottom: 50px;
+            // .ivu-btn-info {
+            //     margin: 0px 10px 0px 10px;
+            // }
         }
     }
-    .resourceGroupList {
-        margin-bottom: 50px;
-        // .ivu-btn-info {
-        //     margin: 0px 10px 0px 10px;
-        // }
-    }
-
 }
 .ivu-modal-body{
     .modalLI {

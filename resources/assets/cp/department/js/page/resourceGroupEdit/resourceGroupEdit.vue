@@ -1,10 +1,16 @@
 <template>
     <div class="page">
         <div class="tree">
-            <div>
-                <Button @click="saveDepartment" :loading="saveDepartmentLoading" class="saveDepartment" type="primary">保存部门</Button>
+            <div class="content_options">
+                <Button
+                    @click="saveDepartment"
+                    :loading="saveDepartmentLoading"
+                    class="saveDepartment"
+                    type="primary">
+                    保存部门
+                </Button>
             </div>
-            <div>
+            <div class="content">
                 <orgTree 
                     v-for="tree,index in departmentTree"
                     :key="index"
@@ -12,35 +18,49 @@
                     :props="departmentTreeConfig.props"
                     :collapsable="departmentTreeConfig.collapsable"
                     :horizontal="departmentTreeConfig.horizontal"
-                    @on-node-click="departmentOnClick"
-                ></orgTree>
+                    @on-node-click="departmentOnClick">
+                </orgTree>
             </div>
-            
         </div>
         <div class="detail">
-            
-            <Card class='detailElement'>
+            <Card class='content detailElement'>
                 <p slot="title">
                     <span v-if="groupDetail!=null">{{ groupDetail.name }}（{{ groupDetail.desc }}）</span>
                 </p>
-                <p>
-                    <div><Button @click="saveResource" :loading="saveResourceLoading" class="saveResource" type="primary">保存资源</Button></div>
-                    <Collapse>
-                        <Panel :name="index + ''" :key="index" v-for="(controllerInfo, index) in resourceList">
-                            <span class="resourceGroupTitle">{{ controllerInfo.desc }}（{{ controllerInfo.controller }}）</span>
-                            <span :key="index" v-for="(resourceInfo, index) in controllerInfo.resource">
-                                <Tag color="cyan" v-if="resourceInfo.originIsChecked == 1">{{ resourceInfo.desc }}</Tag>
+                <Collapse v-model="resourceCollapse" v-if="resourceList.length">
+                    <Panel
+                        v-for="(controllerInfo, index) in resourceList"
+                        :name="controllerInfo.controller"
+                        :key="index">
+                        <span class="resourceGroupTitle">
+                            {{ controllerInfo.desc }}（{{ controllerInfo.controller }}）
+                        </span>
+                        <p slot="content">
+                            <span
+                                v-for="(resourceInfo, index) in controllerInfo.resource"
+                                :key="index">
+                                <Button
+                                    class="resourceButton"
+                                    @click="changeResource(resourceInfo)"
+                                    size="small"
+                                    :type="resourceInfo.isChecked == 1 ? 'info' : 'default'"
+                                    v-if="resourceInfo.isChecked == 1">
+                                    {{ resourceInfo.desc }}
+                                </Button>
                             </span>
-                            <p slot="content">
-                                <span :key="index" v-for="(resourceInfo, index) in controllerInfo.resource">
-                                    <Button class="resourceButton" @click="changeResource(resourceInfo)" size="small" type="info" v-if="resourceInfo.isChecked == 1">{{ resourceInfo.desc }}</Button>
-                                    <Button class="resourceButton" @click="changeResource(resourceInfo)" size="small" v-else>{{ resourceInfo.desc }}</Button>
-                                </span>
-                            </p>
-                        </Panel>
-                    </Collapse>
-                </p>
+                        </p>
+                    </Panel>
+                </Collapse>
             </Card>
+            <div class="content_options">
+                <Button
+                    @click="saveResource"
+                    :loading="saveResourceLoading"
+                    class="saveResource"
+                    type="primary">
+                    保存资源
+                </Button>
+            </div>
         </div>
     </div>
 </template>
@@ -63,11 +83,10 @@ export default {
                 collapsable : false,
                 horizontal : true,
             },
-            
             saveDepartmentLoading : false,
             saveResourceLoading : false,
-
             resourceList : [],
+            resourceCollapse: []
         }
     },
     components: {
@@ -100,6 +119,9 @@ export default {
                 url:`/cp/departments/resourceGroup/` + this.groupId + `/resource`,
                 type:'GET',
                 success: (res) => {
+                    res.data.resource_list.forEach((v) => {
+                        this.resourceCollapse.push(v.controller)
+                    })
                     this.resourceList = res.data.resource_list;
                 }
             })
@@ -260,33 +282,47 @@ export default {
 <style lang="less" scoped>
 .page {
     height: calc(100vh - 70px);
+    .tree, .detail {
+        width: 50%;
+        position: relative;
+        height: 100%;
+        .content_options {
+            height: 50px;
+            line-height: 50px;
+            background-color: #fff;
+            box-shadow: 0 -5px 5px rgba(153,153,153,0.15);
+            position: absolute;
+            bottom: 16px;
+            z-index: 1000;
+            text-align: center;
+            Button {
+                margin: 10px 10px;
+            }
+        }
+        .content {
+            overflow: scroll;
+            height: 100%;
+            padding-bottom: 50px;
+        }
+    }
     .tree {
         float:left;
-        width: 50%;
         background-color: #fff;
-        overflow: scroll;
-        height: 100%;
-        // position:relative;
-        // .saveDepartment {
-        //     position: absolute;
-        // }
+        .content_options {
+            width: 100%;
+            left: 0px;
+        }
     }
     .detail {
         float:right;
-        width: 50%;
         padding-left: 15px;
-        overflow: scroll;
-        height: 100%;
-
-        .detailElement {
-            margin-bottom : 15px;
+        .content_options {
+            width: calc(100% - 15px);
+            left: 15px;
         }
-
-
         .resourceButton {
-            margin:3px;
+            margin:5px;
         }
-        
     }
 }
 </style>

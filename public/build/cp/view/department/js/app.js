@@ -320,6 +320,25 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -338,11 +357,10 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 collapsable: false,
                 horizontal: true
             },
-
             saveDepartmentLoading: false,
             saveActionLoading: false,
-
-            actionList: []
+            actionList: [],
+            actionCollapse: []
         };
     },
 
@@ -384,6 +402,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 url: '/cp/departments/actionGroup/' + this.groupId + '/action',
                 type: 'GET',
                 success: function success(res) {
+                    res.data.action_list.forEach(function (v, i) {
+                        _this4.actionCollapse.push(v.controller);
+                    });
                     _this4.actionList = res.data.action_list;
                 }
             });
@@ -548,10 +569,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-//
-//
-//
-//
 //
 //
 //
@@ -2024,6 +2041,26 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -2042,11 +2079,10 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 collapsable: false,
                 horizontal: true
             },
-
             saveDepartmentLoading: false,
             saveResourceLoading: false,
-
-            resourceList: []
+            resourceList: [],
+            resourceCollapse: []
         };
     },
 
@@ -2088,6 +2124,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 url: '/cp/departments/resourceGroup/' + this.groupId + '/resource',
                 type: 'GET',
                 success: function success(res) {
+                    res.data.resource_list.forEach(function (v) {
+                        _this4.resourceCollapse.push(v.controller);
+                    });
                     _this4.resourceList = res.data.resource_list;
                 }
             });
@@ -2254,9 +2293,6 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-//
-//
-//
 //
 //
 //
@@ -2648,7 +2684,7 @@ exports.push([module.i, ".org-tree-container {\n  display: inline-block;\n  padd
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page[data-v-c0c4c224] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-c0c4c224] {\n  float: left;\n  width: 50%;\n  background-color: #fff;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail[data-v-c0c4c224] {\n  float: right;\n  width: 50%;\n  padding-left: 15px;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail .detailElement[data-v-c0c4c224] {\n  margin-bottom: 15px;\n}\n.page .detail .actionButton[data-v-c0c4c224] {\n  margin: 3px;\n}\n", ""]);
+exports.push([module.i, ".page[data-v-c0c4c224] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-c0c4c224],\n.page .detail[data-v-c0c4c224] {\n  width: 50%;\n  position: relative;\n  height: 100%;\n}\n.page .tree .content_options[data-v-c0c4c224],\n.page .detail .content_options[data-v-c0c4c224] {\n  height: 50px;\n  line-height: 50px;\n  background-color: #fff;\n  box-shadow: 0 -5px 5px rgba(153, 153, 153, 0.15);\n  position: absolute;\n  bottom: 16px;\n  z-index: 1000;\n  text-align: center;\n}\n.page .tree .content_options Button[data-v-c0c4c224],\n.page .detail .content_options Button[data-v-c0c4c224] {\n  margin: 10px 10px;\n}\n.page .tree .content[data-v-c0c4c224],\n.page .detail .content[data-v-c0c4c224] {\n  overflow: scroll;\n  height: 100%;\n  padding-bottom: 50px;\n}\n.page .tree[data-v-c0c4c224] {\n  float: left;\n  background-color: #fff;\n}\n.page .tree .content_options[data-v-c0c4c224] {\n  width: 100%;\n  left: 0px;\n}\n.page .detail[data-v-c0c4c224] {\n  float: right;\n  padding-left: 15px;\n}\n.page .detail .content_options[data-v-c0c4c224] {\n  width: calc(100% - 15px);\n  left: 15px;\n}\n.page .detail .actionButton[data-v-c0c4c224] {\n  margin: 5px;\n}\n", ""]);
 
 
 /***/ }),
@@ -2658,7 +2694,7 @@ exports.push([module.i, ".page[data-v-c0c4c224] {\n  height: calc(100vh - 70px);
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page .pageCenter[data-v-2891a816] {\n  width: 1200px;\n  background-color: #fff;\n  margin: 0 auto;\n  padding: 15px;\n}\n.page .createOperate Button[data-v-2891a816] {\n  margin: 10px;\n}\n.page .actionGroupList[data-v-2891a816] {\n  margin-bottom: 50px;\n}\n.ivu-modal-body .modalLI[data-v-2891a816] {\n  margin-top: 20px;\n}\n.ivu-modal-body .modalLI span[data-v-2891a816]:first-child {\n  display: inline-block;\n  width: 100px;\n  text-align: right;\n}\n", ""]);
+exports.push([module.i, ".page h2[data-v-2891a816] {\n  margin-bottom: 15px;\n}\n.page .pageCenter[data-v-2891a816] {\n  width: 1000px;\n  background-color: #fff;\n  margin: 0 auto;\n  padding: 15px;\n}\n.page .pageCenter .actionGroupList[data-v-2891a816] {\n  margin-bottom: 50px;\n}\n.ivu-modal-body .modalLI[data-v-2891a816] {\n  margin-top: 20px;\n}\n.ivu-modal-body .modalLI span[data-v-2891a816]:first-child {\n  display: inline-block;\n  width: 100px;\n  text-align: right;\n}\n", ""]);
 
 
 /***/ }),
@@ -2688,7 +2724,7 @@ exports.push([module.i, ".page .pageCenter[data-v-088f4746] {\n  width: 1200px;\
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page[data-v-e9683ca8] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-e9683ca8] {\n  float: left;\n  width: 50%;\n  background-color: #fff;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail[data-v-e9683ca8] {\n  float: right;\n  width: 50%;\n  padding-left: 15px;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail .departmentInfo .department_info_item[data-v-e9683ca8] {\n  display: inline-block;\n}\n.page .detail .departmentInfo .ivu-input-wrapper[data-v-e9683ca8] {\n  width: 200px;\n}\n.page .detail .departmentOperateList[data-v-e9683ca8] {\n  margin-top: 10px;\n}\n.page .detail .departmentOperateList Button[data-v-e9683ca8] {\n  margin: 5px;\n}\n.page .detail .detailElement[data-v-e9683ca8] {\n  margin-bottom: 15px;\n}\n.page .detail .detailElement .tmp table[data-v-e9683ca8],\n.page .detail .detailElement .groups table[data-v-e9683ca8] {\n  width: 100%;\n  border-collapse: collapse;\n}\n.page .detail .detailElement .tmp table td[data-v-e9683ca8],\n.page .detail .detailElement .groups table td[data-v-e9683ca8] {\n  padding: 5px;\n  border-color: #eee;\n  text-align: left;\n}\n.page .detail .detailElement .tmp table td .group_tag[data-v-e9683ca8],\n.page .detail .detailElement .groups table td .group_tag[data-v-e9683ca8] {\n  display: inline-block;\n  margin-right: 5px;\n  margin-bottom: 3px;\n}\n.page .detail .detailElement .tmp[data-v-e9683ca8] {\n  margin-bottom: 10px;\n}\n.page .detail .userInputBlock[data-v-e9683ca8] {\n  margin-bottom: 20px;\n}\n.page .detail .userInputBlock .user_input[data-v-e9683ca8] {\n  width: 200px;\n  display: inline-block;\n  vertical-align: top;\n}\n.page .detail .userInputBlock Button[data-v-e9683ca8] {\n  margin-left: 10px;\n  vertical-align: top;\n}\n.depart_modal ul .modal_li[data-v-e9683ca8] {\n  margin-bottom: 10px;\n}\n.depart_modal ul .modal_li .modal_li_title[data-v-e9683ca8] {\n  display: inline-block;\n  width: 80px;\n  text-align: right;\n}\n", ""]);
+exports.push([module.i, ".page[data-v-e9683ca8] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-e9683ca8] {\n  float: left;\n  width: 50%;\n  background-color: #fff;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail[data-v-e9683ca8] {\n  float: right;\n  width: 50%;\n  padding-left: 15px;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail .departmentInfo .department_info_item[data-v-e9683ca8] {\n  display: inline-block;\n}\n.page .detail .departmentInfo .ivu-input-wrapper[data-v-e9683ca8] {\n  width: 200px;\n}\n.page .detail .departmentOperateList[data-v-e9683ca8] {\n  margin-top: 10px;\n}\n.page .detail .departmentOperateList Button[data-v-e9683ca8] {\n  margin: 5px;\n}\n.page .detail .detailElement[data-v-e9683ca8] {\n  margin-bottom: 15px;\n}\n.page .detail .detailElement .tmp table[data-v-e9683ca8],\n.page .detail .detailElement .groups table[data-v-e9683ca8] {\n  width: 100%;\n  border-collapse: collapse;\n}\n.page .detail .detailElement .tmp table td[data-v-e9683ca8],\n.page .detail .detailElement .groups table td[data-v-e9683ca8] {\n  padding: 5px;\n  border-color: #eee;\n  text-align: left;\n}\n.page .detail .detailElement .tmp table td .group_tag[data-v-e9683ca8],\n.page .detail .detailElement .groups table td .group_tag[data-v-e9683ca8] {\n  display: inline-block;\n  margin-right: 5px;\n  margin-bottom: 3px;\n}\n.page .detail .detailElement .tmp[data-v-e9683ca8] {\n  margin-bottom: 10px;\n}\n.page .detail .userInputBlock[data-v-e9683ca8] {\n  margin-bottom: 20px;\n}\n.page .detail .userInputBlock .user_input[data-v-e9683ca8] {\n  width: 200px;\n  display: inline-block;\n  vertical-align: top;\n}\n.page .detail .userInputBlock Button[data-v-e9683ca8] {\n  margin-left: 10px;\n  vertical-align: top;\n}\n.depart_modal ul .modal_li[data-v-e9683ca8] {\n  margin-bottom: 10px;\n}\n.depart_modal ul .modal_li .modal_li_title[data-v-e9683ca8] {\n  display: inline-block;\n  width: 100px;\n  text-align: right;\n}\n", ""]);
 
 
 /***/ }),
@@ -2698,7 +2734,7 @@ exports.push([module.i, ".page[data-v-e9683ca8] {\n  height: calc(100vh - 70px);
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page[data-v-105c4ebe] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-105c4ebe] {\n  float: left;\n  width: 50%;\n  background-color: #fff;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail[data-v-105c4ebe] {\n  float: right;\n  width: 50%;\n  padding-left: 15px;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail .detailElement[data-v-105c4ebe] {\n  margin-bottom: 15px;\n}\n.page .detail .resourceButton[data-v-105c4ebe] {\n  margin: 3px;\n}\n", ""]);
+exports.push([module.i, ".page[data-v-105c4ebe] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-105c4ebe],\n.page .detail[data-v-105c4ebe] {\n  width: 50%;\n  position: relative;\n  height: 100%;\n}\n.page .tree .content_options[data-v-105c4ebe],\n.page .detail .content_options[data-v-105c4ebe] {\n  height: 50px;\n  line-height: 50px;\n  background-color: #fff;\n  box-shadow: 0 -5px 5px rgba(153, 153, 153, 0.15);\n  position: absolute;\n  bottom: 16px;\n  z-index: 1000;\n  text-align: center;\n}\n.page .tree .content_options Button[data-v-105c4ebe],\n.page .detail .content_options Button[data-v-105c4ebe] {\n  margin: 10px 10px;\n}\n.page .tree .content[data-v-105c4ebe],\n.page .detail .content[data-v-105c4ebe] {\n  overflow: scroll;\n  height: 100%;\n  padding-bottom: 50px;\n}\n.page .tree[data-v-105c4ebe] {\n  float: left;\n  background-color: #fff;\n}\n.page .tree .content_options[data-v-105c4ebe] {\n  width: 100%;\n  left: 0px;\n}\n.page .detail[data-v-105c4ebe] {\n  float: right;\n  padding-left: 15px;\n}\n.page .detail .content_options[data-v-105c4ebe] {\n  width: calc(100% - 15px);\n  left: 15px;\n}\n.page .detail .resourceButton[data-v-105c4ebe] {\n  margin: 5px;\n}\n", ""]);
 
 
 /***/ }),
@@ -2708,7 +2744,7 @@ exports.push([module.i, ".page[data-v-105c4ebe] {\n  height: calc(100vh - 70px);
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page .pageCenter[data-v-7b0682e6] {\n  width: 1200px;\n  background-color: #fff;\n  margin: 0 auto;\n  padding: 15px;\n}\n.page .createOperate Button[data-v-7b0682e6] {\n  margin: 10px;\n}\n.page .resourceGroupList[data-v-7b0682e6] {\n  margin-bottom: 50px;\n}\n.ivu-modal-body .modalLI[data-v-7b0682e6] {\n  margin-top: 20px;\n}\n.ivu-modal-body .modalLI span[data-v-7b0682e6]:first-child {\n  display: inline-block;\n  width: 100px;\n  text-align: right;\n}\n", ""]);
+exports.push([module.i, ".page h2[data-v-7b0682e6] {\n  margin-bottom: 15px;\n}\n.page .pageCenter[data-v-7b0682e6] {\n  width: 1000px;\n  background-color: #fff;\n  margin: 0 auto;\n  padding: 15px;\n}\n.page .pageCenter .resourceGroupList[data-v-7b0682e6] {\n  margin-bottom: 50px;\n}\n.ivu-modal-body .modalLI[data-v-7b0682e6] {\n  margin-top: 20px;\n}\n.ivu-modal-body .modalLI span[data-v-7b0682e6]:first-child {\n  display: inline-block;\n  width: 100px;\n  text-align: right;\n}\n", ""]);
 
 
 /***/ }),
@@ -4053,6 +4089,7 @@ var render = function() {
     _c("div", { staticClass: "tree" }, [
       _c(
         "div",
+        { staticClass: "content_options" },
         [
           _c(
             "Button",
@@ -4061,7 +4098,7 @@ var render = function() {
               attrs: { loading: _vm.saveDepartmentLoading, type: "primary" },
               on: { click: _vm.saveDepartment }
             },
-            [_vm._v("保存部门")]
+            [_vm._v("\n                保存部门\n            ")]
           )
         ],
         1
@@ -4069,6 +4106,7 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
+        { staticClass: "content" },
         _vm._l(_vm.departmentTree, function(tree, index) {
           return _c("orgTree", {
             key: index,
@@ -4091,7 +4129,7 @@ var render = function() {
       [
         _c(
           "Card",
-          { staticClass: "detailElement" },
+          { staticClass: "content detailElement" },
           [
             _c("p", { attrs: { slot: "title" }, slot: "title" }, [
               _vm.groupDetail != null
@@ -4106,106 +4144,101 @@ var render = function() {
                 : _vm._e()
             ]),
             _vm._v(" "),
-            _c("p"),
-            _c(
-              "div",
-              [
-                _c(
-                  "Button",
+            _vm.actionList.length
+              ? _c(
+                  "Collapse",
                   {
-                    staticClass: "saveAction",
-                    attrs: { loading: _vm.saveActionLoading, type: "primary" },
-                    on: { click: _vm.saveAction }
+                    model: {
+                      value: _vm.actionCollapse,
+                      callback: function($$v) {
+                        _vm.actionCollapse = $$v
+                      },
+                      expression: "actionCollapse"
+                    }
                   },
-                  [_vm._v("保存权限")]
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "Collapse",
-              _vm._l(_vm.actionList, function(controllerInfo, index) {
-                return _c(
-                  "Panel",
-                  { key: index, attrs: { name: index + "" } },
-                  [
-                    _c("span", { staticClass: "actionGroupTitle" }, [
-                      _vm._v(
-                        _vm._s(controllerInfo.desc) +
-                          "（" +
-                          _vm._s(controllerInfo.controller) +
-                          "）"
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _vm._l(controllerInfo.action, function(actionInfo, index) {
-                      return _c(
-                        "span",
-                        { key: index },
-                        [
-                          actionInfo.originIsChecked == 1
-                            ? _c("Tag", { attrs: { color: "cyan" } }, [
-                                _vm._v(_vm._s(actionInfo.desc))
-                              ])
-                            : _vm._e()
-                        ],
-                        1
-                      )
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "p",
-                      { attrs: { slot: "content" }, slot: "content" },
-                      _vm._l(controllerInfo.action, function(
-                        actionInfo,
-                        index
-                      ) {
-                        return _c(
-                          "span",
-                          { key: index },
-                          [
-                            actionInfo.isChecked == 1
-                              ? _c(
+                  _vm._l(_vm.actionList, function(controllerInfo, index) {
+                    return _c(
+                      "Panel",
+                      {
+                        key: index,
+                        attrs: { name: controllerInfo.controller }
+                      },
+                      [
+                        _c("span", { staticClass: "actionGroupTitle" }, [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(controllerInfo.desc) +
+                              "（" +
+                              _vm._s(controllerInfo.controller) +
+                              "）\n                    "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "p",
+                          { attrs: { slot: "content" }, slot: "content" },
+                          _vm._l(controllerInfo.action, function(
+                            actionInfo,
+                            index
+                          ) {
+                            return _c(
+                              "span",
+                              { key: index },
+                              [
+                                _c(
                                   "Button",
                                   {
                                     staticClass: "actionButton",
-                                    attrs: { size: "small", type: "info" },
+                                    attrs: {
+                                      size: "small",
+                                      type:
+                                        actionInfo.isChecked == 1
+                                          ? "info"
+                                          : "default"
+                                    },
                                     on: {
                                       click: function($event) {
                                         return _vm.changeAction(actionInfo)
                                       }
                                     }
                                   },
-                                  [_vm._v(_vm._s(actionInfo.desc))]
+                                  [
+                                    _vm._v(
+                                      "\n                                " +
+                                        _vm._s(actionInfo.desc) +
+                                        "\n                            "
+                                    )
+                                  ]
                                 )
-                              : _c(
-                                  "Button",
-                                  {
-                                    staticClass: "actionButton",
-                                    attrs: { size: "small" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.changeAction(actionInfo)
-                                      }
-                                    }
-                                  },
-                                  [_vm._v(_vm._s(actionInfo.desc))]
-                                )
-                          ],
-                          1
+                              ],
+                              1
+                            )
+                          }),
+                          0
                         )
-                      }),
-                      0
+                      ]
                     )
-                  ],
-                  2
+                  }),
+                  1
                 )
-              }),
-              1
-            ),
-            _vm._v(" "),
-            _c("p")
+              : _vm._e()
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "content_options" },
+          [
+            _c(
+              "Button",
+              {
+                staticClass: "saveAction",
+                attrs: { loading: _vm.saveActionLoading, type: "primary" },
+                on: { click: _vm.saveAction }
+              },
+              [_vm._v("\n                保存权限\n            ")]
+            )
           ],
           1
         )
@@ -4231,17 +4264,15 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "page" }, [
-    _c(
-      "div",
-      { staticClass: "pageCenter" },
-      [
-        _c("h2", [_vm._v("权限组管理")]),
-        _vm._v(" "),
+  return _c(
+    "div",
+    { staticClass: "page" },
+    [
+      _c("div", { staticClass: "pageCenter" }, [
         _c(
-          "div",
-          { staticClass: "createOperate" },
+          "h2",
           [
+            _vm._v("权限组管理 "),
             _c(
               "Button",
               { attrs: { type: "info" }, on: { click: _vm.createItem } },
@@ -4264,105 +4295,105 @@ var render = function() {
             })
           ],
           1
-        ),
-        _vm._v(" "),
-        _c(
-          "Modal",
-          {
-            attrs: { loading: _vm.modalConfig.loading, "ok-text": "保存" },
-            on: { "on-ok": _vm.storeItem },
-            model: {
-              value: _vm.modal,
-              callback: function($$v) {
-                _vm.modal = $$v
-              },
-              expression: "modal"
-            }
-          },
-          [
-            this.modalConfig.operate == "add"
-              ? _c("h3", [_vm._v("添加")])
-              : _c("h3", [_vm._v("编辑")]),
-            _vm._v(" "),
-            _c("ul", [
-              _c(
-                "li",
-                { staticClass: "modalLI" },
-                [
-                  _c("span", [_vm._v("名称:")]),
-                  _vm._v(" "),
-                  _c("i-input", {
-                    staticStyle: { width: "300px" },
-                    model: {
-                      value: _vm.modalData.name,
-                      callback: function($$v) {
-                        _vm.$set(_vm.modalData, "name", $$v)
-                      },
-                      expression: "modalData.name"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "li",
-                { staticClass: "modalLI" },
-                [
-                  _c("span", [_vm._v("描述:")]),
-                  _vm._v(" "),
-                  _c("i-input", {
-                    staticStyle: { width: "300px" },
-                    model: {
-                      value: _vm.modalData.desc,
-                      callback: function($$v) {
-                        _vm.$set(_vm.modalData, "desc", $$v)
-                      },
-                      expression: "modalData.desc"
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "li",
-                { staticClass: "modalLI" },
-                [
-                  _c("span", [_vm._v("所属项目:")]),
-                  _vm._v(" "),
-                  _c(
-                    "i-select",
-                    {
-                      staticStyle: { width: "300px" },
-                      attrs: { disabled: this.modalConfig.operate != "add" },
-                      model: {
-                        value: _vm.modalData.project,
-                        callback: function($$v) {
-                          _vm.$set(_vm.modalData, "project", $$v)
-                        },
-                        expression: "modalData.project"
-                      }
-                    },
-                    _vm._l(_vm.accessProjectList, function(desc, index) {
-                      return _c(
-                        "i-option",
-                        { key: index, attrs: { value: index } },
-                        [_vm._v(_vm._s(desc) + " ")]
-                      )
-                    }),
-                    1
-                  )
-                ],
-                1
-              )
-            ])
-          ]
         )
-      ],
-      1
-    )
-  ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "Modal",
+        {
+          attrs: { loading: _vm.modalConfig.loading, "ok-text": "保存" },
+          on: { "on-ok": _vm.storeItem },
+          model: {
+            value: _vm.modal,
+            callback: function($$v) {
+              _vm.modal = $$v
+            },
+            expression: "modal"
+          }
+        },
+        [
+          this.modalConfig.operate == "add"
+            ? _c("h3", [_vm._v("添加")])
+            : _c("h3", [_vm._v("编辑")]),
+          _vm._v(" "),
+          _c("ul", [
+            _c(
+              "li",
+              { staticClass: "modalLI" },
+              [
+                _c("span", [_vm._v("名称:")]),
+                _vm._v(" "),
+                _c("i-input", {
+                  staticStyle: { width: "300px" },
+                  model: {
+                    value: _vm.modalData.name,
+                    callback: function($$v) {
+                      _vm.$set(_vm.modalData, "name", $$v)
+                    },
+                    expression: "modalData.name"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "li",
+              { staticClass: "modalLI" },
+              [
+                _c("span", [_vm._v("描述:")]),
+                _vm._v(" "),
+                _c("i-input", {
+                  staticStyle: { width: "300px" },
+                  model: {
+                    value: _vm.modalData.desc,
+                    callback: function($$v) {
+                      _vm.$set(_vm.modalData, "desc", $$v)
+                    },
+                    expression: "modalData.desc"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "li",
+              { staticClass: "modalLI" },
+              [
+                _c("span", [_vm._v("所属项目:")]),
+                _vm._v(" "),
+                _c(
+                  "i-select",
+                  {
+                    staticStyle: { width: "300px" },
+                    attrs: { disabled: this.modalConfig.operate != "add" },
+                    model: {
+                      value: _vm.modalData.project,
+                      callback: function($$v) {
+                        _vm.$set(_vm.modalData, "project", $$v)
+                      },
+                      expression: "modalData.project"
+                    }
+                  },
+                  _vm._l(_vm.accessProjectList, function(desc, index) {
+                    return _c(
+                      "i-option",
+                      { key: index, attrs: { value: index } },
+                      [_vm._v(_vm._s(desc) + " ")]
+                    )
+                  }),
+                  1
+                )
+              ],
+              1
+            )
+          ])
+        ]
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -5652,6 +5683,7 @@ var render = function() {
     _c("div", { staticClass: "tree" }, [
       _c(
         "div",
+        { staticClass: "content_options" },
         [
           _c(
             "Button",
@@ -5660,7 +5692,7 @@ var render = function() {
               attrs: { loading: _vm.saveDepartmentLoading, type: "primary" },
               on: { click: _vm.saveDepartment }
             },
-            [_vm._v("保存部门")]
+            [_vm._v("\n                保存部门\n            ")]
           )
         ],
         1
@@ -5668,6 +5700,7 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
+        { staticClass: "content" },
         _vm._l(_vm.departmentTree, function(tree, index) {
           return _c("orgTree", {
             key: index,
@@ -5690,7 +5723,7 @@ var render = function() {
       [
         _c(
           "Card",
-          { staticClass: "detailElement" },
+          { staticClass: "content detailElement" },
           [
             _c("p", { attrs: { slot: "title" }, slot: "title" }, [
               _vm.groupDetail != null
@@ -5705,112 +5738,105 @@ var render = function() {
                 : _vm._e()
             ]),
             _vm._v(" "),
-            _c("p"),
-            _c(
-              "div",
-              [
-                _c(
-                  "Button",
+            _vm.resourceList.length
+              ? _c(
+                  "Collapse",
                   {
-                    staticClass: "saveResource",
-                    attrs: {
-                      loading: _vm.saveResourceLoading,
-                      type: "primary"
-                    },
-                    on: { click: _vm.saveResource }
+                    model: {
+                      value: _vm.resourceCollapse,
+                      callback: function($$v) {
+                        _vm.resourceCollapse = $$v
+                      },
+                      expression: "resourceCollapse"
+                    }
                   },
-                  [_vm._v("保存资源")]
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "Collapse",
-              _vm._l(_vm.resourceList, function(controllerInfo, index) {
-                return _c(
-                  "Panel",
-                  { key: index, attrs: { name: index + "" } },
-                  [
-                    _c("span", { staticClass: "resourceGroupTitle" }, [
-                      _vm._v(
-                        _vm._s(controllerInfo.desc) +
-                          "（" +
-                          _vm._s(controllerInfo.controller) +
-                          "）"
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _vm._l(controllerInfo.resource, function(
-                      resourceInfo,
-                      index
-                    ) {
-                      return _c(
-                        "span",
-                        { key: index },
-                        [
-                          resourceInfo.originIsChecked == 1
-                            ? _c("Tag", { attrs: { color: "cyan" } }, [
-                                _vm._v(_vm._s(resourceInfo.desc))
-                              ])
-                            : _vm._e()
-                        ],
-                        1
-                      )
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "p",
-                      { attrs: { slot: "content" }, slot: "content" },
-                      _vm._l(controllerInfo.resource, function(
-                        resourceInfo,
-                        index
-                      ) {
-                        return _c(
-                          "span",
-                          { key: index },
-                          [
-                            resourceInfo.isChecked == 1
-                              ? _c(
-                                  "Button",
-                                  {
-                                    staticClass: "resourceButton",
-                                    attrs: { size: "small", type: "info" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.changeResource(resourceInfo)
-                                      }
-                                    }
-                                  },
-                                  [_vm._v(_vm._s(resourceInfo.desc))]
-                                )
-                              : _c(
-                                  "Button",
-                                  {
-                                    staticClass: "resourceButton",
-                                    attrs: { size: "small" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.changeResource(resourceInfo)
-                                      }
-                                    }
-                                  },
-                                  [_vm._v(_vm._s(resourceInfo.desc))]
-                                )
-                          ],
-                          1
+                  _vm._l(_vm.resourceList, function(controllerInfo, index) {
+                    return _c(
+                      "Panel",
+                      {
+                        key: index,
+                        attrs: { name: controllerInfo.controller }
+                      },
+                      [
+                        _c("span", { staticClass: "resourceGroupTitle" }, [
+                          _vm._v(
+                            "\n                        " +
+                              _vm._s(controllerInfo.desc) +
+                              "（" +
+                              _vm._s(controllerInfo.controller) +
+                              "）\n                    "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "p",
+                          { attrs: { slot: "content" }, slot: "content" },
+                          _vm._l(controllerInfo.resource, function(
+                            resourceInfo,
+                            index
+                          ) {
+                            return _c(
+                              "span",
+                              { key: index },
+                              [
+                                resourceInfo.isChecked == 1
+                                  ? _c(
+                                      "Button",
+                                      {
+                                        staticClass: "resourceButton",
+                                        attrs: {
+                                          size: "small",
+                                          type:
+                                            resourceInfo.isChecked == 1
+                                              ? "info"
+                                              : "default"
+                                        },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.changeResource(
+                                              resourceInfo
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                " +
+                                            _vm._s(resourceInfo.desc) +
+                                            "\n                            "
+                                        )
+                                      ]
+                                    )
+                                  : _vm._e()
+                              ],
+                              1
+                            )
+                          }),
+                          0
                         )
-                      }),
-                      0
+                      ]
                     )
-                  ],
-                  2
+                  }),
+                  1
                 )
-              }),
-              1
-            ),
-            _vm._v(" "),
-            _c("p")
+              : _vm._e()
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "content_options" },
+          [
+            _c(
+              "Button",
+              {
+                staticClass: "saveResource",
+                attrs: { loading: _vm.saveResourceLoading, type: "primary" },
+                on: { click: _vm.saveResource }
+              },
+              [_vm._v("\n                保存资源\n            ")]
+            )
           ],
           1
         )
@@ -5841,12 +5867,10 @@ var render = function() {
       "div",
       { staticClass: "pageCenter" },
       [
-        _c("h2", [_vm._v("资源组管理")]),
-        _vm._v(" "),
         _c(
-          "div",
-          { staticClass: "createOperate" },
+          "h2",
           [
+            _vm._v("资源组管理 "),
             _c(
               "Button",
               { attrs: { type: "info" }, on: { click: _vm.createItem } },

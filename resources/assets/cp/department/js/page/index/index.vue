@@ -749,7 +749,7 @@ export default {
             margin-bottom: 10px;
             .modal_li_title {
                 display: inline-block;
-                width: 80px;
+                width: 100px;
                 text-align: right;
             }
         }
