@@ -1,6 +1,7 @@
 function request(formData) {
     let {
         url,
+        type,
         method,
         success,
         data = null,
@@ -12,7 +13,7 @@ function request(formData) {
         headers: {
             'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
         },
-        type: method,
+        type: type || method,
         data: data,
         success: (res)=> {
             if (success instanceof Function) {

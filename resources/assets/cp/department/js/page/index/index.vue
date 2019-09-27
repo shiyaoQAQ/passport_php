@@ -1,5 +1,6 @@
 <template>
     <div class="page">
+        <!-- 组织架构树 -->
         <div class="tree">
             <div>
                 <orgTree 
@@ -14,15 +15,28 @@
                 ></orgTree>
             </div>
         </div>
+        <!-- 组织架构树-部门详情 -->
         <div class="detail">
             <div v-if="department != null">
                 <Card class='detailElement'>
                     <p slot="title" style="font-size:20px;">{{ department.name }}</p>
                     <p>
                         <div class="departmentInfo">
-                            <span>标识：{{ department.mark }}</span>
-                            <span>邮箱：{{ department.email }}</span>
-                            <span>上级部门：<span v-if="departmentParent != null">{{ departmentParent.name }}</span></span>
+                            <div class="department_info_item">
+                                <Input v-model="department.mark" readonly>
+                                    <span slot="prepend">标识：</span>
+                                </Input>
+                            </div>
+                            <div class="department_info_item">
+                                <Input v-model="department.email" readonly>
+                                    <span slot="prepend">邮箱：</span>
+                                </Input>
+                            </div>
+                            <div class="department_info_item">
+                                <Input v-model="departmentParent.name" readonly>
+                                    <span slot="prepend">上级部门：</span>
+                                </Input>
+                            </div>
                         </div>
                         <div class="departmentOperateList">
                             <Button @click="editDepart" type="info">编辑</Button>
@@ -32,123 +46,197 @@
                     </p>
                 </Card>
                 <Card class='detailElement'>
-                    <p class="userInputBlock">
-                        <Input class="userInput" type="text" v-model="userInput" placeholder="cp账号">
-                            <Icon type="ios-person-outline" slot="prepend"></Icon>
-                        </Input>
+                    <div class="userInputBlock">
+                        <div class="user_input">
+                            <Input type="text" v-model="userInput" placeholder="cp账号">
+                                <Icon type="ios-person-outline" slot="prepend"></Icon>
+                            </Input>
+                        </div>
                         <Button @click="addDepartmentUser" type="info">添加用户到部门</Button>
                         <Button @click="addAdminUser" >新增一个管理员</Button>
-                    </p>
+                    </div>
                     <p class="userListBlock">
                         <Table :columns="departmentUserColumn" :data="departmentUser"></Table>
                     </p>
                 </Card>
                 <Card class='detailElement'>
                     <p slot="title">权限详情</p>
-                    <p>
+                    <div class="tmp" v-if="departmentAction.tmp">
                         <h4>独立权限</h4>
-                        <Collapse v-if="departmentAction.tmp != null">
-                            <Panel :name="index + ''" :key="index" v-for="(projectInfo, project, index) in departmentAction.tmp">
+                        <Collapse>
+                            <Panel
+                                v-for="(projectInfo, project, index) in departmentAction.tmp"
+                                :name="index + ''"
+                                :key="index" >
                                 {{ projectInfo.projectName }} 
-                                <Button type='info' size="small" @click="editTmpAction(project)">编辑{{ projectInfo.projectName}}权限</Button>
-                                <p slot="content">
-                                    <span class="actionGroup" :key="index" v-for="(controllerInfo, controller, index) in  projectInfo.controllerList" >
-                                        <span class="actionGroupTitle">{{ controllerInfo.name }}（{{ controller }}）</span>
-                                        <span :key="index" v-for="(actionInfo, index) in controllerInfo.actions">
-                                            <Tag color="cyan" v-if="actionInfo.desc">{{ actionInfo.desc }}</Tag>
-                                        </span>
-                                    </span>
-                                </p>
+                                <Button
+                                    type='info'
+                                    size="small"
+                                    @click="editTmpAction(project)">
+                                    编辑{{ projectInfo.projectName}}权限
+                                </Button>
+                                <div slot="content">
+                                    <table>
+                                        <tr
+                                            class="actionGroup"
+                                            v-for="(controllerInfo, controller, index) in  projectInfo.controllerList"
+                                            :key="index">
+                                            <td>
+                                                <p class="group_title">{{ controllerInfo.name }}（{{ controller }}）</p>
+                                                <div
+                                                    class="group_tag"
+                                                    v-for="(actionInfo, index) in controllerInfo.actions"
+                                                    :key="index">
+                                                    <Tag color="cyan" v-if="actionInfo.desc">{{ actionInfo.desc }}</Tag>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </Panel>
                         </Collapse>
-                    </p>
-                    <p style="margin-top:10px;">
+                    </div>
+                    <div class="groups" v-if="departmentAction.groups && departmentAction.groups.length">
                         <h4>权限包</h4>
-                        <Collapse v-if="departmentAction.groups != null">
-                            <Panel :name="index + ''" :key="index" v-for="(group, index) in departmentAction.groups">
+                        <Collapse>
+                            <Panel
+                                v-for="(group, index) in departmentAction.groups"
+                                :name="index + ''"
+                                :key="index">
                                 {{ group.name }} （{{ group.project }}:{{ group.desc }}） 
-                                <Button type='info' size="small" @click="editGroupAction(group.id)">编辑{{ group.name }}</Button>
-                                <p slot="content">
-                                    <span class="actionGroup" :key="index" v-for="(controllerInfo, controller, index) in  group.actions" >
-                                        <span class="actionGroupTitle">{{ controllerInfo.name }}（{{ controller }}）</span>
-                                        <span :key="index" v-for="(actionInfo, index) in controllerInfo.actions">
-                                            <Tag color="cyan" v-if="actionInfo.desc">{{ actionInfo.desc }}</Tag>
-                                        </span>
-                                    </span>
-                                </p>
+                                <Button
+                                    type='info'
+                                    size="small"
+                                    @click="editGroupAction(group.id)">
+                                    编辑{{ group.name }}
+                                </Button>
+                                <div slot="content">
+                                    <table>
+                                        <tr
+                                            class="actionGroup"
+                                            v-for="(controllerInfo, controller, index) in group.actions"
+                                            :key="index">
+                                            <td>
+                                                <p class="group_title">{{ controllerInfo.name }}（{{ controller }}）</p>
+                                                <div
+                                                    class="group_tag"
+                                                    v-for="(actionInfo, index) in controllerInfo.actions"
+                                                    :key="index">
+                                                    <Tag color="cyan" v-if="actionInfo.desc">{{ actionInfo.desc }}</Tag>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </Panel>
                         </Collapse>
-                    </p>
+                    </div>
                 </Card>
-                <Card>
+                <Card class="detailElement">
                     <p slot="title">资源详情</p>
-                    <p>
+                    <div class="tmp" v-if="departmentResource.tmp != null">
                         <h4>独立资源</h4>
-                        <Collapse v-if="departmentResource.tmp != null">
+                        <Collapse>
                             <Panel name="1">
                                 独立资源
-                                <Button type='info' size="small" @click="editTmpResource()">编辑独立资源</Button>
-                                <p slot="content">
-                                    <span class="actionGroup" :key="index" v-for="(controllerInfo, controller, index) in  departmentResource.tmp" >
-                                        <span class="actionGroupTitle">{{ controllerInfo.name }}（{{ controller }}）</span>
-                                        <span :key="index" v-for="(resourceInfo, index) in controllerInfo.resource">
-                                            <Tag color="cyan" v-if="resourceInfo.desc">{{ resourceInfo.desc }}</Tag>
-                                        </span>
-                                    </span>
-                                </p>
+                                <Button
+                                    type='info'
+                                    size="small"
+                                    @click="editTmpResource()">
+                                    编辑独立资源
+                                </Button>
+                                <div slot="content">
+                                    <table>
+                                        <tr
+                                            class="actionGroup"
+                                            v-for="(controllerInfo, controller, index) in  departmentResource.tmp"
+                                            :key="index">
+                                            <td>
+                                                <p class="group_title">{{ controllerInfo.name }}（{{ controller }}）</p>
+                                                <div
+                                                    class="group_tag"
+                                                    v-for="(resourceInfo, index) in controllerInfo.resource"
+                                                    :key="index">
+                                                    <Tag color="cyan" v-if="resourceInfo.desc">{{ resourceInfo.desc }}</Tag>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </Panel>
                         </Collapse>
-                    </p>
-                    <p style="margin-top:10px;">
+                    </div>
+                    <div class="groups" v-if="departmentResource.groups && departmentResource.groups.length">
                         <h4>资源包</h4>
-                        <Collapse v-if="departmentResource.groups != null">
-                            <Panel :name="index + ''" :key="index" v-for="(group, index) in departmentResource.groups">
+                        <Collapse>
+                            <Panel
+                                v-for="(group, index) in departmentResource.groups"
+                                :name="index + ''"
+                                :key="index">
                                 {{ group.name }} （{{ group.desc }}） 
-                                <Button type='info' size="small" @click="editGroupResource(group.id)">编辑{{ group.name }}</Button>
-                                <p slot="content">
-                                    <span class="actionGroup" :key="index" v-for="(controllerInfo, controller, index) in  group.resources" >
-                                        <span class="actionGroupTitle">{{ controllerInfo.name }}（{{ controller }}）</span>
-                                        <span :key="index" v-for="(resourceInfo, index) in controllerInfo.resource">
-                                            <Tag color="cyan" v-if="resourceInfo.desc">{{ resourceInfo.desc }}</Tag>
-                                        </span>
-                                    </span>
-                                </p>
+                                <Button
+                                    type='info'
+                                    size="small"
+                                    @click="editGroupResource(group.id)">
+                                    编辑{{ group.name }}
+                                </Button>
+                                <div slot="content">
+                                    <table>
+                                        <tr
+                                            class="actionGroup"
+                                            v-for="(controllerInfo, controller, index) in  group.resources"
+                                            :key="index">
+                                            <td>
+                                                <p class="group_title">{{ controllerInfo.name }}（{{ controller }}）</p>
+                                                <div
+                                                    class="group_tag"
+                                                    v-for="(resourceInfo, index) in controllerInfo.resource"
+                                                    :key="index">
+                                                    <Tag color="cyan" v-if="resourceInfo.desc">{{ resourceInfo.desc }}</Tag>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </Panel>
                         </Collapse>
-                    </p>
+                    </div>
                 </Card>
-                <!-- <Card>{{ department }}</Card>
-                <div></div> -->
-                <Modal v-model="addDepartmentModal" @on-ok="saveDepartment" :loading="addDepartmentModalConfig.loading" ok-text="保存">
-                    <h3 v-if="addDepartmentModalConfig.operate == 'addChild'">添加子节点</h3>
-                    <h3 v-else>节点编辑</h3>
-                    <ul>
-                        <li class="modalLI">
-                            <span>名称：</span>
-                            <Input style="width:300px" v-model="departmentModalData.name"></Input>
-                        </li>
-                        <li class="modalLI">
-                            <span>标识：</span>
-                            <Input style="width:300px" v-model="departmentModalData.mark"></Input>
-                        </li>
-                        <li class="modalLI">
-                            <span>邮箱：</span>
-                            <Input style="width:300px" v-model="departmentModalData.email"></Input>
-                        </li>
-                        <li class="modalLI">
-                            <span>上级部门：</span>
-                            <i-select 
-                                style="width:300px" 
-                                v-model="departmentModalData.pid"
-                                :disabled="this.addDepartmentModalConfig.operate == 'addChild'"
-                                >
-                                <i-option v-for="itemDepart in allDepartmentList" :value="itemDepart.id" :key="itemDepart.id">{{ itemDepart.name }} </i-option>
-                            </i-select>
-                        </li>
-                    </ul>
-                </Modal>
             </div>
         </div>
+        <!-- 部门编辑-modal -->
+        <Modal
+            class-name="depart_modal"
+            v-model="addDepartmentModal"
+            :title="addDepartmentModalConfig.operate == 'addChild' ? '添加子节点' : '节点编辑'"
+            :loading="addDepartmentModalConfig.loading"
+            ok-text="保存"
+            @on-ok="saveDepartment">
+            <ul>
+                <li class="modal_li">
+                    <span class="modal_li_title">名称：</span>
+                    <Input style="width:300px" v-model="departmentModalData.name"></Input>
+                </li>
+                <li class="modal_li">
+                    <span class="modal_li_title">标识：</span>
+                    <Input style="width:300px" v-model="departmentModalData.mark"></Input>
+                </li>
+                <li class="modal_li">
+                    <span class="modal_li_title">邮箱：</span>
+                    <Input style="width:300px" v-model="departmentModalData.email"></Input>
+                </li>
+                <li class="modal_li">
+                    <span class="modal_li_title">上级部门：</span>
+                    <i-select 
+                        style="width:300px" 
+                        v-model="departmentModalData.pid"
+                        :disabled="this.addDepartmentModalConfig.operate == 'addChild'"
+                        >
+                        <i-option v-for="itemDepart in allDepartmentList" :value="itemDepart.id" :key="itemDepart.id">{{ itemDepart.name }} </i-option>
+                    </i-select>
+                </li>
+            </ul>
+        </Modal>
     </div>
 </template>
 
@@ -169,7 +257,7 @@ export default {
             },
             // 当前选定的节点信息
             department : null,
-            departmentParent : null,
+            departmentParent : {},
             departmentUser : [],
             departmentAction : {},
             departmentResource : {},
@@ -259,10 +347,10 @@ export default {
         },
         // 获取节点的父节点
         getDepartmentParent(data) {
-            this.departmentParent = null
+            this.departmentParent = {}
             this.$Request({
                 url : `/cp/departments/${data.id}/parent`,
-                method:'GET',
+                type:'GET',
                 success: (res) => {
                     this.departmentParent = res.data;
                 }
@@ -276,7 +364,7 @@ export default {
             this.departmentUser = []
             this.$Request({
                 url : `/cp/departments/${data.id}/user`,
-                method:'GET',
+                type:'GET',
                 success: (res) => {
                     this.departmentUser= res.data;
                 }
@@ -287,7 +375,7 @@ export default {
             this.departmentAction = {}
             this.$Request({
                 url : `/cp/departments/${data.id}/action`,
-                method:'GET',
+                type:'GET',
                 success: (res) => {
                     this.departmentAction= res.data;
                 }
@@ -298,7 +386,7 @@ export default {
             this.departmentResource = {}
             this.$Request({
                 url : `/cp/departments/${data.id}/resource`,
-                method:'GET',
+                type:'GET',
                 success: (res) => {
                     this.departmentResource= res.data;
                 }
@@ -373,7 +461,7 @@ export default {
                     code: 0,
                     email: this.departmentModalData.email,
                 },
-                method: 'POST',
+                type: 'POST',
                 success: (data) => {
                     if (data.code == 0) {
                         this.$Message.success(data.msg)
@@ -405,7 +493,7 @@ export default {
                     email: this.departmentModalData.email,
                     code: 0,
                 },
-                method: 'POST',
+                type: 'POST',
                 success: (data) => {
                     if(data.code == 0) {
                         this.$Message.success(data.msg);
@@ -430,7 +518,7 @@ export default {
                 data: {
                     id: this.department.id,
                 },
-                method: 'POST',
+                type: 'POST',
                 dataType:'json',
                 success: (data) => {
                     if (data.code == 0) {
@@ -604,10 +692,11 @@ export default {
         overflow: scroll;
         height: 100%;
         .departmentInfo {
-            span {
+            .department_info_item {
                 display: inline-block;
-                min-width: 120px;
-                margin-right: 10px;
+            }
+            .ivu-input-wrapper {
+                width: 200px;
             }
         }
         .departmentOperateList {
@@ -619,32 +708,51 @@ export default {
 
         .detailElement {
             margin-bottom : 15px;
+            .tmp, .groups {
+                table {
+                    width: 100%;
+                    border-collapse: collapse;
+                    td {
+                        padding: 5px;
+                        border-color: #eee;
+                        text-align: left;
+                        .group_tag {
+                            display: inline-block;
+                            margin-right: 5px;
+                            margin-bottom: 3px;
+                        }
+                    }
+                }
+            }
+            .tmp {
+                margin-bottom: 10px;
+            }
         }
 
         .userInputBlock {
-            overflow:hidden;
-            .userInput {
-                float: left;
-                width: 30%;
+            .user_input {
+                width: 200px;
+                display: inline-block;
+                vertical-align: top;
             }
             Button {
-                float: left;
                 margin-left: 10px;
+                vertical-align: top;
             }
             margin-bottom: 20px;
         }
-
-        .actionGroup {
-            padding: 5px;
-            display: block;
-            .actionGroupTitle {
-                display: block;
-                font-size: 12px;
+    }
+}
+.depart_modal {
+    ul {
+        .modal_li {
+            margin-bottom: 10px;
+            .modal_li_title {
+                display: inline-block;
+                width: 80px;
+                text-align: right;
             }
         }
-
-        
-        
     }
 }
 </style>

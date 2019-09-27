@@ -1400,6 +1400,94 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -1419,7 +1507,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             },
             // 当前选定的节点信息
             department: null,
-            departmentParent: null,
+            departmentParent: {},
             departmentUser: [],
             departmentAction: {},
             departmentResource: {},
@@ -1512,10 +1600,10 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
         getDepartmentParent: function getDepartmentParent(data) {
             var _this4 = this;
 
-            this.departmentParent = null;
+            this.departmentParent = {};
             this.$Request({
                 url: '/cp/departments/' + data.id + '/parent',
-                method: 'GET',
+                type: 'GET',
                 success: function success(res) {
                     _this4.departmentParent = res.data;
                 }
@@ -1534,7 +1622,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             this.departmentUser = [];
             this.$Request({
                 url: '/cp/departments/' + data.id + '/user',
-                method: 'GET',
+                type: 'GET',
                 success: function success(res) {
                     _this5.departmentUser = res.data;
                 }
@@ -1548,7 +1636,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             this.departmentAction = {};
             this.$Request({
                 url: '/cp/departments/' + data.id + '/action',
-                method: 'GET',
+                type: 'GET',
                 success: function success(res) {
                     _this6.departmentAction = res.data;
                 }
@@ -1562,7 +1650,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             this.departmentResource = {};
             this.$Request({
                 url: '/cp/departments/' + data.id + '/resource',
-                method: 'GET',
+                type: 'GET',
                 success: function success(res) {
                     _this7.departmentResource = res.data;
                 }
@@ -1644,7 +1732,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                     code: 0,
                     email: this.departmentModalData.email
                 },
-                method: 'POST',
+                type: 'POST',
                 success: function success(data) {
                     if (data.code == 0) {
                         _this9.$Message.success(data.msg);
@@ -1682,7 +1770,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                     email: this.departmentModalData.email,
                     code: 0
                 },
-                method: 'POST',
+                type: 'POST',
                 success: function success(data) {
                     if (data.code == 0) {
                         _this10.$Message.success(data.msg);
@@ -1714,7 +1802,7 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 data: {
                     id: this.department.id
                 },
-                method: 'POST',
+                type: 'POST',
                 dataType: 'json',
                 success: function success(data) {
                     if (data.code == 0) {
@@ -2600,7 +2688,7 @@ exports.push([module.i, ".page .pageCenter[data-v-088f4746] {\n  width: 1200px;\
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page[data-v-e9683ca8] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-e9683ca8] {\n  float: left;\n  width: 50%;\n  background-color: #fff;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail[data-v-e9683ca8] {\n  float: right;\n  width: 50%;\n  padding-left: 15px;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail .departmentInfo span[data-v-e9683ca8] {\n  display: inline-block;\n  min-width: 120px;\n  margin-right: 10px;\n}\n.page .detail .departmentOperateList[data-v-e9683ca8] {\n  margin-top: 10px;\n}\n.page .detail .departmentOperateList Button[data-v-e9683ca8] {\n  margin: 5px;\n}\n.page .detail .detailElement[data-v-e9683ca8] {\n  margin-bottom: 15px;\n}\n.page .detail .userInputBlock[data-v-e9683ca8] {\n  overflow: hidden;\n  margin-bottom: 20px;\n}\n.page .detail .userInputBlock .userInput[data-v-e9683ca8] {\n  float: left;\n  width: 30%;\n}\n.page .detail .userInputBlock Button[data-v-e9683ca8] {\n  float: left;\n  margin-left: 10px;\n}\n.page .detail .actionGroup[data-v-e9683ca8] {\n  padding: 5px;\n  display: block;\n}\n.page .detail .actionGroup .actionGroupTitle[data-v-e9683ca8] {\n  display: block;\n  font-size: 12px;\n}\n", ""]);
+exports.push([module.i, ".page[data-v-e9683ca8] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-e9683ca8] {\n  float: left;\n  width: 50%;\n  background-color: #fff;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail[data-v-e9683ca8] {\n  float: right;\n  width: 50%;\n  padding-left: 15px;\n  overflow: scroll;\n  height: 100%;\n}\n.page .detail .departmentInfo .department_info_item[data-v-e9683ca8] {\n  display: inline-block;\n}\n.page .detail .departmentInfo .ivu-input-wrapper[data-v-e9683ca8] {\n  width: 200px;\n}\n.page .detail .departmentOperateList[data-v-e9683ca8] {\n  margin-top: 10px;\n}\n.page .detail .departmentOperateList Button[data-v-e9683ca8] {\n  margin: 5px;\n}\n.page .detail .detailElement[data-v-e9683ca8] {\n  margin-bottom: 15px;\n}\n.page .detail .detailElement .tmp table[data-v-e9683ca8],\n.page .detail .detailElement .groups table[data-v-e9683ca8] {\n  width: 100%;\n  border-collapse: collapse;\n}\n.page .detail .detailElement .tmp table td[data-v-e9683ca8],\n.page .detail .detailElement .groups table td[data-v-e9683ca8] {\n  padding: 5px;\n  border-color: #eee;\n  text-align: left;\n}\n.page .detail .detailElement .tmp table td .group_tag[data-v-e9683ca8],\n.page .detail .detailElement .groups table td .group_tag[data-v-e9683ca8] {\n  display: inline-block;\n  margin-right: 5px;\n  margin-bottom: 3px;\n}\n.page .detail .detailElement .tmp[data-v-e9683ca8] {\n  margin-bottom: 10px;\n}\n.page .detail .userInputBlock[data-v-e9683ca8] {\n  margin-bottom: 20px;\n}\n.page .detail .userInputBlock .user_input[data-v-e9683ca8] {\n  width: 200px;\n  display: inline-block;\n  vertical-align: top;\n}\n.page .detail .userInputBlock Button[data-v-e9683ca8] {\n  margin-left: 10px;\n  vertical-align: top;\n}\n.depart_modal ul .modal_li[data-v-e9683ca8] {\n  margin-bottom: 10px;\n}\n.depart_modal ul .modal_li .modal_li_title[data-v-e9683ca8] {\n  display: inline-block;\n  width: 80px;\n  text-align: right;\n}\n", ""]);
 
 
 /***/ }),
@@ -4591,458 +4679,668 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "page" }, [
-    _c("div", { staticClass: "tree" }, [
-      _c(
-        "div",
-        _vm._l(_vm.departmentTree, function(tree, index) {
-          return _c("orgTree", {
-            key: index,
-            attrs: {
-              data: tree,
-              props: _vm.departmentTreeConfig.props,
-              collapsable: _vm.departmentTreeConfig.collapsable,
-              horizontal: _vm.departmentTreeConfig.horizontal
-            },
-            on: {
-              "on-expand": _vm.departmentOnExpand,
-              "on-node-click": _vm.departmentOnClick
-            }
-          })
-        }),
-        1
-      )
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "detail" }, [
-      _vm.department != null
-        ? _c(
-            "div",
-            [
-              _c("Card", { staticClass: "detailElement" }, [
-                _c(
-                  "p",
-                  {
-                    staticStyle: { "font-size": "20px" },
-                    attrs: { slot: "title" },
-                    slot: "title"
-                  },
-                  [_vm._v(_vm._s(_vm.department.name))]
-                ),
-                _vm._v(" "),
-                _c("p"),
-                _c("div", { staticClass: "departmentInfo" }, [
-                  _c("span", [_vm._v("标识：" + _vm._s(_vm.department.mark))]),
+  return _c(
+    "div",
+    { staticClass: "page" },
+    [
+      _c("div", { staticClass: "tree" }, [
+        _c(
+          "div",
+          _vm._l(_vm.departmentTree, function(tree, index) {
+            return _c("orgTree", {
+              key: index,
+              attrs: {
+                data: tree,
+                props: _vm.departmentTreeConfig.props,
+                collapsable: _vm.departmentTreeConfig.collapsable,
+                horizontal: _vm.departmentTreeConfig.horizontal
+              },
+              on: {
+                "on-expand": _vm.departmentOnExpand,
+                "on-node-click": _vm.departmentOnClick
+              }
+            })
+          }),
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "detail" }, [
+        _vm.department != null
+          ? _c(
+              "div",
+              [
+                _c("Card", { staticClass: "detailElement" }, [
+                  _c(
+                    "p",
+                    {
+                      staticStyle: { "font-size": "20px" },
+                      attrs: { slot: "title" },
+                      slot: "title"
+                    },
+                    [_vm._v(_vm._s(_vm.department.name))]
+                  ),
                   _vm._v(" "),
-                  _c("span", [_vm._v("邮箱：" + _vm._s(_vm.department.email))]),
-                  _vm._v(" "),
-                  _c("span", [
-                    _vm._v("上级部门："),
-                    _vm.departmentParent != null
-                      ? _c("span", [_vm._v(_vm._s(_vm.departmentParent.name))])
-                      : _vm._e()
-                  ])
-                ]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "departmentOperateList" },
-                  [
+                  _c("p"),
+                  _c("div", { staticClass: "departmentInfo" }, [
                     _c(
-                      "Button",
-                      {
-                        attrs: { type: "info" },
-                        on: { click: _vm.editDepart }
-                      },
-                      [_vm._v("编辑")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "Button",
-                      {
-                        attrs: { type: "info" },
-                        on: { click: _vm.addChildDepart }
-                      },
-                      [_vm._v("添加子节点")]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "Button",
-                      {
-                        attrs: { type: "error" },
-                        on: { click: _vm.delDepart }
-                      },
-                      [_vm._v("删除")]
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c("p")
-              ]),
-              _vm._v(" "),
-              _c("Card", { staticClass: "detailElement" }, [
-                _c(
-                  "p",
-                  { staticClass: "userInputBlock" },
-                  [
-                    _c(
-                      "Input",
-                      {
-                        staticClass: "userInput",
-                        attrs: { type: "text", placeholder: "cp账号" },
-                        model: {
-                          value: _vm.userInput,
-                          callback: function($$v) {
-                            _vm.userInput = $$v
-                          },
-                          expression: "userInput"
-                        }
-                      },
+                      "div",
+                      { staticClass: "department_info_item" },
                       [
-                        _c("Icon", {
-                          attrs: {
-                            slot: "prepend",
-                            type: "ios-person-outline"
+                        _c(
+                          "Input",
+                          {
+                            attrs: { readonly: "" },
+                            model: {
+                              value: _vm.department.mark,
+                              callback: function($$v) {
+                                _vm.$set(_vm.department, "mark", $$v)
+                              },
+                              expression: "department.mark"
+                            }
                           },
-                          slot: "prepend"
-                        })
+                          [
+                            _c(
+                              "span",
+                              { attrs: { slot: "prepend" }, slot: "prepend" },
+                              [_vm._v("标识：")]
+                            )
+                          ]
+                        )
                       ],
                       1
                     ),
                     _vm._v(" "),
                     _c(
-                      "Button",
-                      {
-                        attrs: { type: "info" },
-                        on: { click: _vm.addDepartmentUser }
-                      },
-                      [_vm._v("添加用户到部门")]
+                      "div",
+                      { staticClass: "department_info_item" },
+                      [
+                        _c(
+                          "Input",
+                          {
+                            attrs: { readonly: "" },
+                            model: {
+                              value: _vm.department.email,
+                              callback: function($$v) {
+                                _vm.$set(_vm.department, "email", $$v)
+                              },
+                              expression: "department.email"
+                            }
+                          },
+                          [
+                            _c(
+                              "span",
+                              { attrs: { slot: "prepend" }, slot: "prepend" },
+                              [_vm._v("邮箱：")]
+                            )
+                          ]
+                        )
+                      ],
+                      1
                     ),
                     _vm._v(" "),
-                    _c("Button", { on: { click: _vm.addAdminUser } }, [
-                      _vm._v("新增一个管理员")
-                    ])
-                  ],
-                  1
-                ),
+                    _c(
+                      "div",
+                      { staticClass: "department_info_item" },
+                      [
+                        _c(
+                          "Input",
+                          {
+                            attrs: { readonly: "" },
+                            model: {
+                              value: _vm.departmentParent.name,
+                              callback: function($$v) {
+                                _vm.$set(_vm.departmentParent, "name", $$v)
+                              },
+                              expression: "departmentParent.name"
+                            }
+                          },
+                          [
+                            _c(
+                              "span",
+                              { attrs: { slot: "prepend" }, slot: "prepend" },
+                              [_vm._v("上级部门：")]
+                            )
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "departmentOperateList" },
+                    [
+                      _c(
+                        "Button",
+                        {
+                          attrs: { type: "info" },
+                          on: { click: _vm.editDepart }
+                        },
+                        [_vm._v("编辑")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "Button",
+                        {
+                          attrs: { type: "info" },
+                          on: { click: _vm.addChildDepart }
+                        },
+                        [_vm._v("添加子节点")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "Button",
+                        {
+                          attrs: { type: "error" },
+                          on: { click: _vm.delDepart }
+                        },
+                        [_vm._v("删除")]
+                      )
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c("p")
+                ]),
                 _vm._v(" "),
-                _c(
-                  "p",
-                  { staticClass: "userListBlock" },
-                  [
-                    _c("Table", {
-                      attrs: {
-                        columns: _vm.departmentUserColumn,
-                        data: _vm.departmentUser
-                      }
-                    })
-                  ],
-                  1
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "Card",
-                { staticClass: "detailElement" },
-                [
+                _c("Card", { staticClass: "detailElement" }, [
+                  _c(
+                    "div",
+                    { staticClass: "userInputBlock" },
+                    [
+                      _c(
+                        "div",
+                        { staticClass: "user_input" },
+                        [
+                          _c(
+                            "Input",
+                            {
+                              attrs: { type: "text", placeholder: "cp账号" },
+                              model: {
+                                value: _vm.userInput,
+                                callback: function($$v) {
+                                  _vm.userInput = $$v
+                                },
+                                expression: "userInput"
+                              }
+                            },
+                            [
+                              _c("Icon", {
+                                attrs: {
+                                  slot: "prepend",
+                                  type: "ios-person-outline"
+                                },
+                                slot: "prepend"
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "Button",
+                        {
+                          attrs: { type: "info" },
+                          on: { click: _vm.addDepartmentUser }
+                        },
+                        [_vm._v("添加用户到部门")]
+                      ),
+                      _vm._v(" "),
+                      _c("Button", { on: { click: _vm.addAdminUser } }, [
+                        _vm._v("新增一个管理员")
+                      ])
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "p",
+                    { staticClass: "userListBlock" },
+                    [
+                      _c("Table", {
+                        attrs: {
+                          columns: _vm.departmentUserColumn,
+                          data: _vm.departmentUser
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("Card", { staticClass: "detailElement" }, [
                   _c("p", { attrs: { slot: "title" }, slot: "title" }, [
                     _vm._v("权限详情")
                   ]),
                   _vm._v(" "),
-                  _c("p"),
-                  _c("h4", [_vm._v("独立权限")]),
-                  _vm._v(" "),
-                  _vm.departmentAction.tmp != null
+                  _vm.departmentAction.tmp
                     ? _c(
-                        "Collapse",
-                        _vm._l(_vm.departmentAction.tmp, function(
-                          projectInfo,
-                          project,
-                          index
-                        ) {
-                          return _c(
-                            "Panel",
-                            { key: index, attrs: { name: index + "" } },
-                            [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(projectInfo.projectName) +
-                                  " \n                            "
-                              ),
-                              _c(
-                                "Button",
-                                {
-                                  attrs: { type: "info", size: "small" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.editTmpAction(project)
-                                    }
-                                  }
-                                },
+                        "div",
+                        { staticClass: "tmp" },
+                        [
+                          _c("h4", [_vm._v("独立权限")]),
+                          _vm._v(" "),
+                          _c(
+                            "Collapse",
+                            _vm._l(_vm.departmentAction.tmp, function(
+                              projectInfo,
+                              project,
+                              index
+                            ) {
+                              return _c(
+                                "Panel",
+                                { key: index, attrs: { name: index + "" } },
                                 [
                                   _vm._v(
-                                    "编辑" +
+                                    "\n                            " +
                                       _vm._s(projectInfo.projectName) +
-                                      "权限"
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "p",
-                                { attrs: { slot: "content" }, slot: "content" },
-                                _vm._l(projectInfo.controllerList, function(
-                                  controllerInfo,
-                                  controller,
-                                  index
-                                ) {
-                                  return _c(
-                                    "span",
-                                    { key: index, staticClass: "actionGroup" },
+                                      " \n                            "
+                                  ),
+                                  _c(
+                                    "Button",
+                                    {
+                                      attrs: { type: "info", size: "small" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.editTmpAction(project)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                编辑" +
+                                          _vm._s(projectInfo.projectName) +
+                                          "权限\n                            "
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      attrs: { slot: "content" },
+                                      slot: "content"
+                                    },
                                     [
                                       _c(
-                                        "span",
-                                        { staticClass: "actionGroupTitle" },
-                                        [
-                                          _vm._v(
-                                            _vm._s(controllerInfo.name) +
-                                              "（" +
-                                              _vm._s(controller) +
-                                              "）"
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _vm._l(controllerInfo.actions, function(
-                                        actionInfo,
-                                        index
-                                      ) {
-                                        return _c(
-                                          "span",
-                                          { key: index },
-                                          [
-                                            actionInfo.desc
-                                              ? _c(
-                                                  "Tag",
-                                                  { attrs: { color: "cyan" } },
+                                        "table",
+                                        _vm._l(
+                                          projectInfo.controllerList,
+                                          function(
+                                            controllerInfo,
+                                            controller,
+                                            index
+                                          ) {
+                                            return _c(
+                                              "tr",
+                                              {
+                                                key: index,
+                                                staticClass: "actionGroup"
+                                              },
+                                              [
+                                                _c(
+                                                  "td",
                                                   [
-                                                    _vm._v(
-                                                      _vm._s(actionInfo.desc)
+                                                    _c(
+                                                      "p",
+                                                      {
+                                                        staticClass:
+                                                          "group_title"
+                                                      },
+                                                      [
+                                                        _vm._v(
+                                                          _vm._s(
+                                                            controllerInfo.name
+                                                          ) +
+                                                            "（" +
+                                                            _vm._s(controller) +
+                                                            "）"
+                                                        )
+                                                      ]
+                                                    ),
+                                                    _vm._v(" "),
+                                                    _vm._l(
+                                                      controllerInfo.actions,
+                                                      function(
+                                                        actionInfo,
+                                                        index
+                                                      ) {
+                                                        return _c(
+                                                          "div",
+                                                          {
+                                                            key: index,
+                                                            staticClass:
+                                                              "group_tag"
+                                                          },
+                                                          [
+                                                            actionInfo.desc
+                                                              ? _c(
+                                                                  "Tag",
+                                                                  {
+                                                                    attrs: {
+                                                                      color:
+                                                                        "cyan"
+                                                                    }
+                                                                  },
+                                                                  [
+                                                                    _vm._v(
+                                                                      _vm._s(
+                                                                        actionInfo.desc
+                                                                      )
+                                                                    )
+                                                                  ]
+                                                                )
+                                                              : _vm._e()
+                                                          ],
+                                                          1
+                                                        )
+                                                      }
                                                     )
-                                                  ]
+                                                  ],
+                                                  2
                                                 )
-                                              : _vm._e()
-                                          ],
-                                          1
-                                        )
-                                      })
-                                    ],
-                                    2
+                                              ]
+                                            )
+                                          }
+                                        ),
+                                        0
+                                      )
+                                    ]
                                   )
-                                }),
-                                0
+                                ],
+                                1
                               )
-                            ],
+                            }),
                             1
                           )
-                        }),
+                        ],
                         1
                       )
                     : _vm._e(),
                   _vm._v(" "),
-                  _c("p"),
-                  _vm._v(" "),
-                  _c("p", { staticStyle: { "margin-top": "10px" } }),
-                  _c("h4", [_vm._v("权限包")]),
-                  _vm._v(" "),
-                  _vm.departmentAction.groups != null
+                  _vm.departmentAction.groups &&
+                  _vm.departmentAction.groups.length
                     ? _c(
-                        "Collapse",
-                        _vm._l(_vm.departmentAction.groups, function(
-                          group,
-                          index
-                        ) {
-                          return _c(
-                            "Panel",
-                            { key: index, attrs: { name: index + "" } },
-                            [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(group.name) +
-                                  " （" +
-                                  _vm._s(group.project) +
-                                  ":" +
-                                  _vm._s(group.desc) +
-                                  "） \n                            "
-                              ),
-                              _c(
-                                "Button",
-                                {
-                                  attrs: { type: "info", size: "small" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.editGroupAction(group.id)
-                                    }
-                                  }
-                                },
-                                [_vm._v("编辑" + _vm._s(group.name))]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "p",
-                                { attrs: { slot: "content" }, slot: "content" },
-                                _vm._l(group.actions, function(
-                                  controllerInfo,
-                                  controller,
-                                  index
-                                ) {
-                                  return _c(
-                                    "span",
-                                    { key: index, staticClass: "actionGroup" },
+                        "div",
+                        { staticClass: "groups" },
+                        [
+                          _c("h4", [_vm._v("权限包")]),
+                          _vm._v(" "),
+                          _c(
+                            "Collapse",
+                            _vm._l(_vm.departmentAction.groups, function(
+                              group,
+                              index
+                            ) {
+                              return _c(
+                                "Panel",
+                                { key: index, attrs: { name: index + "" } },
+                                [
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(group.name) +
+                                      " （" +
+                                      _vm._s(group.project) +
+                                      ":" +
+                                      _vm._s(group.desc) +
+                                      "） \n                            "
+                                  ),
+                                  _c(
+                                    "Button",
+                                    {
+                                      attrs: { type: "info", size: "small" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.editGroupAction(group.id)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                编辑" +
+                                          _vm._s(group.name) +
+                                          "\n                            "
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      attrs: { slot: "content" },
+                                      slot: "content"
+                                    },
                                     [
                                       _c(
-                                        "span",
-                                        { staticClass: "actionGroupTitle" },
-                                        [
-                                          _vm._v(
-                                            _vm._s(controllerInfo.name) +
-                                              "（" +
-                                              _vm._s(controller) +
-                                              "）"
+                                        "table",
+                                        _vm._l(group.actions, function(
+                                          controllerInfo,
+                                          controller,
+                                          index
+                                        ) {
+                                          return _c(
+                                            "tr",
+                                            {
+                                              key: index,
+                                              staticClass: "actionGroup"
+                                            },
+                                            [
+                                              _c(
+                                                "td",
+                                                [
+                                                  _c(
+                                                    "p",
+                                                    {
+                                                      staticClass: "group_title"
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        _vm._s(
+                                                          controllerInfo.name
+                                                        ) +
+                                                          "（" +
+                                                          _vm._s(controller) +
+                                                          "）"
+                                                      )
+                                                    ]
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _vm._l(
+                                                    controllerInfo.actions,
+                                                    function(
+                                                      actionInfo,
+                                                      index
+                                                    ) {
+                                                      return _c(
+                                                        "div",
+                                                        {
+                                                          key: index,
+                                                          staticClass:
+                                                            "group_tag"
+                                                        },
+                                                        [
+                                                          actionInfo.desc
+                                                            ? _c(
+                                                                "Tag",
+                                                                {
+                                                                  attrs: {
+                                                                    color:
+                                                                      "cyan"
+                                                                  }
+                                                                },
+                                                                [
+                                                                  _vm._v(
+                                                                    _vm._s(
+                                                                      actionInfo.desc
+                                                                    )
+                                                                  )
+                                                                ]
+                                                              )
+                                                            : _vm._e()
+                                                        ],
+                                                        1
+                                                      )
+                                                    }
+                                                  )
+                                                ],
+                                                2
+                                              )
+                                            ]
                                           )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _vm._l(controllerInfo.actions, function(
-                                        actionInfo,
-                                        index
-                                      ) {
-                                        return _c(
-                                          "span",
-                                          { key: index },
-                                          [
-                                            actionInfo.desc
-                                              ? _c(
-                                                  "Tag",
-                                                  { attrs: { color: "cyan" } },
-                                                  [
-                                                    _vm._v(
-                                                      _vm._s(actionInfo.desc)
-                                                    )
-                                                  ]
-                                                )
-                                              : _vm._e()
-                                          ],
-                                          1
-                                        )
-                                      })
-                                    ],
-                                    2
+                                        }),
+                                        0
+                                      )
+                                    ]
                                   )
-                                }),
-                                0
+                                ],
+                                1
                               )
-                            ],
+                            }),
                             1
                           )
-                        }),
+                        ],
                         1
                       )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p")
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "Card",
-                [
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c("Card", { staticClass: "detailElement" }, [
                   _c("p", { attrs: { slot: "title" }, slot: "title" }, [
                     _vm._v("资源详情")
                   ]),
                   _vm._v(" "),
-                  _c("p"),
-                  _c("h4", [_vm._v("独立资源")]),
-                  _vm._v(" "),
                   _vm.departmentResource.tmp != null
                     ? _c(
-                        "Collapse",
+                        "div",
+                        { staticClass: "tmp" },
                         [
+                          _c("h4", [_vm._v("独立资源")]),
+                          _vm._v(" "),
                           _c(
-                            "Panel",
-                            { attrs: { name: "1" } },
+                            "Collapse",
                             [
-                              _vm._v(
-                                "\n                            独立资源\n                            "
-                              ),
                               _c(
-                                "Button",
-                                {
-                                  attrs: { type: "info", size: "small" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.editTmpResource()
-                                    }
-                                  }
-                                },
-                                [_vm._v("编辑独立资源")]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "p",
-                                { attrs: { slot: "content" }, slot: "content" },
-                                _vm._l(_vm.departmentResource.tmp, function(
-                                  controllerInfo,
-                                  controller,
-                                  index
-                                ) {
-                                  return _c(
-                                    "span",
-                                    { key: index, staticClass: "actionGroup" },
+                                "Panel",
+                                { attrs: { name: "1" } },
+                                [
+                                  _vm._v(
+                                    "\n                            独立资源\n                            "
+                                  ),
+                                  _c(
+                                    "Button",
+                                    {
+                                      attrs: { type: "info", size: "small" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.editTmpResource()
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                编辑独立资源\n                            "
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      attrs: { slot: "content" },
+                                      slot: "content"
+                                    },
                                     [
                                       _c(
-                                        "span",
-                                        { staticClass: "actionGroupTitle" },
-                                        [
-                                          _vm._v(
-                                            _vm._s(controllerInfo.name) +
-                                              "（" +
-                                              _vm._s(controller) +
-                                              "）"
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _vm._l(controllerInfo.resource, function(
-                                        resourceInfo,
-                                        index
-                                      ) {
-                                        return _c(
-                                          "span",
-                                          { key: index },
-                                          [
-                                            resourceInfo.desc
-                                              ? _c(
-                                                  "Tag",
-                                                  { attrs: { color: "cyan" } },
+                                        "table",
+                                        _vm._l(
+                                          _vm.departmentResource.tmp,
+                                          function(
+                                            controllerInfo,
+                                            controller,
+                                            index
+                                          ) {
+                                            return _c(
+                                              "tr",
+                                              {
+                                                key: index,
+                                                staticClass: "actionGroup"
+                                              },
+                                              [
+                                                _c(
+                                                  "td",
                                                   [
-                                                    _vm._v(
-                                                      _vm._s(resourceInfo.desc)
+                                                    _c(
+                                                      "p",
+                                                      {
+                                                        staticClass:
+                                                          "group_title"
+                                                      },
+                                                      [
+                                                        _vm._v(
+                                                          _vm._s(
+                                                            controllerInfo.name
+                                                          ) +
+                                                            "（" +
+                                                            _vm._s(controller) +
+                                                            "）"
+                                                        )
+                                                      ]
+                                                    ),
+                                                    _vm._v(" "),
+                                                    _vm._l(
+                                                      controllerInfo.resource,
+                                                      function(
+                                                        resourceInfo,
+                                                        index
+                                                      ) {
+                                                        return _c(
+                                                          "div",
+                                                          {
+                                                            key: index,
+                                                            staticClass:
+                                                              "group_tag"
+                                                          },
+                                                          [
+                                                            resourceInfo.desc
+                                                              ? _c(
+                                                                  "Tag",
+                                                                  {
+                                                                    attrs: {
+                                                                      color:
+                                                                        "cyan"
+                                                                    }
+                                                                  },
+                                                                  [
+                                                                    _vm._v(
+                                                                      _vm._s(
+                                                                        resourceInfo.desc
+                                                                      )
+                                                                    )
+                                                                  ]
+                                                                )
+                                                              : _vm._e()
+                                                          ],
+                                                          1
+                                                        )
+                                                      }
                                                     )
-                                                  ]
+                                                  ],
+                                                  2
                                                 )
-                                              : _vm._e()
-                                          ],
-                                          1
-                                        )
-                                      })
-                                    ],
-                                    2
+                                              ]
+                                            )
+                                          }
+                                        ),
+                                        0
+                                      )
+                                    ]
                                   )
-                                }),
-                                0
+                                ],
+                                1
                               )
                             ],
                             1
@@ -5052,238 +5350,286 @@ var render = function() {
                       )
                     : _vm._e(),
                   _vm._v(" "),
-                  _c("p"),
-                  _vm._v(" "),
-                  _c("p", { staticStyle: { "margin-top": "10px" } }),
-                  _c("h4", [_vm._v("资源包")]),
-                  _vm._v(" "),
-                  _vm.departmentResource.groups != null
+                  _vm.departmentResource.groups &&
+                  _vm.departmentResource.groups.length
                     ? _c(
-                        "Collapse",
-                        _vm._l(_vm.departmentResource.groups, function(
-                          group,
-                          index
-                        ) {
-                          return _c(
-                            "Panel",
-                            { key: index, attrs: { name: index + "" } },
-                            [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(group.name) +
-                                  " （" +
-                                  _vm._s(group.desc) +
-                                  "） \n                            "
-                              ),
-                              _c(
-                                "Button",
-                                {
-                                  attrs: { type: "info", size: "small" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.editGroupResource(group.id)
-                                    }
-                                  }
-                                },
-                                [_vm._v("编辑" + _vm._s(group.name))]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "p",
-                                { attrs: { slot: "content" }, slot: "content" },
-                                _vm._l(group.resources, function(
-                                  controllerInfo,
-                                  controller,
-                                  index
-                                ) {
-                                  return _c(
-                                    "span",
-                                    { key: index, staticClass: "actionGroup" },
+                        "div",
+                        { staticClass: "groups" },
+                        [
+                          _c("h4", [_vm._v("资源包")]),
+                          _vm._v(" "),
+                          _c(
+                            "Collapse",
+                            _vm._l(_vm.departmentResource.groups, function(
+                              group,
+                              index
+                            ) {
+                              return _c(
+                                "Panel",
+                                { key: index, attrs: { name: index + "" } },
+                                [
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(group.name) +
+                                      " （" +
+                                      _vm._s(group.desc) +
+                                      "） \n                            "
+                                  ),
+                                  _c(
+                                    "Button",
+                                    {
+                                      attrs: { type: "info", size: "small" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.editGroupResource(group.id)
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                编辑" +
+                                          _vm._s(group.name) +
+                                          "\n                            "
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      attrs: { slot: "content" },
+                                      slot: "content"
+                                    },
                                     [
                                       _c(
-                                        "span",
-                                        { staticClass: "actionGroupTitle" },
-                                        [
-                                          _vm._v(
-                                            _vm._s(controllerInfo.name) +
-                                              "（" +
-                                              _vm._s(controller) +
-                                              "）"
+                                        "table",
+                                        _vm._l(group.resources, function(
+                                          controllerInfo,
+                                          controller,
+                                          index
+                                        ) {
+                                          return _c(
+                                            "tr",
+                                            {
+                                              key: index,
+                                              staticClass: "actionGroup"
+                                            },
+                                            [
+                                              _c(
+                                                "td",
+                                                [
+                                                  _c(
+                                                    "p",
+                                                    {
+                                                      staticClass: "group_title"
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        _vm._s(
+                                                          controllerInfo.name
+                                                        ) +
+                                                          "（" +
+                                                          _vm._s(controller) +
+                                                          "）"
+                                                      )
+                                                    ]
+                                                  ),
+                                                  _vm._v(" "),
+                                                  _vm._l(
+                                                    controllerInfo.resource,
+                                                    function(
+                                                      resourceInfo,
+                                                      index
+                                                    ) {
+                                                      return _c(
+                                                        "div",
+                                                        {
+                                                          key: index,
+                                                          staticClass:
+                                                            "group_tag"
+                                                        },
+                                                        [
+                                                          resourceInfo.desc
+                                                            ? _c(
+                                                                "Tag",
+                                                                {
+                                                                  attrs: {
+                                                                    color:
+                                                                      "cyan"
+                                                                  }
+                                                                },
+                                                                [
+                                                                  _vm._v(
+                                                                    _vm._s(
+                                                                      resourceInfo.desc
+                                                                    )
+                                                                  )
+                                                                ]
+                                                              )
+                                                            : _vm._e()
+                                                        ],
+                                                        1
+                                                      )
+                                                    }
+                                                  )
+                                                ],
+                                                2
+                                              )
+                                            ]
                                           )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _vm._l(controllerInfo.resource, function(
-                                        resourceInfo,
-                                        index
-                                      ) {
-                                        return _c(
-                                          "span",
-                                          { key: index },
-                                          [
-                                            resourceInfo.desc
-                                              ? _c(
-                                                  "Tag",
-                                                  { attrs: { color: "cyan" } },
-                                                  [
-                                                    _vm._v(
-                                                      _vm._s(resourceInfo.desc)
-                                                    )
-                                                  ]
-                                                )
-                                              : _vm._e()
-                                          ],
-                                          1
-                                        )
-                                      })
-                                    ],
-                                    2
+                                        }),
+                                        0
+                                      )
+                                    ]
                                   )
-                                }),
-                                0
+                                ],
+                                1
                               )
-                            ],
+                            }),
                             1
                           )
-                        }),
+                        ],
                         1
                       )
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("p")
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "Modal",
-                {
-                  attrs: {
-                    loading: _vm.addDepartmentModalConfig.loading,
-                    "ok-text": "保存"
-                  },
-                  on: { "on-ok": _vm.saveDepartment },
+                    : _vm._e()
+                ])
+              ],
+              1
+            )
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _c(
+        "Modal",
+        {
+          attrs: {
+            "class-name": "depart_modal",
+            title:
+              _vm.addDepartmentModalConfig.operate == "addChild"
+                ? "添加子节点"
+                : "节点编辑",
+            loading: _vm.addDepartmentModalConfig.loading,
+            "ok-text": "保存"
+          },
+          on: { "on-ok": _vm.saveDepartment },
+          model: {
+            value: _vm.addDepartmentModal,
+            callback: function($$v) {
+              _vm.addDepartmentModal = $$v
+            },
+            expression: "addDepartmentModal"
+          }
+        },
+        [
+          _c("ul", [
+            _c(
+              "li",
+              { staticClass: "modal_li" },
+              [
+                _c("span", { staticClass: "modal_li_title" }, [
+                  _vm._v("名称：")
+                ]),
+                _vm._v(" "),
+                _c("Input", {
+                  staticStyle: { width: "300px" },
                   model: {
-                    value: _vm.addDepartmentModal,
+                    value: _vm.departmentModalData.name,
                     callback: function($$v) {
-                      _vm.addDepartmentModal = $$v
+                      _vm.$set(_vm.departmentModalData, "name", $$v)
                     },
-                    expression: "addDepartmentModal"
+                    expression: "departmentModalData.name"
                   }
-                },
-                [
-                  _vm.addDepartmentModalConfig.operate == "addChild"
-                    ? _c("h3", [_vm._v("添加子节点")])
-                    : _c("h3", [_vm._v("节点编辑")]),
-                  _vm._v(" "),
-                  _c("ul", [
-                    _c(
-                      "li",
-                      { staticClass: "modalLI" },
-                      [
-                        _c("span", [_vm._v("名称：")]),
-                        _vm._v(" "),
-                        _c("Input", {
-                          staticStyle: { width: "300px" },
-                          model: {
-                            value: _vm.departmentModalData.name,
-                            callback: function($$v) {
-                              _vm.$set(_vm.departmentModalData, "name", $$v)
-                            },
-                            expression: "departmentModalData.name"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "li",
-                      { staticClass: "modalLI" },
-                      [
-                        _c("span", [_vm._v("标识：")]),
-                        _vm._v(" "),
-                        _c("Input", {
-                          staticStyle: { width: "300px" },
-                          model: {
-                            value: _vm.departmentModalData.mark,
-                            callback: function($$v) {
-                              _vm.$set(_vm.departmentModalData, "mark", $$v)
-                            },
-                            expression: "departmentModalData.mark"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "li",
-                      { staticClass: "modalLI" },
-                      [
-                        _c("span", [_vm._v("邮箱：")]),
-                        _vm._v(" "),
-                        _c("Input", {
-                          staticStyle: { width: "300px" },
-                          model: {
-                            value: _vm.departmentModalData.email,
-                            callback: function($$v) {
-                              _vm.$set(_vm.departmentModalData, "email", $$v)
-                            },
-                            expression: "departmentModalData.email"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "li",
-                      { staticClass: "modalLI" },
-                      [
-                        _c("span", [_vm._v("上级部门：")]),
-                        _vm._v(" "),
-                        _c(
-                          "i-select",
-                          {
-                            staticStyle: { width: "300px" },
-                            attrs: {
-                              disabled:
-                                this.addDepartmentModalConfig.operate ==
-                                "addChild"
-                            },
-                            model: {
-                              value: _vm.departmentModalData.pid,
-                              callback: function($$v) {
-                                _vm.$set(_vm.departmentModalData, "pid", $$v)
-                              },
-                              expression: "departmentModalData.pid"
-                            }
-                          },
-                          _vm._l(_vm.allDepartmentList, function(itemDepart) {
-                            return _c(
-                              "i-option",
-                              {
-                                key: itemDepart.id,
-                                attrs: { value: itemDepart.id }
-                              },
-                              [_vm._v(_vm._s(itemDepart.name) + " ")]
-                            )
-                          }),
-                          1
-                        )
-                      ],
-                      1
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "li",
+              { staticClass: "modal_li" },
+              [
+                _c("span", { staticClass: "modal_li_title" }, [
+                  _vm._v("标识：")
+                ]),
+                _vm._v(" "),
+                _c("Input", {
+                  staticStyle: { width: "300px" },
+                  model: {
+                    value: _vm.departmentModalData.mark,
+                    callback: function($$v) {
+                      _vm.$set(_vm.departmentModalData, "mark", $$v)
+                    },
+                    expression: "departmentModalData.mark"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "li",
+              { staticClass: "modal_li" },
+              [
+                _c("span", { staticClass: "modal_li_title" }, [
+                  _vm._v("邮箱：")
+                ]),
+                _vm._v(" "),
+                _c("Input", {
+                  staticStyle: { width: "300px" },
+                  model: {
+                    value: _vm.departmentModalData.email,
+                    callback: function($$v) {
+                      _vm.$set(_vm.departmentModalData, "email", $$v)
+                    },
+                    expression: "departmentModalData.email"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "li",
+              { staticClass: "modal_li" },
+              [
+                _c("span", { staticClass: "modal_li_title" }, [
+                  _vm._v("上级部门：")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "i-select",
+                  {
+                    staticStyle: { width: "300px" },
+                    attrs: {
+                      disabled:
+                        this.addDepartmentModalConfig.operate == "addChild"
+                    },
+                    model: {
+                      value: _vm.departmentModalData.pid,
+                      callback: function($$v) {
+                        _vm.$set(_vm.departmentModalData, "pid", $$v)
+                      },
+                      expression: "departmentModalData.pid"
+                    }
+                  },
+                  _vm._l(_vm.allDepartmentList, function(itemDepart) {
+                    return _c(
+                      "i-option",
+                      { key: itemDepart.id, attrs: { value: itemDepart.id } },
+                      [_vm._v(_vm._s(itemDepart.name) + " ")]
                     )
-                  ])
-                ]
-              )
-            ],
-            1
-          )
-        : _vm._e()
-    ])
-  ])
+                  }),
+                  1
+                )
+              ],
+              1
+            )
+          ])
+        ]
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -8620,7 +8966,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -8681,6 +9027,7 @@ component.options.__file = "resources/assets/cp/base/js/compontents/menu/index.v
     var _this = this;
 
     var url = formData.url,
+        type = formData.type,
         method = formData.method,
         _success = formData.success,
         _formData$data = formData.data,
@@ -8695,7 +9042,7 @@ component.options.__file = "resources/assets/cp/base/js/compontents/menu/index.v
         headers: {
             'X-CSRF-TOKEN': $('meta[name=csrf-token]').attr('content')
         },
-        type: method,
+        type: type || method,
         data: data,
         success: function success(res) {
             if (_success instanceof Function) {
@@ -8801,7 +9148,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -8912,7 +9259,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -9156,7 +9503,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -9240,7 +9587,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -9324,7 +9671,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -9408,7 +9755,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -9492,7 +9839,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -9576,7 +9923,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
@@ -9660,7 +10007,7 @@ var component = Object(__WEBPACK_IMPORTED_MODULE_3__node_modules_vue_loader_lib_
 
 /* hot reload */
 if (false) {
-  var api = require("/home/shihongda/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
+  var api = require("/home/gengxiaoyong/website/passport/node_modules/vue-hot-reload-api/dist/index.js")
   api.install(require('vue'))
   if (api.compatible) {
     module.hot.accept()
