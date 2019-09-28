@@ -187,7 +187,7 @@ export default {
         .content {
             height: calc(100vh - 165px);
             overflow-y: scroll;
-            .actionButton {
+            .resourceButton {
                 margin: 5px;
             }
         }

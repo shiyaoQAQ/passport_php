@@ -2712,7 +2712,7 @@ exports.push([module.i, ".org-tree-container {\n  display: inline-block;\n  padd
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page[data-v-c0c4c224] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-c0c4c224],\n.page .detail[data-v-c0c4c224] {\n  width: 50%;\n  position: relative;\n  height: 100%;\n}\n.page .tree .content_options[data-v-c0c4c224],\n.page .detail .content_options[data-v-c0c4c224] {\n  height: 50px;\n  line-height: 50px;\n  background-color: #fff;\n  background: linear-gradient(rgba(255, 255, 255, 0.38), #fff);\n  position: absolute;\n  bottom: 16px;\n  z-index: 1000;\n  text-align: center;\n}\n.page .tree .content_options Button[data-v-c0c4c224],\n.page .detail .content_options Button[data-v-c0c4c224] {\n  margin: 10px 10px;\n}\n.page .tree .content[data-v-c0c4c224],\n.page .detail .content[data-v-c0c4c224] {\n  overflow: scroll;\n  height: 100%;\n  padding-bottom: 50px;\n}\n.page .tree[data-v-c0c4c224] {\n  float: left;\n  background-color: #fff;\n}\n.page .tree .content_options[data-v-c0c4c224] {\n  width: 100%;\n  left: 0px;\n}\n.page .detail[data-v-c0c4c224] {\n  float: right;\n  padding-left: 15px;\n}\n.page .detail .content_options[data-v-c0c4c224] {\n  width: calc(100% - 15px);\n  left: 15px;\n}\n.page .detail .actionButton[data-v-c0c4c224] {\n  margin: 5px;\n}\n", ""]);
+exports.push([module.i, ".page[data-v-c0c4c224] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-c0c4c224],\n.page .detail[data-v-c0c4c224] {\n  width: 50%;\n  position: relative;\n  height: 100%;\n}\n.page .tree .content_options[data-v-c0c4c224],\n.page .detail .content_options[data-v-c0c4c224] {\n  height: 50px;\n  line-height: 50px;\n  background: linear-gradient(rgba(255, 255, 255, 0.38), #fff);\n  position: absolute;\n  bottom: 16px;\n  z-index: 1000;\n  text-align: center;\n}\n.page .tree .content_options Button[data-v-c0c4c224],\n.page .detail .content_options Button[data-v-c0c4c224] {\n  margin: 10px 10px;\n}\n.page .tree .content[data-v-c0c4c224],\n.page .detail .content[data-v-c0c4c224] {\n  overflow: scroll;\n  height: 100%;\n  padding-bottom: 50px;\n  background-color: #fff;\n}\n.page .tree[data-v-c0c4c224] {\n  float: left;\n  background-color: #fff;\n}\n.page .tree .content_options[data-v-c0c4c224] {\n  width: 100%;\n  left: 0px;\n}\n.page .detail[data-v-c0c4c224] {\n  float: right;\n  padding-left: 15px;\n}\n.page .detail .content_options[data-v-c0c4c224] {\n  width: calc(100% - 15px);\n  left: 15px;\n}\n.page .detail .actionButton[data-v-c0c4c224] {\n  margin: 5px;\n}\n", ""]);
 
 
 /***/ }),
@@ -2742,7 +2742,7 @@ exports.push([module.i, ".page .detail_element[data-v-138195f4] {\n  width: 1000
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page .detail_element[data-v-088f4746] {\n  width: 1000px;\n  height: calc(100vh - 70px);\n  margin: 0 auto;\n}\n.page .detail_element .content_header .content_header_text[data-v-088f4746] {\n  font-weight: 700;\n  width: auto;\n  display: inline-block;\n  vertical-align: middle;\n  margin-right: 10px;\n}\n.page .detail_element .content[data-v-088f4746] {\n  height: calc(100vh - 165px);\n  overflow-y: scroll;\n}\n.page .detail_element .content .actionButton[data-v-088f4746] {\n  margin: 5px;\n}\n", ""]);
+exports.push([module.i, ".page .detail_element[data-v-088f4746] {\n  width: 1000px;\n  height: calc(100vh - 70px);\n  margin: 0 auto;\n}\n.page .detail_element .content_header .content_header_text[data-v-088f4746] {\n  font-weight: 700;\n  width: auto;\n  display: inline-block;\n  vertical-align: middle;\n  margin-right: 10px;\n}\n.page .detail_element .content[data-v-088f4746] {\n  height: calc(100vh - 165px);\n  overflow-y: scroll;\n}\n.page .detail_element .content .resourceButton[data-v-088f4746] {\n  margin: 5px;\n}\n", ""]);
 
 
 /***/ }),
@@ -2762,7 +2762,7 @@ exports.push([module.i, ".page[data-v-e9683ca8] {\n  height: calc(100vh - 70px);
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page[data-v-105c4ebe] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-105c4ebe],\n.page .detail[data-v-105c4ebe] {\n  width: 50%;\n  position: relative;\n  height: 100%;\n}\n.page .tree .content_options[data-v-105c4ebe],\n.page .detail .content_options[data-v-105c4ebe] {\n  height: 50px;\n  line-height: 50px;\n  background-color: #fff;\n  background: linear-gradient(rgba(255, 255, 255, 0.38), #fff);\n  position: absolute;\n  bottom: 16px;\n  z-index: 1000;\n  text-align: center;\n}\n.page .tree .content_options Button[data-v-105c4ebe],\n.page .detail .content_options Button[data-v-105c4ebe] {\n  margin: 10px 10px;\n}\n.page .tree .content[data-v-105c4ebe],\n.page .detail .content[data-v-105c4ebe] {\n  overflow: scroll;\n  height: 100%;\n  padding-bottom: 50px;\n}\n.page .tree[data-v-105c4ebe] {\n  float: left;\n  background-color: #fff;\n}\n.page .tree .content_options[data-v-105c4ebe] {\n  width: 100%;\n  left: 0px;\n}\n.page .detail[data-v-105c4ebe] {\n  float: right;\n  padding-left: 15px;\n}\n.page .detail .content_options[data-v-105c4ebe] {\n  width: calc(100% - 15px);\n  left: 15px;\n}\n.page .detail .resourceButton[data-v-105c4ebe] {\n  margin: 5px;\n}\n", ""]);
+exports.push([module.i, ".page[data-v-105c4ebe] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-105c4ebe],\n.page .detail[data-v-105c4ebe] {\n  width: 50%;\n  position: relative;\n  height: 100%;\n}\n.page .tree .content_options[data-v-105c4ebe],\n.page .detail .content_options[data-v-105c4ebe] {\n  height: 50px;\n  line-height: 50px;\n  background: linear-gradient(rgba(255, 255, 255, 0.38), #fff);\n  position: absolute;\n  bottom: 16px;\n  z-index: 1000;\n  text-align: center;\n}\n.page .tree .content_options Button[data-v-105c4ebe],\n.page .detail .content_options Button[data-v-105c4ebe] {\n  margin: 10px 10px;\n}\n.page .tree .content[data-v-105c4ebe],\n.page .detail .content[data-v-105c4ebe] {\n  overflow: scroll;\n  height: 100%;\n  padding-bottom: 50px;\n  background-color: #fff;\n}\n.page .tree[data-v-105c4ebe] {\n  float: left;\n  background-color: #fff;\n}\n.page .tree .content_options[data-v-105c4ebe] {\n  width: 100%;\n  left: 0px;\n}\n.page .detail[data-v-105c4ebe] {\n  float: right;\n  padding-left: 15px;\n}\n.page .detail .content_options[data-v-105c4ebe] {\n  width: calc(100% - 15px);\n  left: 15px;\n}\n.page .detail .resourceButton[data-v-105c4ebe] {\n  margin: 5px;\n}\n", ""]);
 
 
 /***/ }),
@@ -4349,7 +4349,7 @@ var render = function() {
               "li",
               { staticClass: "modalLI" },
               [
-                _c("span", [_vm._v("名称:")]),
+                _c("span", [_vm._v("名称：")]),
                 _vm._v(" "),
                 _c("i-input", {
                   staticStyle: { width: "300px" },
@@ -4369,7 +4369,7 @@ var render = function() {
               "li",
               { staticClass: "modalLI" },
               [
-                _c("span", [_vm._v("描述:")]),
+                _c("span", [_vm._v("描述：")]),
                 _vm._v(" "),
                 _c("i-input", {
                   staticStyle: { width: "300px" },
@@ -4389,7 +4389,7 @@ var render = function() {
               "li",
               { staticClass: "modalLI" },
               [
-                _c("span", [_vm._v("所属项目:")]),
+                _c("span", [_vm._v("所属项目：")]),
                 _vm._v(" "),
                 _c(
                   "i-select",
@@ -5912,7 +5912,7 @@ var render = function() {
                 "li",
                 { staticClass: "modalLI" },
                 [
-                  _c("span", [_vm._v("名称:")]),
+                  _c("span", [_vm._v("名称：")]),
                   _vm._v(" "),
                   _c("i-input", {
                     staticStyle: { width: "300px" },
@@ -5932,7 +5932,7 @@ var render = function() {
                 "li",
                 { staticClass: "modalLI" },
                 [
-                  _c("span", [_vm._v("描述:")]),
+                  _c("span", [_vm._v("描述：")]),
                   _vm._v(" "),
                   _c("i-input", {
                     staticStyle: { width: "300px" },

@@ -289,7 +289,6 @@ export default {
         .content_options {
             height: 50px;
             line-height: 50px;
-            background-color: #fff;
             background: linear-gradient(rgba(255, 255, 255, 0.38), #fff);
             position: absolute;
             bottom: 16px;
@@ -303,6 +302,7 @@ export default {
             overflow: scroll;
             height: 100%;
             padding-bottom: 50px;
+            background-color: #fff;
         }
     }
     .tree {

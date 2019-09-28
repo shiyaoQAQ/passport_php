@@ -33,15 +33,15 @@
             <h3 v-else>编辑</h3>
             <ul>
                 <li  class="modalLI">
-                    <span>名称:</span>
+                    <span>名称：</span>
                     <i-input style="width:300px" v-model="modalData.name"></i-input>
                 </li>
                 <li  class="modalLI">
-                    <span>描述:</span>
+                    <span>描述：</span>
                     <i-input style="width:300px" v-model="modalData.desc"></i-input>
                 </li>
                 <li  class="modalLI">
-                    <span>所属项目:</span>
+                    <span>所属项目：</span>
                     <i-select 
                         style="width:300px" 
                         v-model="modalData.project"
