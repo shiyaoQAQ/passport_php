@@ -1,31 +1,41 @@
 <template>
     <div class="page">
-        <div class="pageCenter">
-            <Card class='detailElement'>
-                <p slot="title">
-                    <span v-if="departmentDetail!=null">
-                        {{ departmentDetail.name }}
-                    </span>
-                </p>
-                <p>
-                    <div><Button @click="saveResource" :loading="saveResourceLoading" class="saveResource" type="primary">保存资源</Button></div>
-                    <Collapse>
-                        <Panel :name="index + ''" :key="index" v-for="(controllerInfo, index) in resourceList">
-                            <span class="resourceGroupTitle">{{ controllerInfo.desc }}（{{ controllerInfo.controller }}）</span>
-                            <span :key="index" v-for="(resourceInfo, index) in controllerInfo.resource">
-                                <Tag color="cyan" v-if="resourceInfo.originIsChecked == 1">{{ resourceInfo.desc }}</Tag>
-                            </span>
-                            <p slot="content">
-                                <span :key="index" v-for="(resourceInfo, index) in controllerInfo.resource">
-                                    <Button class="resourceButton" @click="changeResource(resourceInfo)" size="small" type="info" v-if="resourceInfo.isChecked == 1">{{ resourceInfo.desc }}</Button>
-                                    <Button class="resourceButton" @click="changeResource(resourceInfo)" size="small" v-else>{{ resourceInfo.desc }}</Button>
-                                </span>
-                            </p>
-                        </Panel>
-                    </Collapse>
-                </p>
-            </Card>
-        </div>
+        <Card class='detail_element'>
+            <div slot="title" class="content_header">
+                <p class="content_header_text">{{ departmentDetail.name }}</p>
+                <Button
+                    @click="saveResource"
+                    :loading="saveResourceLoading"
+                    class="saveResource"
+                    type="primary">
+                    保存资源
+                </Button>
+            </div>
+            <Collapse
+                v-model="resourceCollapse"
+                v-if="resourceList.length"
+                class="content">
+                <Panel
+                    v-for="(controllerInfo, index) in resourceList"
+                    :name="controllerInfo.controller"
+                    :key="index">
+                    <span class="resourceGroupTitle">{{ controllerInfo.desc }}（{{ controllerInfo.controller }}）</span>
+                    <p slot="content">
+                        <span
+                            v-for="(resourceInfo, index) in controllerInfo.resource"
+                            :key="index">
+                            <Button
+                                class="resourceButton"
+                                @click="changeResource(resourceInfo)"
+                                size="small"
+                                :type="resourceInfo.isChecked == 1 ? 'info' : 'default'">
+                                {{ resourceInfo.desc }}
+                            </Button>
+                        </span>
+                    </p>
+                </Panel>
+            </Collapse>
+        </Card>
     </div>
 </template>
 
@@ -39,8 +49,9 @@ export default {
             project : '',
             saveResourceLoading : false,
 
-            departmentDetail : null,
+            departmentDetail : {},
             resourceList : [],
+            resourceCollapse: []
         }
     },
     components: {
@@ -56,6 +67,9 @@ export default {
                 },
                 type:'GET',
                 success: (res) => {
+                    res.data.resource_list.forEach((v) => {
+                        this.resourceCollapse.push(v.controller);
+                    })
                     this.resourceList = res.data.resource_list;
                 }
             })
@@ -157,18 +171,25 @@ export default {
 
 <style lang="less" scoped>
 .page {
-    // height: calc(100vh - 70px);
-    .pageCenter {
-        width: 1200px;
-        background-color: #fff;
+    .detail_element {
+        width: 1000px;
+        height: calc(100vh - 70px);
         margin: 0 auto;
-        padding: 15px;
-
-        .detailElement {
-            margin-bottom : 15px;
+        .content_header {
+            .content_header_text {
+                font-weight: 700;
+                width: auto;
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 10px;
+            }
         }
-        .resourceButton {
-            margin:3px;
+        .content {
+            height: calc(100vh - 165px);
+            overflow-y: scroll;
+            .actionButton {
+                margin: 5px;
+            }
         }
     }
 }

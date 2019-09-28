@@ -962,6 +962,16 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -972,8 +982,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             project: '',
             saveActionLoading: false,
 
-            departmentDetail: null,
-            actionList: []
+            departmentDetail: {},
+            actionList: [],
+            actionCollapse: []
         };
     },
 
@@ -992,6 +1003,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 },
                 type: 'GET',
                 success: function success(res) {
+                    res.data.action_list.forEach(function (v) {
+                        _this2.actionCollapse.push(v.controller);
+                    });
                     _this2.actionList = res.data.action_list;
                 }
             });
@@ -1128,6 +1142,16 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
@@ -1138,8 +1162,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
             project: '',
             saveResourceLoading: false,
 
-            departmentDetail: null,
-            resourceList: []
+            departmentDetail: {},
+            resourceList: [],
+            resourceCollapse: []
         };
     },
 
@@ -1158,6 +1183,9 @@ var Base64 = __webpack_require__("./node_modules/js-base64/base64.js").Base64;
                 },
                 type: 'GET',
                 success: function success(res) {
+                    res.data.resource_list.forEach(function (v) {
+                        _this2.resourceCollapse.push(v.controller);
+                    });
                     _this2.resourceList = res.data.resource_list;
                 }
             });
@@ -2684,7 +2712,7 @@ exports.push([module.i, ".org-tree-container {\n  display: inline-block;\n  padd
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page[data-v-c0c4c224] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-c0c4c224],\n.page .detail[data-v-c0c4c224] {\n  width: 50%;\n  position: relative;\n  height: 100%;\n}\n.page .tree .content_options[data-v-c0c4c224],\n.page .detail .content_options[data-v-c0c4c224] {\n  height: 50px;\n  line-height: 50px;\n  background-color: #fff;\n  box-shadow: 0 -5px 5px rgba(153, 153, 153, 0.15);\n  position: absolute;\n  bottom: 16px;\n  z-index: 1000;\n  text-align: center;\n}\n.page .tree .content_options Button[data-v-c0c4c224],\n.page .detail .content_options Button[data-v-c0c4c224] {\n  margin: 10px 10px;\n}\n.page .tree .content[data-v-c0c4c224],\n.page .detail .content[data-v-c0c4c224] {\n  overflow: scroll;\n  height: 100%;\n  padding-bottom: 50px;\n}\n.page .tree[data-v-c0c4c224] {\n  float: left;\n  background-color: #fff;\n}\n.page .tree .content_options[data-v-c0c4c224] {\n  width: 100%;\n  left: 0px;\n}\n.page .detail[data-v-c0c4c224] {\n  float: right;\n  padding-left: 15px;\n}\n.page .detail .content_options[data-v-c0c4c224] {\n  width: calc(100% - 15px);\n  left: 15px;\n}\n.page .detail .actionButton[data-v-c0c4c224] {\n  margin: 5px;\n}\n", ""]);
+exports.push([module.i, ".page[data-v-c0c4c224] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-c0c4c224],\n.page .detail[data-v-c0c4c224] {\n  width: 50%;\n  position: relative;\n  height: 100%;\n}\n.page .tree .content_options[data-v-c0c4c224],\n.page .detail .content_options[data-v-c0c4c224] {\n  height: 50px;\n  line-height: 50px;\n  background-color: #fff;\n  background: linear-gradient(rgba(255, 255, 255, 0.38), #fff);\n  position: absolute;\n  bottom: 16px;\n  z-index: 1000;\n  text-align: center;\n}\n.page .tree .content_options Button[data-v-c0c4c224],\n.page .detail .content_options Button[data-v-c0c4c224] {\n  margin: 10px 10px;\n}\n.page .tree .content[data-v-c0c4c224],\n.page .detail .content[data-v-c0c4c224] {\n  overflow: scroll;\n  height: 100%;\n  padding-bottom: 50px;\n}\n.page .tree[data-v-c0c4c224] {\n  float: left;\n  background-color: #fff;\n}\n.page .tree .content_options[data-v-c0c4c224] {\n  width: 100%;\n  left: 0px;\n}\n.page .detail[data-v-c0c4c224] {\n  float: right;\n  padding-left: 15px;\n}\n.page .detail .content_options[data-v-c0c4c224] {\n  width: calc(100% - 15px);\n  left: 15px;\n}\n.page .detail .actionButton[data-v-c0c4c224] {\n  margin: 5px;\n}\n", ""]);
 
 
 /***/ }),
@@ -2704,7 +2732,7 @@ exports.push([module.i, ".page h2[data-v-2891a816] {\n  margin-bottom: 15px;\n}\
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page .pageCenter[data-v-138195f4] {\n  width: 1200px;\n  background-color: #fff;\n  margin: 0 auto;\n  padding: 15px;\n}\n.page .pageCenter .detailElement[data-v-138195f4] {\n  margin-bottom: 15px;\n}\n.page .pageCenter .actionButton[data-v-138195f4] {\n  margin: 3px;\n}\n", ""]);
+exports.push([module.i, ".page .detail_element[data-v-138195f4] {\n  width: 1000px;\n  height: calc(100vh - 70px);\n  margin: 0 auto;\n}\n.page .detail_element .content_header .content_header_text[data-v-138195f4] {\n  font-weight: 700;\n  width: auto;\n  display: inline-block;\n  vertical-align: middle;\n  margin-right: 10px;\n}\n.page .detail_element .content[data-v-138195f4] {\n  height: calc(100vh - 165px);\n  overflow-y: scroll;\n}\n.page .detail_element .content .actionButton[data-v-138195f4] {\n  margin: 5px;\n}\n", ""]);
 
 
 /***/ }),
@@ -2714,7 +2742,7 @@ exports.push([module.i, ".page .pageCenter[data-v-138195f4] {\n  width: 1200px;\
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page .pageCenter[data-v-088f4746] {\n  width: 1200px;\n  background-color: #fff;\n  margin: 0 auto;\n  padding: 15px;\n}\n.page .pageCenter .detailElement[data-v-088f4746] {\n  margin-bottom: 15px;\n}\n.page .pageCenter .resourceButton[data-v-088f4746] {\n  margin: 3px;\n}\n", ""]);
+exports.push([module.i, ".page .detail_element[data-v-088f4746] {\n  width: 1000px;\n  height: calc(100vh - 70px);\n  margin: 0 auto;\n}\n.page .detail_element .content_header .content_header_text[data-v-088f4746] {\n  font-weight: 700;\n  width: auto;\n  display: inline-block;\n  vertical-align: middle;\n  margin-right: 10px;\n}\n.page .detail_element .content[data-v-088f4746] {\n  height: calc(100vh - 165px);\n  overflow-y: scroll;\n}\n.page .detail_element .content .actionButton[data-v-088f4746] {\n  margin: 5px;\n}\n", ""]);
 
 
 /***/ }),
@@ -2734,7 +2762,7 @@ exports.push([module.i, ".page[data-v-e9683ca8] {\n  height: calc(100vh - 70px);
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".page[data-v-105c4ebe] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-105c4ebe],\n.page .detail[data-v-105c4ebe] {\n  width: 50%;\n  position: relative;\n  height: 100%;\n}\n.page .tree .content_options[data-v-105c4ebe],\n.page .detail .content_options[data-v-105c4ebe] {\n  height: 50px;\n  line-height: 50px;\n  background-color: #fff;\n  box-shadow: 0 -5px 5px rgba(153, 153, 153, 0.15);\n  position: absolute;\n  bottom: 16px;\n  z-index: 1000;\n  text-align: center;\n}\n.page .tree .content_options Button[data-v-105c4ebe],\n.page .detail .content_options Button[data-v-105c4ebe] {\n  margin: 10px 10px;\n}\n.page .tree .content[data-v-105c4ebe],\n.page .detail .content[data-v-105c4ebe] {\n  overflow: scroll;\n  height: 100%;\n  padding-bottom: 50px;\n}\n.page .tree[data-v-105c4ebe] {\n  float: left;\n  background-color: #fff;\n}\n.page .tree .content_options[data-v-105c4ebe] {\n  width: 100%;\n  left: 0px;\n}\n.page .detail[data-v-105c4ebe] {\n  float: right;\n  padding-left: 15px;\n}\n.page .detail .content_options[data-v-105c4ebe] {\n  width: calc(100% - 15px);\n  left: 15px;\n}\n.page .detail .resourceButton[data-v-105c4ebe] {\n  margin: 5px;\n}\n", ""]);
+exports.push([module.i, ".page[data-v-105c4ebe] {\n  height: calc(100vh - 70px);\n}\n.page .tree[data-v-105c4ebe],\n.page .detail[data-v-105c4ebe] {\n  width: 50%;\n  position: relative;\n  height: 100%;\n}\n.page .tree .content_options[data-v-105c4ebe],\n.page .detail .content_options[data-v-105c4ebe] {\n  height: 50px;\n  line-height: 50px;\n  background-color: #fff;\n  background: linear-gradient(rgba(255, 255, 255, 0.38), #fff);\n  position: absolute;\n  bottom: 16px;\n  z-index: 1000;\n  text-align: center;\n}\n.page .tree .content_options Button[data-v-105c4ebe],\n.page .detail .content_options Button[data-v-105c4ebe] {\n  margin: 10px 10px;\n}\n.page .tree .content[data-v-105c4ebe],\n.page .detail .content[data-v-105c4ebe] {\n  overflow: scroll;\n  height: 100%;\n  padding-bottom: 50px;\n}\n.page .tree[data-v-105c4ebe] {\n  float: left;\n  background-color: #fff;\n}\n.page .tree .content_options[data-v-105c4ebe] {\n  width: 100%;\n  left: 0px;\n}\n.page .detail[data-v-105c4ebe] {\n  float: right;\n  padding-left: 15px;\n}\n.page .detail .content_options[data-v-105c4ebe] {\n  width: calc(100% - 15px);\n  left: 15px;\n}\n.page .detail .resourceButton[data-v-105c4ebe] {\n  margin: 5px;\n}\n", ""]);
 
 
 /***/ }),
@@ -4412,134 +4440,120 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "page" }, [
-    _c(
-      "div",
-      { staticClass: "pageCenter" },
-      [
-        _c(
-          "Card",
-          { staticClass: "detailElement" },
-          [
-            _c("p", { attrs: { slot: "title" }, slot: "title" }, [
-              _vm.departmentDetail != null
-                ? _c("span", [
-                    _vm._v(
-                      "\n                    " +
-                        _vm._s(_vm.departmentDetail.name) +
-                        "\n                "
-                    )
-                  ])
-                : _vm._e()
-            ]),
-            _vm._v(" "),
-            _c("p"),
-            _c(
-              "div",
-              [
-                _c(
-                  "Button",
-                  {
-                    staticClass: "saveAction",
-                    attrs: { loading: _vm.saveActionLoading, type: "primary" },
-                    on: { click: _vm.saveAction }
-                  },
-                  [_vm._v("保存权限")]
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "Collapse",
-              _vm._l(_vm.actionList, function(controllerInfo, index) {
-                return _c(
-                  "Panel",
-                  { key: index, attrs: { name: index + "" } },
-                  [
-                    _c("span", { staticClass: "actionGroupTitle" }, [
-                      _vm._v(
-                        _vm._s(controllerInfo.desc) +
-                          "（" +
-                          _vm._s(controllerInfo.controller) +
-                          "）"
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _vm._l(controllerInfo.action, function(actionInfo, index) {
-                      return _c(
-                        "span",
-                        { key: index },
-                        [
-                          actionInfo.originIsChecked == 1
-                            ? _c("Tag", { attrs: { color: "cyan" } }, [
-                                _vm._v(_vm._s(actionInfo.desc))
-                              ])
-                            : _vm._e()
-                        ],
-                        1
-                      )
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "p",
-                      { attrs: { slot: "content" }, slot: "content" },
-                      _vm._l(controllerInfo.action, function(
-                        actionInfo,
-                        index
-                      ) {
-                        return _c(
-                          "span",
-                          { key: index },
-                          [
-                            actionInfo.isChecked == 1
-                              ? _c(
-                                  "Button",
-                                  {
-                                    staticClass: "actionButton",
-                                    attrs: { size: "small", type: "info" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.changeAction(actionInfo)
-                                      }
-                                    }
-                                  },
-                                  [_vm._v(_vm._s(actionInfo.desc))]
-                                )
-                              : _c(
-                                  "Button",
-                                  {
-                                    staticClass: "actionButton",
-                                    attrs: { size: "small" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.changeAction(actionInfo)
-                                      }
-                                    }
-                                  },
-                                  [_vm._v(_vm._s(actionInfo.desc))]
-                                )
-                          ],
-                          1
+  return _c(
+    "div",
+    { staticClass: "page" },
+    [
+      _c(
+        "Card",
+        { staticClass: "detail_element" },
+        [
+          _c(
+            "div",
+            {
+              staticClass: "content_header",
+              attrs: { slot: "title" },
+              slot: "title"
+            },
+            [
+              _c("p", { staticClass: "content_header_text" }, [
+                _vm._v(_vm._s(_vm.departmentDetail.name))
+              ]),
+              _vm._v(" "),
+              _c(
+                "Button",
+                {
+                  staticClass: "saveAction",
+                  attrs: { loading: _vm.saveActionLoading, type: "primary" },
+                  on: { click: _vm.saveAction }
+                },
+                [_vm._v("\n                保存资源\n            ")]
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.actionList.length
+            ? _c(
+                "Collapse",
+                {
+                  staticClass: "content",
+                  model: {
+                    value: _vm.actionCollapse,
+                    callback: function($$v) {
+                      _vm.actionCollapse = $$v
+                    },
+                    expression: "actionCollapse"
+                  }
+                },
+                _vm._l(_vm.actionList, function(controllerInfo, index) {
+                  return _c(
+                    "Panel",
+                    { key: index, attrs: { name: controllerInfo.controller } },
+                    [
+                      _c("span", { staticClass: "actionGroupTitle" }, [
+                        _vm._v(
+                          _vm._s(controllerInfo.desc) +
+                            "（" +
+                            _vm._s(controllerInfo.controller) +
+                            "）"
                         )
-                      }),
-                      0
-                    )
-                  ],
-                  2
-                )
-              }),
-              1
-            ),
-            _vm._v(" "),
-            _c("p")
-          ],
-          1
-        )
-      ],
-      1
-    )
-  ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "p",
+                        { attrs: { slot: "content" }, slot: "content" },
+                        _vm._l(controllerInfo.action, function(
+                          actionInfo,
+                          index
+                        ) {
+                          return _c(
+                            "span",
+                            { key: index },
+                            [
+                              _c(
+                                "Button",
+                                {
+                                  staticClass: "actionButton",
+                                  attrs: {
+                                    size: "small",
+                                    type:
+                                      actionInfo.isChecked == 1
+                                        ? "info"
+                                        : "default"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.changeAction(actionInfo)
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(actionInfo.desc) +
+                                      "\n                        "
+                                  )
+                                ]
+                              )
+                            ],
+                            1
+                          )
+                        }),
+                        0
+                      )
+                    ]
+                  )
+                }),
+                1
+              )
+            : _vm._e()
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -4558,140 +4572,120 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "page" }, [
-    _c(
-      "div",
-      { staticClass: "pageCenter" },
-      [
-        _c(
-          "Card",
-          { staticClass: "detailElement" },
-          [
-            _c("p", { attrs: { slot: "title" }, slot: "title" }, [
-              _vm.departmentDetail != null
-                ? _c("span", [
-                    _vm._v(
-                      "\n                    " +
-                        _vm._s(_vm.departmentDetail.name) +
-                        "\n                "
-                    )
-                  ])
-                : _vm._e()
-            ]),
-            _vm._v(" "),
-            _c("p"),
-            _c(
-              "div",
-              [
-                _c(
-                  "Button",
-                  {
-                    staticClass: "saveResource",
-                    attrs: {
-                      loading: _vm.saveResourceLoading,
-                      type: "primary"
+  return _c(
+    "div",
+    { staticClass: "page" },
+    [
+      _c(
+        "Card",
+        { staticClass: "detail_element" },
+        [
+          _c(
+            "div",
+            {
+              staticClass: "content_header",
+              attrs: { slot: "title" },
+              slot: "title"
+            },
+            [
+              _c("p", { staticClass: "content_header_text" }, [
+                _vm._v(_vm._s(_vm.departmentDetail.name))
+              ]),
+              _vm._v(" "),
+              _c(
+                "Button",
+                {
+                  staticClass: "saveResource",
+                  attrs: { loading: _vm.saveResourceLoading, type: "primary" },
+                  on: { click: _vm.saveResource }
+                },
+                [_vm._v("\n                保存资源\n            ")]
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.resourceList.length
+            ? _c(
+                "Collapse",
+                {
+                  staticClass: "content",
+                  model: {
+                    value: _vm.resourceCollapse,
+                    callback: function($$v) {
+                      _vm.resourceCollapse = $$v
                     },
-                    on: { click: _vm.saveResource }
-                  },
-                  [_vm._v("保存资源")]
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "Collapse",
-              _vm._l(_vm.resourceList, function(controllerInfo, index) {
-                return _c(
-                  "Panel",
-                  { key: index, attrs: { name: index + "" } },
-                  [
-                    _c("span", { staticClass: "resourceGroupTitle" }, [
-                      _vm._v(
-                        _vm._s(controllerInfo.desc) +
-                          "（" +
-                          _vm._s(controllerInfo.controller) +
-                          "）"
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _vm._l(controllerInfo.resource, function(
-                      resourceInfo,
-                      index
-                    ) {
-                      return _c(
-                        "span",
-                        { key: index },
-                        [
-                          resourceInfo.originIsChecked == 1
-                            ? _c("Tag", { attrs: { color: "cyan" } }, [
-                                _vm._v(_vm._s(resourceInfo.desc))
-                              ])
-                            : _vm._e()
-                        ],
-                        1
-                      )
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "p",
-                      { attrs: { slot: "content" }, slot: "content" },
-                      _vm._l(controllerInfo.resource, function(
-                        resourceInfo,
-                        index
-                      ) {
-                        return _c(
-                          "span",
-                          { key: index },
-                          [
-                            resourceInfo.isChecked == 1
-                              ? _c(
-                                  "Button",
-                                  {
-                                    staticClass: "resourceButton",
-                                    attrs: { size: "small", type: "info" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.changeResource(resourceInfo)
-                                      }
-                                    }
-                                  },
-                                  [_vm._v(_vm._s(resourceInfo.desc))]
-                                )
-                              : _c(
-                                  "Button",
-                                  {
-                                    staticClass: "resourceButton",
-                                    attrs: { size: "small" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.changeResource(resourceInfo)
-                                      }
-                                    }
-                                  },
-                                  [_vm._v(_vm._s(resourceInfo.desc))]
-                                )
-                          ],
-                          1
+                    expression: "resourceCollapse"
+                  }
+                },
+                _vm._l(_vm.resourceList, function(controllerInfo, index) {
+                  return _c(
+                    "Panel",
+                    { key: index, attrs: { name: controllerInfo.controller } },
+                    [
+                      _c("span", { staticClass: "resourceGroupTitle" }, [
+                        _vm._v(
+                          _vm._s(controllerInfo.desc) +
+                            "（" +
+                            _vm._s(controllerInfo.controller) +
+                            "）"
                         )
-                      }),
-                      0
-                    )
-                  ],
-                  2
-                )
-              }),
-              1
-            ),
-            _vm._v(" "),
-            _c("p")
-          ],
-          1
-        )
-      ],
-      1
-    )
-  ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "p",
+                        { attrs: { slot: "content" }, slot: "content" },
+                        _vm._l(controllerInfo.resource, function(
+                          resourceInfo,
+                          index
+                        ) {
+                          return _c(
+                            "span",
+                            { key: index },
+                            [
+                              _c(
+                                "Button",
+                                {
+                                  staticClass: "resourceButton",
+                                  attrs: {
+                                    size: "small",
+                                    type:
+                                      resourceInfo.isChecked == 1
+                                        ? "info"
+                                        : "default"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.changeResource(resourceInfo)
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                            " +
+                                      _vm._s(resourceInfo.desc) +
+                                      "\n                        "
+                                  )
+                                ]
+                              )
+                            ],
+                            1
+                          )
+                        }),
+                        0
+                      )
+                    ]
+                  )
+                }),
+                1
+              )
+            : _vm._e()
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

@@ -289,7 +289,7 @@ export default {
             height: 50px;
             line-height: 50px;
             background-color: #fff;
-            box-shadow: 0 -5px 5px rgba(153,153,153,0.15);
+            background: linear-gradient(rgba(255, 255, 255, 0.38), #fff);
             position: absolute;
             bottom: 16px;
             z-index: 1000;

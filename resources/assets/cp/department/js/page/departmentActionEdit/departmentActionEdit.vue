@@ -1,31 +1,41 @@
 <template>
     <div class="page">
-        <div class="pageCenter">
-            <Card class='detailElement'>
-                <p slot="title">
-                    <span v-if="departmentDetail!=null">
-                        {{ departmentDetail.name }}
-                    </span>
-                </p>
-                <p>
-                    <div><Button @click="saveAction" :loading="saveActionLoading" class="saveAction" type="primary">保存权限</Button></div>
-                    <Collapse>
-                        <Panel :name="index + ''" :key="index" v-for="(controllerInfo, index) in actionList">
-                            <span class="actionGroupTitle">{{ controllerInfo.desc }}（{{ controllerInfo.controller }}）</span>
-                            <span :key="index" v-for="(actionInfo, index) in controllerInfo.action">
-                                <Tag color="cyan" v-if="actionInfo.originIsChecked == 1">{{ actionInfo.desc }}</Tag>
-                            </span>
-                            <p slot="content">
-                                <span :key="index" v-for="(actionInfo, index) in controllerInfo.action">
-                                    <Button class="actionButton" @click="changeAction(actionInfo)" size="small" type="info" v-if="actionInfo.isChecked == 1">{{ actionInfo.desc }}</Button>
-                                    <Button class="actionButton" @click="changeAction(actionInfo)" size="small" v-else>{{ actionInfo.desc }}</Button>
-                                </span>
-                            </p>
-                        </Panel>
-                    </Collapse>
-                </p>
-            </Card>
-        </div>
+        <Card class='detail_element'>
+            <div slot="title" class="content_header">
+                <p class="content_header_text">{{ departmentDetail.name }}</p>
+                <Button 
+                    @click="saveAction"
+                    :loading="saveActionLoading"
+                    class="saveAction"
+                    type="primary">
+                    保存资源
+                </Button>
+            </div>
+            <Collapse
+                v-model="actionCollapse"
+                v-if="actionList.length"
+                class="content">
+                <Panel
+                    v-for="(controllerInfo, index) in actionList"
+                    :name="controllerInfo.controller"
+                    :key="index">
+                    <span class="actionGroupTitle">{{ controllerInfo.desc }}（{{ controllerInfo.controller }}）</span>
+                    <p slot="content">
+                        <span
+                            v-for="(actionInfo, index) in controllerInfo.action"
+                            :key="index">
+                            <Button
+                                class="actionButton"
+                                @click="changeAction(actionInfo)"
+                                size="small"
+                                :type="actionInfo.isChecked == 1 ? 'info' : 'default'">
+                                {{ actionInfo.desc }}
+                            </Button>
+                        </span>
+                    </p>
+                </Panel>
+            </Collapse>
+        </Card>
     </div>
 </template>
 
@@ -39,8 +49,9 @@ export default {
             project : '',
             saveActionLoading : false,
 
-            departmentDetail : null,
+            departmentDetail : {},
             actionList : [],
+            actionCollapse: []
         }
     },
     components: {
@@ -56,6 +67,9 @@ export default {
                 },
                 type:'GET',
                 success: (res) => {
+                    res.data.action_list.forEach((v) => {
+                        this.actionCollapse.push(v.controller)
+                    })
                     this.actionList = res.data.action_list;
                 }
             })
@@ -157,20 +171,26 @@ export default {
 
 <style lang="less" scoped>
 .page {
-    // height: calc(100vh - 70px);
-    .pageCenter {
-        width: 1200px;
-        background-color: #fff;
+    .detail_element {
+        width: 1000px;
+        height: calc(100vh - 70px);
         margin: 0 auto;
-        padding: 15px;
-
-        .detailElement {
-            margin-bottom : 15px;
+        .content_header {
+            .content_header_text {
+                font-weight: 700;
+                width: auto;
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 10px;
+            }
         }
-        .actionButton {
-            margin:3px;
+        .content {
+            height: calc(100vh - 165px);
+            overflow-y: scroll;
+            .actionButton {
+                margin: 5px;
+            }
         }
     }
 }
 </style>
-
