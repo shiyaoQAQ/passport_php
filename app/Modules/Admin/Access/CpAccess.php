@@ -1208,7 +1208,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                             'data_limit'    => $one['data_limit'],
                             'project'    => $groupProjectMap[$one['gid']],
                         );
-                    $actionList[$one['gid']][$tmp['controller']][$tmp['action']] = $tmp;
+                    $actionList[$groupProjectMap[$one['gid']]][$tmp['controller']][$tmp['action']] = $tmp;
                 }
             }
         }
