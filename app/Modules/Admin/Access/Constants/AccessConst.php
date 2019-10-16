@@ -70,7 +70,8 @@ class AccessConst
                     'opf-wholesale-order' => '1.5批可查看',
                     'can-dblink-price' => '不可自定义价格',
                     'opf-wholesale-edit' => '可修改1.5批商户',
-                    'order-refund-super' => '手动退款超级权限'
+                    'order-refund-super' => '手动退款超级权限',
+                    'show-edit-expectcost' => '毛利信息编辑采购价'
                 ),
             ),
             'refund'=>array(
@@ -200,6 +201,8 @@ class AccessConst
                 'desc' => '客户详情页操作资源',
                 'resource' => [
                     'custom-change-phone' => '手机号编辑',
+                    'custom-change-must-pay-ok' => '编辑先款后货-是',
+                    'custom-change-must-pay-no' => '编辑先款后货-否',
                 ],
             ],
     );
@@ -298,6 +301,10 @@ class AccessConst
                 'App\Http\Controllers\Cp\KaController',
                 'App\Http\Controllers\Cp\Workorder',
                 'App\Http\Controllers\CpApi\WorkorderController',
+                'App\Http\Controllers\Cp\OrderRefund',
+                'App\Http\Controllers\Cp\FinanceController',
+                'App\Http\Controllers\Cp\Report\Purchase\CateBrandProfitController',
+                'App\Http\Controllers\Cp\WholesaleController',
             ],
             'rules' => [
                 'App\Http\Controllers\Cp\OrderController' => [
@@ -403,7 +410,31 @@ class AccessConst
                         'function' => 'accessPathCallback',
                         'data_key' => 'city_id',
                     ],
-                ]
+                ],
+                'App\Http\Controllers\Cp\OrderRefund' => [
+                    'check_key' => ['id'],
+                    'callback'  => [
+                        'class'    => 'App\Modules\Goods\GoodsThirdPartyModule',
+                        'function' => 'accessPathCallback',
+                        'data_key' => 'city_id',
+                    ],
+                ],
+                'App\Http\Controllers\Cp\FinanceController' => [
+                    'check_key' => ['id'],
+                    'callback'  => [
+                        'class'    => 'App\Modules\Goods\GoodsThirdPartyModule',
+                        'function' => 'accessPathCallback',
+                        'data_key' => 'city_id',
+                    ],
+                ],
+                'App\Http\Controllers\Cp\WholesaleController' => [
+                    'check_key' => ['id'],
+                    'callback'  => [
+                        'class'    => 'App\Modules\Sales\WholesaleModule',
+                        'function' => 'accessPathCallback',
+                        'data_key' => 'city_id',
+                    ],
+                ],
             ],
         ],
     );
