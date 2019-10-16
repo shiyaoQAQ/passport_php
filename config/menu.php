@@ -103,18 +103,12 @@ return [
          '采购' => [
             'logo' => 'document-text',
             'menu_list' => [
-                // "/purchasestore/create" => '新增采购单',
                 $zsfucaiCpUrl . "/purchasestore/list" => '采购单列表',
-                // "/purchaserefund/create" => '新增采购退货单',
                 $zsfucaiCpUrl . "/purchaserefund/list" => '采购退货单列表',
                 $zsfucaiCpUrl . "/report/unsalableGoods" => '滞销报表',
                 $zsfucaiCpUrl . "/purchase/temp" => '临采明细',
                 $zsfucaiCpUrl . "/purchase/bill" => '临采账务',
                 $zsfucaiCpUrl . "/goods/stockWarning" => '库存预警',
-                // "/purchase/profit/skuProfit" => '商品毛利',
-                // "/purchase/profit/skuProfitnew" => '商品毛利(新，测试)',
-                $zsfucaiCpUrl . "/purchase/order/index" => '临采订单占比',
-                // "/purchase/profit/catProfit" => '毛利汇总',
                 $zsfucaiCpUrl . "/report/oemKeyData" => 'OEM-壁贝关键数据报表',
                 $zsfucaiCpUrl . "/report/OEMReport" => 'OEM销售数据报表',
                 $zsfucaiCpUrl . "/report/newWoodsReport" => '新木类数据报表',
@@ -126,7 +120,6 @@ return [
                 $zsfucaiCpUrl . "/goods/exammingReport" => '商品检测报告',
                 $zsfucaiCpUrl . "/report/powderOemReplaceRate" => '粉类OEM替代率数据报表',
                 $zsfucaiCpUrl . "/report/powderOemCustomerReplaceRate" => '粉类-客户OEM替代率报表',
-                // "/purchase/purchaseList" => '采购单',
                 $zsfucaiCpUrl . "/purchase/profit/skuProfitnewTest" => '商品毛利(最新)',
             ],
         ],    
@@ -141,9 +134,10 @@ return [
         '报表' => [
             'logo' => 'stats-bars',
             'menu_list' => [
-                'G2' => [
-                    $zsfucaiCpUrl. "/report/okr/index" => 'G2看板',
-                    $zsfucaiCpUrl. "/report/seller/sellerAchievement" => '销售业绩总报表',
+                '管理' => [
+                    $zsfucaiCpUrl. "/report/seller/sellerAchievement" => 'G1',
+                    $zsfucaiCpUrl. "/report/incomeCostReport" => 'G2',
+                    $zsfucaiCpUrl. "/reportform/seller/amoeba" => '阿米巴0.1版',
                 ],
                 '通用' => [
                     $zsfucaiCpUrl . '/exportData/order/orderDeliveryInfo' => '自助导出数据',
@@ -157,7 +151,6 @@ return [
                     $zsfucaiCpUrl . "/report/salerPerformance" => '销售绩效统计报表',
                     $zsfucaiCpUrl . "/report/salerPerformance/hr"=> '销售绩效统计表（原始版）',
                     $zsfucaiCpUrl . "/sales/firstOrderReferReport" => '首单渠道数据报表',
-                    $zsfucaiCpUrl . "/report/incomeCostReport" => '成本收入关键数据报表',
                     $zsfucaiCpUrl . "/reportform/salerank" => '销售排行榜',
                     $zsfucaiCpUrl . "/report/seller/online/pk" => '销售线上下单争霸赛报表',
                     $zsfucaiCpUrl . "/reportform/dailySaleRank" => '掌辅英雄榜',
@@ -172,10 +165,8 @@ return [
                     $zsfucaiCpUrl . "/reportform/saleReport" => '销售管理报表',
                     $zsfucaiCpUrl . "/salestats/keyCustomer" => '重点客户数据',
                     $zsfucaiCpUrl . "/salestats/keyCustomerTrend" => '重点客户数据趋势图',
-                    $zsfucaiCpUrl . "/report/CustomerRecommentReport" => '客户评价数据',
                     $zsfucaiCpUrl . '/report/marketCost' => '市场成本明细报表',
                     $zsfucaiCpUrl . '/report/sellerImportCustom' => '销售录入数据报表'
-                    // "/salestats/smartPanelEffects" => '智能推荐面板效果报表',
                 ],
                 '销售-风控'=>[
                     $zsfucaiCpUrl . "/sales/unpayOrderList" => '欠款订单列表',
@@ -200,11 +191,13 @@ return [
                     $zsfucaiCpUrl . "/report/express/ExpressLoadTime" => '物流装车时效报表',
                     $zsfucaiCpUrl . "/report/express/ExpressUseTime" => '配送单各流程耗时表',
                     $zsfucaiCpUrl . "/report/warehouse" => '库房绩效统计报表',
+                    $zsfucaiCpUrl . "/report/orderExpressCost" => '订单维度物流成本报表',
                 ],
                 '采购' => [
-                    $zsfucaiCpUrl . '/report/purchaseTemporaries' => '临采时效报表',
+                    $zsfucaiCpUrl . '/report/tempPurchaseReport' => '临采时效报表',
                     $zsfucaiCpUrl . "/report/purchasePriChangeReport" => '采购价格变更记录',
                     $zsfucaiCpUrl . "/report/oversales/list" => '超卖商品报表',
+                    $zsfucaiCpUrl . '/report/cateBrandProfit/list' => '分类品牌毛利报表',
                 ],
                 '缺货统计' => [
                     $zsfucaiCpUrl . '/report/stockout' => '缺货统计',
@@ -219,7 +212,6 @@ return [
         '商品及供应商' => [
             'logo' => 'stats-bars',
             'menu_list' => [
-                // "/goods/purchase" => '商品采购信息',
                 $zsfucaiCpUrl . "/goods/addGoods" => '商品添加',
                 $zsfucaiCpUrl . "/goods/goodsList" => '商品列表',
                 $zsfucaiCpUrl . "/supplier/addSupplier" => '供应商添加',
@@ -265,9 +257,7 @@ return [
         '仓库' => [
             'logo' => 'model-s',
             'menu_list' => [
-                // "/instore/create" => '新增入库单',
                 $zsfucaiCpUrl . "/instore/list" => '入库单列表',
-                // "/outstore/create" => '新增出库单',
                 $zsfucaiCpUrl . "/outstore/list" => '出库单列表',
                 $zsfucaiCpUrl . "/check/list" => '盘点单列表',
                 $zsfucaiCpUrl . "/gainloss/list" => '损益单列表',
@@ -278,7 +268,7 @@ return [
         '珊瑚家' => [
             'logo' => 'ios-home',
             'menu_list' => [
-                $shanhujiaCpUrl . "/" => '珊瑚家欢迎页',
+                // $shanhujiaCpUrl . "/" => '珊瑚家欢迎页',
                 $shanhujiaCpUrl . "/goods" => '商品',
                 $shanhujiaCpUrl . "/order" => '订单',
             ],
