@@ -46,7 +46,7 @@ class HomeController extends Controller
             'error_msg' => Session::get('home_login_error_msg'),
             'appid'     => config('wechat.work.default.corp_id'),
             'agentid'   => config('wechat.work.default.agent_id'),
-            'old_url'   => 'http://' .config('app.url'). '/admin',
+            // 'old_url'   => 'http://' .config('app.url'). '/admin',
         ];
         Session::put('home_login_error_msg', '');
         return view('admin.home.login', $assign);

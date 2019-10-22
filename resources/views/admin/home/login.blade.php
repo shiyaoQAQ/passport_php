@@ -204,9 +204,9 @@
                         "id" : "work_code",  
                         "appid" : "{{$appid}}",
                         "agentid" : "{{$agentid}}",
-                        "redirect_uri" :"https://cp.{{config('app.url')}}/home/wxcode",
+                        "redirect_uri" :"https://{{config('app.url')}}/cp/home/wxcode",
                         "state" : state,
-                        "href" : "https://cp.{{config('app.url')}}/css/cp_login.css",
+                        "href" : "https://{{config('app.url')}}/css/cp_login.css",
                 })
             },
             doLogin(){
