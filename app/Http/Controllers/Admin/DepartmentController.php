@@ -25,6 +25,9 @@ class DepartmentController extends Controller
         return view('cp.department.index');
     }
 
+    /**
+     * @desc 显示组织架构树
+     */
     public function showDepartmentTree()
     {
         $objDepart = new CpDepartment();
@@ -173,7 +176,7 @@ class DepartmentController extends Controller
     }
 
     /**
-     * 获取部门资源信息
+     * @desc 获取部门资源信息
      *
      * @param [type] $did
      * @param Request $request

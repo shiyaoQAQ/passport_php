@@ -109,8 +109,9 @@ class UserController extends Controller
         $cpRoleList = CpUserModule::getCpRoleList();
         return view('admin.access.addDepartmentUser')->with('cp_role_list', $cpRoleList);
     }
+
     /**
-     * @desc  新增管理员-请求
+     * @desc 新增管理员-请求
      */
     public function addDepartmentUserJson(Request $request){
         try{
