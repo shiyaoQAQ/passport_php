@@ -110,6 +110,7 @@ Route::get('/home/testLogin', 'HomeController@testLogin');
 
 Route::get('/home/login', 'HomeController@login');
 Route::post('/home/login', 'HomeController@storeLogin');
+Route::post('/home/login/sendSms', 'HomeController@loginSendSms');
 Route::get('/home/wxcode', 'HomeController@wxCode');
 // 通过code获取token接口实质上不需要有任何权限
 Route::post('/oauth/token', 'OauthController@getOauthToken');

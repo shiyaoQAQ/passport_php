@@ -29,24 +29,6 @@ class HomeController extends Controller
         return view('admin.home.welcome');
     }
 
-    // /**
-    //  * @desc 临时oauth接口
-    //  */
-    // public function tempOauth(Request $request)
-    // {
-    //     $user = UserModule::getUserInfo(CpAccess::theUid());
-    //     $user = empty($user) ? [] : $user->toArray();
-    //     // 生成token
-    //     $timestamp = time();
-    //     $token = \YC_Util::getLaravelToken($user, $timestamp);
-    //     return redirect('http://cp.' . config('app.shanhujia_url') . '/login/tempOauth/check?' . http_build_query([
-    //         'refer' => $request->input('refer'),
-    //         'token' => $token,
-    //         'time' => $timestamp,
-    //         'user_name' => $user['user_name'],
-    //     ]));
-    // }
-
     /**
      * @desc 退出登录
      */
@@ -75,20 +57,45 @@ class HomeController extends Controller
      */
     public function storeLogin(Request $request)
     {
-        try {
-            $mobile   = trim($request->input('mobile'));
-            if (empty($mobile) || YC_Util::checkCpMobile($mobile) == false) {
-                throw new Exception("用户名格式不正确", 1);
-            }
-            $password = htmlspecialchars($request->input('password')); 
-            if (empty($password)) {
-                throw new Exception("密码不能为空", 1);
-            }
-            $state = CpUserModule::storeLoginInfo($mobile, $password);
-            return $this->json(0, 'ok', $state);
-        } catch (Exception $e) {
-            return $this->json($e->getCode(), $e->getMessage()); 
+        // 如果有验证码 直接进行登录 没有则走企业微信路线
+        $smsCode = trim($request->input('smscode'));
+        $mobile   = trim($request->input('mobile'));
+        if (empty($mobile) || YC_Util::checkCpMobile($mobile) == false) {
+            throw new WorkException("用户名格式不正确", 1);
         }
+        $password = htmlspecialchars($request->input('password')); 
+        if (empty($password)) {
+            throw new WorkException("密码不能为空", 1);
+        }
+        if ($smsCode) {
+            CpUserModule::login($mobile, $password, $smsCode);
+            $result = [
+                'type' => 'loginResult',
+                'result' => 0,
+            ];
+        } else {
+            $state = CpUserModule::storeLoginInfo($mobile, $password);
+            $result = [
+                'type' => 'state',
+                'result' => $state,
+            ];
+        }
+
+        return $this->json(0, 'ok', $result);
+    }
+
+     /**
+     * @desc 登录时发送验证码
+     */
+    public function loginSendSms(Request $request)
+    {
+        $mobile   = trim($request->input('mobile'));
+        if (empty($mobile) || YC_Util::checkCpMobile($mobile) == false) {
+            throw new Exception("用户名格式不正确", 1);
+        }
+        // 生成验证码
+        CpUserModule::getCaptcha($mobile);
+        return $this->json(0, 'ok', []);
     }
 
     /**

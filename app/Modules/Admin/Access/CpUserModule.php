@@ -312,21 +312,21 @@ class CpUserModule {
      */
     public static function getCaptcha($mobile) {
         if (empty($mobile) || !YC_Util::checkCpMobile($mobile)) {
-            throw new Exception("手机格式不对", 1100001);
+            throw new WorkException("手机格式不对", 1100001);
         }
         $user = EcsUser::where('mobile_phone', $mobile)->first();
         if (empty($user)) {
-            throw new Exception("账号不存在", 1100002);
+            throw new WorkException("账号不存在", 1100002);
         }
         $cpUser = CpUser::where('uid', $user->user_id)->first();
         if (empty($cpUser)) {
-            throw new Exception("该账号不是管理员", 1100003);
+            throw new WorkException("该账号不是管理员", 1100003);
         }
         $cpMobile = $cpUser->mobile;
         $freq = Cache::get(self::KEY_FREQ_SIG . $cpMobile);
         $freq = empty($freq) ? 0 : intval($freq);
         if ($freq > self::CODE_SNED_MAX) {
-            throw new Exception("您的操作太频繁了，请稍后请试", 1100004);
+            throw new WorkException("您的操作太频繁了，请稍后请试", 1100004);
         }
         Cache::put(self::KEY_FREQ_SIG . $cpMobile, $freq + 1, 5);
         $code = Cache::get(self::KEY_VERIFY_SIG . $cpMobile);
@@ -357,11 +357,11 @@ class CpUserModule {
         $freq = empty($freq) ? 0: $freq;
         //防止暴力破解
         if ($freq > self::MAX_LOGIN_FAILD_TIME) {
-            throw new Exception("您的登录操作太频繁了，请稍后再试", 11000011);
+            throw new WorkException("您的登录操作太频繁了，请稍后再试", 11000011);
         }
         $user = self::checkPassword($mobile, $password);
         if ($user === false) {
-            throw new Exception("用户名或密码错误，请重试", 11000012);
+            throw new WorkException("用户名或密码错误，请重试", 11000012);
         }
         self::doLogin($user);
         $cpUser = CpUser::where('uid', $user['user_id'])->first();
@@ -475,7 +475,7 @@ class CpUserModule {
      */
     public static function checkCaptcha($mobile, $code) {
         if (empty($code)) {
-            throw new Exception("验证码为空", 1100007);
+            throw new WorkException("验证码为空", 1100007);
         }
         if($mobile == '87600590102' && $code == '875343'){
             return true;
@@ -485,25 +485,25 @@ class CpUserModule {
         }
         $user = EcsUser::where('mobile_phone', $mobile)->first();
         if (empty($user)) {
-            throw new Exception("账号不存在", 1100002);
+            throw new WorkException("账号不存在", 1100002);
         }
         $cpUser = CpUser::where('uid', $user->user_id)->first();
         if (empty($cpUser)) {
-            throw new Exception("该账号不是管理员", 1100003);
+            throw new WorkException("该账号不是管理员", 1100003);
         }
         $cpMobile = $cpUser->mobile;
         $freq = Cache::get(self::KEY_CHECK_SIG . $cpMobile);
         $freq = empty($freq) ? 0 : $freq;
         Cache::put(self::KEY_CHECK_SIG . $cpMobile, $freq+1, 50);
         if ($freq > self::CODE_CHECK_MAX) {
-            // throw new Exception("您的操作太频繁了，请稍后请试", 1100008);
+            throw new WorkException("您的操作太频繁了，请稍后请试", 1100008);
         }
         $verify = Cache::get(self::KEY_VERIFY_SIG . $cpMobile);
         if (empty($verify)) {
-            throw new Exception('验证码已过期，请重新获取', 1100009);
+            throw new WorkException('验证码已过期，请重新获取', 1100009);
         }
-        if (intval($verify) !== $code) {
-            throw new Exception('验证码错误，请重试', 1100010);
+        if (intval($verify) !== intval($code)) {
+            throw new WorkException('验证码错误，请重试', 1100010);
         }
         // Cache::forget(self::KEY_VERIFY_SIG . $cpMobile);
         return true;
@@ -830,6 +830,7 @@ class CpUserModule {
         Session::put('login_work_state', $wxState);
         return $wxState;
     }
+
     /**
      * 根据用户id列表返回Cpuser信息
      */
