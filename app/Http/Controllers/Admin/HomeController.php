@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exceptions\WorkException;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\Admin\Access\CpUserModule;
