@@ -158,8 +158,8 @@ class HomeController extends Controller
         return $this->json(0, 'ok', [
             'show_access_menu_list' => $menu, 
             'show_access_list' => $showAccessList, 
-            'change_password' => "http://" . config('app.passport_url') . "/cp/user/password",
-            'logout' => "http://" . config('app.passport_url') . "/cp/home/logout",
+            'change_password' => "http://" . config('app.url') . "/cp/user/password",
+            'logout' => "http://" . config('app.url') . "/cp/home/logout",
             'user_name' => CpAccess::theName(),
         ]);
     }
