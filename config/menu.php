@@ -138,6 +138,7 @@ return [
                     $zsfucaiCpUrl. "/report/seller/sellerAchievement" => 'G1',
                     $zsfucaiCpUrl. "/report/incomeCostReport" => 'G2',
                     $zsfucaiCpUrl. "/reportform/seller/amoeba" => '阿米巴0.1版',
+                    $zsfucaiCpUrl. '/reportform/orderstats/amoeba' => '阿米巴三级巴订单数据',
                 ],
                 '通用' => [
                     $zsfucaiCpUrl . '/exportData/order/orderDeliveryInfo' => '自助导出数据',
