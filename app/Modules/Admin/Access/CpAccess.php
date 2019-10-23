@@ -1170,49 +1170,53 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
      */
     public static function getAccess($uid, $project = null)
     {
-        //获取用户部门
-        $dUserDep = new CpDepartmentUser();
-        $userDepartInfo = $dUserDep->getUserDepartByUid($uid);
-        if (empty($userDepartInfo)) {
-            return [];
-        }
-        $dids = \YC_Util::extractList($userDepartInfo, 'department_id');
-        //获取部门权限关系表
-        $dDG = new CpDepartmentAction();
-        $departActionList = $dDG->getByDids($dids, $project);
-        if(empty($departActionList)) {
-            return [];
-        }
-        //开始处理权限
-        $groupIds = [];
-        $actionList = [];
-        $groupProjectMap = [];
-        foreach ($departActionList as $key => $actionDetail) {
-            if($actionDetail['action_type'] == CpDepartmentAction::TYPE_GROUP) {
-                $groupIds[] = $actionDetail['group_id'];
-                $groupProjectMap[$actionDetail['group_id']] = $actionDetail['project'];
-            } else {
-                $actionList[$actionDetail['project']][$actionDetail['controller']][$actionDetail['action']] = $actionDetail;
-                unset($departActionList[$key]);
+        $accessRedisKey = 'pa:st:userAccessList:';
+        $actionList = \Pascal\Libs\Remember::one($accessRedisKey . $uid, function () use ($uid) {
+            //获取用户部门
+            $dUserDep = new CpDepartmentUser();
+            $userDepartInfo = $dUserDep->getUserDepartByUid($uid);
+            if (empty($userDepartInfo)) {
+                return [];
             }
-        }
-        //获取权限组里的权限
-        $dGA = new CpActionGroupAccess();
-        $groupActionList = $dGA->getActionsByGids($groupIds);
-        foreach ($departActionList as $actionDetail) {
-            foreach ($groupActionList as $one) {
-                if($one['gid'] == $actionDetail['group_id']) {
-                    $tmp = array(
-                            'department_id' => $actionDetail['department_id'],
-                            'controller'    => $one['controller'], 
-                            'action'        => $one['action'],
-                            'data_limit'    => $one['data_limit'],
-                            'project'    => $groupProjectMap[$one['gid']],
-                        );
-                    $actionList[$groupProjectMap[$one['gid']]][$tmp['controller']][$tmp['action']] = $tmp;
+            // $dids = \YC_Util::extractList($userDepartInfo, 'department_id');
+            $dids = array_column($userDepartInfo, 'department_id');
+            //获取部门权限关系表
+            $dDG = new CpDepartmentAction();
+            $departActionList = $dDG->getByDids($dids);
+            if(empty($departActionList)) {
+                return [];
+            }
+            //开始处理权限
+            $groupIds = [];
+            $actionList = [];
+            $groupProjectMap = [];
+            foreach ($departActionList as $key => $actionDetail) {
+                if($actionDetail['action_type'] == CpDepartmentAction::TYPE_GROUP) {
+                    $groupIds[] = $actionDetail['group_id'];
+                    $groupProjectMap[$actionDetail['group_id']] = $actionDetail['project'];
+                } else {
+                    $actionList[$actionDetail['project']][$actionDetail['controller']][$actionDetail['action']] = $actionDetail;
+                    unset($departActionList[$key]);
                 }
             }
-        }
+            //获取权限组里的权限
+            $dGA = new CpActionGroupAccess();
+            $groupActionList = $dGA->getActionsByGids($groupIds);
+            foreach ($departActionList as $actionDetail) {
+                foreach ($groupActionList as $one) {
+                    if($one['gid'] == $actionDetail['group_id']) {
+                        $tmp = array(
+                                'department_id' => $actionDetail['department_id'],
+                                'controller'    => $one['controller'], 
+                                'action'        => $one['action'],
+                                'data_limit'    => $one['data_limit'],
+                                'project'    => $groupProjectMap[$one['gid']],
+                            );
+                        $actionList[$groupProjectMap[$one['gid']]][$tmp['controller']][$tmp['action']] = $tmp;
+                    }
+                }
+            }
+        }, 5);
         if ($project) {
             $result = $actionList[$project] ?: [];
             // 获取all hack进去 后面重构这部分代码吧
