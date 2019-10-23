@@ -43,8 +43,7 @@
                                     class="resourceButton"
                                     @click="changeResource(resourceInfo)"
                                     size="small"
-                                    :type="resourceInfo.isChecked == 1 ? 'info' : 'default'"
-                                    v-if="resourceInfo.isChecked == 1">
+                                    :type="resourceInfo.isChecked == 1 ? 'info' : 'default'">
                                     {{ resourceInfo.desc }}
                                 </Button>
                             </span>
