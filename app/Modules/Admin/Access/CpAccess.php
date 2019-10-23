@@ -1216,6 +1216,7 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
                     }
                 }
             }
+            return $actionList;
         }, 5);
         if ($project) {
             $result = $actionList[$project] ?: [];
