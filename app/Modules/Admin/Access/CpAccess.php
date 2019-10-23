@@ -1073,13 +1073,44 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
         return $nowChoose;
     }
 
+    /**
+     * 获取用户对应key的全部权限
+     * 用于没有取到值的时候自动设置
+     */
+    public static function getAccessPathAll($uid, $accessKey)
+    {
+        $userResourceList = self::getUserResouceList($uid);
+        $userResourceList = $userResourceList['data'] ?? [];
+
+        $accessPath = array_get(self::$allAccessPath, $accessKey ?: '') ?: [];
+        $resourceList = self::$resourceList[$accessPath['resource']]['resource'];
+        if(empty($resourceList)){
+            return [];
+        }
+        $options = [];
+        foreach ($resourceList as $rKey => $rDesc) {
+            if (isset($userResourceList[$accessPath['resource']][$rKey])) {
+                $options[$rKey] = $rDesc;
+            }
+        }
+        // 如果都为空，则不显示
+        if(empty($options)){
+            return [];
+        }
+        $accessList = array_keys($options);
+        // app('redis')->setex(AccessConst::REDIS_ACCESS_PATH_ALL . $uid . ':' . $accessKey, 36000, json_encode($accessList));
+        return $accessList;
+    }
+
     //把全部权限转换成具体的权限
     public static function getAccessDetail($key, $mapCode = [])
     {
         $accessVal = self::getAccessVal($key);
         if($accessVal == self::ACCESS_VAL_ALL){
-            $allAccess = app('redis')->get(AccessConst::REDIS_ACCESS_PATH_ALL . self::theUid() . ':' . $key);
-            $accessList = json_decode($allAccess, true);
+            $uid = self::theUid();
+            $accessList = \Pascal\Libs\Remember::one(AccessConst::REDIS_ACCESS_PATH_ALL . $uid . ':' . $key, function () use ($uid, $key) {
+                return self::getAccessPathAll($uid, $key);
+            }, 600);
         }else{
             $accessList = [$accessVal];
         }
@@ -1096,8 +1127,10 @@ class CpAccess extends \App\Modules\Admin\Access\Constants\AccessConst
     // 获取资源列表
     public static function getAccessList($key, $mapCode = []) 
     {
-        $allAccess = app('redis')->get(AccessConst::REDIS_ACCESS_PATH_ALL . self::theUid() . ':' . $key);
-        $accessList = json_decode($allAccess, true);
+        $uid = self::theUid();
+        $accessList = \Pascal\Libs\Remember::one(AccessConst::REDIS_ACCESS_PATH_ALL . $uid . ':' . $key, function () use ($uid, $key) {
+            return self::getAccessPathAll($uid, $key);
+        }, 600);
         // 对应映射
         if(empty($mapCode)){
             return $accessList;
