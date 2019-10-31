@@ -272,6 +272,7 @@ return [
                 // $shanhujiaCpUrl . "/" => '珊瑚家欢迎页',
                 $shanhujiaCpUrl . "/goods" => '商品',
                 $shanhujiaCpUrl . "/order" => '订单',
+                $shanhujiaCpUrl . "/suppliers" => '供应商',
             ],
         ],
     ],
