@@ -203,6 +203,8 @@ class AccessConst
                     'custom-change-phone' => '手机号编辑',
                     'custom-change-must-pay-ok' => '编辑先款后货-是',
                     'custom-change-must-pay-no' => '编辑先款后货-否',
+                    'custom-change-user-status' => '编辑客户状态',
+                    'custom-public-user-follow' => '查看公海客户跟进记录',
                 ],
             ],
     );
@@ -237,6 +239,7 @@ class AccessConst
                 'App\Http\Controllers\Cp\PurchaseRefundController',
                 'App\Http\Controllers\Cp\CheckController',
                 'App\Http\Controllers\Cp\GainLossController',
+                'App\Http\Controllers\Cp\ReportFormController',
             ),
             'rules' => [
                 'App\Http\Controllers\Cp\OrderRefund' => [
@@ -305,6 +308,8 @@ class AccessConst
                 'App\Http\Controllers\Cp\FinanceController',
                 'App\Http\Controllers\Cp\Report\Purchase\CateBrandProfitController',
                 'App\Http\Controllers\Cp\WholesaleController',
+                'App\Http\Controllers\Cp\OrderStockoutController',
+                'App\Http\Controllers\Cp\PurchaseStoreController',
             ],
             'rules' => [
                 'App\Http\Controllers\Cp\OrderController' => [

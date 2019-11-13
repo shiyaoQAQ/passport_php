@@ -41,6 +41,7 @@ return [
                 $passportUrl . '/cp/department/resourcegrouplist' => '资源组管理',
                 $passportUrl . '/cp/user/addDepartmentUser'          => '新增管理员',
                 $zsfucaiCpUrl . '/log/index'                       => '操作日志',
+                $zsfucaiCpUrl . '/log/slowRequest'                       => '操作日志',
                 $passportUrl . '/cp/oauth/clients'          => 'oauth客户端列表',
             ],
         ],
@@ -111,7 +112,6 @@ return [
                 $zsfucaiCpUrl . "/goods/stockWarning" => '库存预警',
                 $zsfucaiCpUrl . "/report/oemKeyData" => 'OEM-壁贝关键数据报表',
                 $zsfucaiCpUrl . "/report/OEMReport" => 'OEM销售数据报表',
-                $zsfucaiCpUrl . "/report/newWoodsReport" => '新木类数据报表',
                 $zsfucaiCpUrl . "/purchase/profit/classProfit" => '分类毛利报表',
                 $zsfucaiCpUrl . "/report/goodsSale/categoryInfo" => '品类销售数据',
                 $zsfucaiCpUrl . "/report/goodsSale/brandInfo" => 'TOP10品牌销售数据',
@@ -147,6 +147,7 @@ return [
                     $zsfucaiCpUrl . '/report/skuDimensionPriceCost' => 'sku维度的价格和成本数据',
                     $zsfucaiCpUrl . '/report/homeDecorateBoom' => '家装景气指数',
                     $zsfucaiCpUrl . '/report/compDecorateBoom' => '工装景气指数',
+                    $zsfucaiCpUrl . "/report/databus/G2" => '【临时】databus回测数据表',
                 ],
                 '销售' => [
                     $zsfucaiCpUrl . "/report/salerPerformance" => '销售绩效统计报表',
@@ -170,11 +171,11 @@ return [
                     $zsfucaiCpUrl . '/report/sellerImportCustom' => '销售录入数据报表'
                 ],
                 '销售-风控'=>[
+                    $zsfucaiCpUrl . "/salestats/badOrderAmount" => '应收管理报表',
+                    $zsfucaiCpUrl . "/reportform/salerReceiving" => '应收汇总列表',
+                    $zsfucaiCpUrl . "/sales/unpayUser" => '欠款客户列表',
                     $zsfucaiCpUrl . "/sales/unpayOrderList" => '欠款订单列表',
-                    $zsfucaiCpUrl . "/sales/unpayUser" => '应收-客户列表',
-                    $zsfucaiCpUrl . "/salestats/badOrderAmount" => '不良应收管理报表',
-                    $zsfucaiCpUrl . "/reportform/salerReceiving" => '应收列表',
-                    $zsfucaiCpUrl . "/report/chargeIncrement" => '总监主管绩效统计报表',
+                    $zsfucaiCpUrl . "/report/chargeIncrement" => '总监主管坏账扣款报表',
                     $zsfucaiCpUrl . "/report/salerBadAmount" => '销售坏账扣款报表',
                 ],
                 '客服售后' => [
@@ -264,6 +265,12 @@ return [
                 $zsfucaiCpUrl . "/gainloss/list" => '损益单列表',
                 $zsfucaiCpUrl . "/stock/list" => '库存查询',
                 $zsfucaiCpUrl . "/inoutquery/list" => '产品出入库查询',
+            ],
+        ],
+        '内容' => [
+            'logo' => 'document-text',
+            'menu_list' => [
+                $zsfucaiCpUrl . "/article/list" => '文章列表'
             ],
         ],
         '珊瑚家' => [
