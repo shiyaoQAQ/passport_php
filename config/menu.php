@@ -41,7 +41,7 @@ return [
                 $passportUrl . '/cp/department/resourcegrouplist' => '资源组管理',
                 $passportUrl . '/cp/user/addDepartmentUser'          => '新增管理员',
                 $zsfucaiCpUrl . '/log/index'                       => '操作日志',
-                $zsfucaiCpUrl . '/log/slowRequest'                       => '操作日志',
+                $zsfucaiCpUrl . '/log/slowRequest'                       => '慢请求日志',
                 $passportUrl . '/cp/oauth/clients'          => 'oauth客户端列表',
             ],
         ],
