@@ -207,6 +207,12 @@ class AccessConst
                     'custom-public-user-follow' => '查看公海客户跟进记录',
                 ],
             ],
+            'shanhujiaGoods' => [
+                'desc' => '珊瑚家商品资源',
+                'resource' => [
+                    'show-purchase-price' => '显示采购价',
+                ],
+            ],
     );
 
     const ACCESS_VAL_ALL = 'all';
