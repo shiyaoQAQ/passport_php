@@ -24,6 +24,8 @@ if (config('app.env') == 'dev' && php_sapi_name() != 'cli' && $referUrl = app('r
         // 替换对应域名的url
         $zsfucaiCpUrl = str_replace('shihongda', $dever, $zsfucaiCpUrl);
         $shanhujiaCpUrl = str_replace('shihongda', $dever, $shanhujiaCpUrl);
+        $zsfucaiCpUrl = str_replace('testing', $dever, $zsfucaiCpUrl);
+        $shanhujiaCpUrl = str_replace('testing', $dever, $shanhujiaCpUrl);
     }
 }
 
