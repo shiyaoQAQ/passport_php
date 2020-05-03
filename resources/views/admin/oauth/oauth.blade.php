@@ -40,6 +40,7 @@
                             <input type="hidden" name="redirect_uri" value="{{ $redirect_uri }}" >
                             <input type="hidden" name="response_type" value="{{ $response_type }}" >
                             <input type="hidden" name="scope" value="{{ $scope }}" >
+                            <input type="hidden" name="state" value="{{ $state }}" >
                             <form-item label="">
                                 <h5>您好，{{ $cp_base_user_name }}</h5>
                                 <h5>{{ $clientName }}，请求您授权登录</h5>

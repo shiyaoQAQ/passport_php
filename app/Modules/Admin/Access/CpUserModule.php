@@ -53,11 +53,17 @@ class CpUserModule {
         10 => '搬运工',
         11 => '售后',
         12 => '城市经理',
-        13 => '设计',
-        14 => '运营',
+        13 => '监察',
+        14 => '人力',
     );
 
     const MP_ROLE_DRIVER = 'driver';
+
+    public static function getCpRoleDesc($roleId)
+    {
+        $list = self::getCpRoleList();
+        return array_get($list, $roleId ?: 0) ?: '未知身份';
+    }
 
     public static function getCpRoleList()
     {

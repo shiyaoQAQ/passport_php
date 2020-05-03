@@ -38,6 +38,7 @@ class OauthController extends Controller
         $clientId = $request->input('client_id');
         $redirectUri = $request->input('redirect_uri');
         $responseType = $request->input('response_type');
+        $state = $request->input('state');
         // token级的权限校验 todo
         $scope = $request->input('scope');
         // 校验客户端状态
@@ -67,6 +68,7 @@ class OauthController extends Controller
             'redirect_uri' => $redirectUri,
             'response_type' => $responseType,
             'scope' => $scope,
+            'state' => $state,
         ];
         return view('admin.oauth.oauth', $assign);
     }
@@ -95,6 +97,7 @@ class OauthController extends Controller
         $responseType = $request->input('response_type');
         // token级的权限校验 todo
         $scope = $request->input('scope') ?: '';
+        $state = $request->input('state') ?: '';
         // 校验客户端状态
         OauthModule::checkClient($clientId, $redirectUri);
         $client = OauthModule::getClientInfo($clientId);
@@ -118,6 +121,7 @@ class OauthController extends Controller
         }
         $realUri .= http_build_query([
             'code' => $code,
+            'state' => $state
         ]);
         return redirect($realUri);
     }

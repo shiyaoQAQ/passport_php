@@ -43,6 +43,7 @@ class OpenAdminModule
             'sex' => $cpUser->sex,
             'email' => $cpUser->email,
             'role' => $cpUser->role,
+            'role_desc' => CpUserModule::getCpRoleDesc($cpUser->role),
         ];
 
         return $user;
