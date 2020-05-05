@@ -6,6 +6,7 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\Admin\Access\CpAccess;
+use App\Modules\Admin\Access\CpUserModule;
 use App\Modules\Admin\Access\OauthModule;
 use App\Modules\Admin\Oauth\Constants\OauthConst;
 use App\Modules\Admin\Oauth\Constants\OauthErrorCode;
@@ -61,6 +62,8 @@ class OauthController extends Controller
                 'code' => $code,
             ]));
         }
+        // 临时判断 如果没设置企业邮箱 则报错
+        CpUserModule::checkMailInZsfucai(CpAccess::theUid());
 
         $assign = [
             'clientName' => $client->name,

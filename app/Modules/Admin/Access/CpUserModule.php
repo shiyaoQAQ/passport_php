@@ -7,6 +7,7 @@ use App\Modules\User\UserBase\Models\EcsUser;
 use App\Modules\User\UserBase\UserModule;
 // use App\Models\User\WxappUserToken;
 use App\Exceptions\WorkException;
+use App\Modules\Admin\Access\Constants\AccessErrorCode;
 use App\Modules\Admin\WorkWechat\WorkWeChatModule;
 use \YC_Util;
 use Exception;
@@ -939,5 +940,15 @@ class CpUserModule {
     //检测用户是否为管理员
     public static function isAdmin(int $uid){
         return self::isUserInMark($uid, CpAccess::MARK_SUPER_ADMIN);
+    }
+    
+
+    public static function checkMailInZsfucai($uid)
+    {
+        $cpUser = self::getCpUserInfo($uid);
+        $regex= '/\w+([-+.]\w+)*@zsfucai.cn/';
+        if (!preg_match($regex, $cpUser->email)) {
+            throwWorkError("该用户邮箱目前为" . $cpUser->email . "，请修改为zsfucai企业邮箱", AccessErrorCode::USER_MAIL_ERROR);
+        }
     }
 }

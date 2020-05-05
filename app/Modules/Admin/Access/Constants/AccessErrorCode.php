@@ -29,8 +29,8 @@ class AccessErrorCode
     const INVAILD_RESOURCE_GROUP_3 = 1020011;
     /** @message 无效的资源组 */
     const INVAILD_RESOURCE_GROUP_4 = 1020012;
-    /** @message 错误码1020013 */
-    const ERROR_1020013 = 1020013;
+    /** @message 用户邮箱错误 */
+    const USER_MAIL_ERROR = 1020013;
     /** @message 错误码1020014 */
     const ERROR_1020014 = 1020014;
     /** @message 错误码1020015 */
