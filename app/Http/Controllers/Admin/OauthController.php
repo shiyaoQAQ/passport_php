@@ -126,7 +126,7 @@ class OauthController extends Controller
             'code' => $code,  
         ];
         if ($state) {
-            $odate['state'] = $state;
+            $odata['state'] = $state;
         }
         $realUri .= http_build_query($odata);
         return redirect($realUri);
