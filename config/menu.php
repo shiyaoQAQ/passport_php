@@ -282,6 +282,7 @@ return [
                 $shanhujiaCpUrl . "/goods" => '商品',
                 $shanhujiaCpUrl . "/order" => '订单',
                 $shanhujiaCpUrl . "/suppliers" => '供应商',
+                $shanhujiaCpUrl . "/order#/virtualCallList" => '虚拟电话',
             ],
         ],
     ],
