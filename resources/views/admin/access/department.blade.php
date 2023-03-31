@@ -3,7 +3,6 @@
 @section('title', '组织架构')
 
 @section('content')
-<meta name="csrf-token" content="{{ csrf_token() }}">
 <style type="text/css">
     body{font:16px/1.8 "宋体";overflow-y:scroll}
     html,body{height:100%;margin:0;padding:0;}

@@ -2,7 +2,6 @@
 @section('title', '新增\关闭账户')
 
 @section('content')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         .ivu-modal-body td {
         }

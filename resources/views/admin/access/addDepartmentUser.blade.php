@@ -146,7 +146,6 @@
             padding: 0
         }
     </style>
-    <meta name="csrf-token" content="{{ csrf_token() }}">
     <div id="addModal">
         <div class="strt-wrap">
         </div>

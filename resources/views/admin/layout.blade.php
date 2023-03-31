@@ -19,14 +19,14 @@
       <script src="/js/vue.dev@2.5.13.js"></script>
   @else
       <script src="/js/vue.min@2.5.9.js"></script>
-      <script src="https://browser.sentry-cdn.com/5.6.2/bundle.min.js" integrity="sha384-H4chu/XQ3ztniOYTpWo+kwec6yx3KQutpNkHiKyeY05XCZwCSap7KSwahg16pzJo" crossorigin="anonymous"></script>
+      <!-- <script src="https://browser.sentry-cdn.com/5.6.2/bundle.min.js" integrity="sha384-H4chu/XQ3ztniOYTpWo+kwec6yx3KQutpNkHiKyeY05XCZwCSap7KSwahg16pzJo" crossorigin="anonymous"></script>
       <script src="https://browser.sentry-cdn.com/5.6.2/vue.min.js" crossorigin="anonymous"></script>
       <script>
           Sentry.init({
               dsn: 'https://2b3d4abe5eed4e0abb313398387e1dc8@sentry.youcai123.cn/3',
               integrations: [new Sentry.Integrations.Vue({Vue, attachProps: true})],
           });
-      </script>
+      </script> -->
   @endif
   <script src="/js/iview@2.9.0.js"></script>
   <script src="/js/iview2.14.3.min.js"></script>
